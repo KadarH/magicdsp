@@ -8,6 +8,7 @@
             <input type="password" placeholder="Mot de passe" v-model="password">
 
             <button type="button" @click="login">Connexion</button>
+            <n-link to="/register">Inscription</n-link>
         </form>
     </div>
 
