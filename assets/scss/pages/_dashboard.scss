@@ -1,0 +1,19 @@
+#dashboard {
+    position: relative;
+
+    #newDemand {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        box-shadow: 0 0 50px 0 rgba(0, 0, 0, .2);
+        height: 44px;
+        background: #03a9f4;
+        color: #fff;
+        text-decoration: none;
+        text-transform: uppercase;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}

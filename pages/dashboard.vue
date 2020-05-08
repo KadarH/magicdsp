@@ -1,6 +1,6 @@
 <template>
     
-    <div>
+    <div id="dashboard">
         <h1>Dashboard</h1>
 
         <div>
@@ -111,7 +111,7 @@
             </table>
         </div>
 
-        <n-link to='/quote/new'>Nouvelle demande</n-link>
+        <n-link id="newDemand" to='/quote/new'>Nouvelle demande</n-link>
     </div>
 
 </template>
