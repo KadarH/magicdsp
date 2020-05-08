@@ -1,0 +1,48 @@
+.input {
+    width: 100%;
+    margin: 0 0 10px 0;
+
+    label {
+        font-weight: 500;
+        font-size: .8em;
+        color: #607d8b;
+    }
+    input {
+        width: 100%;
+        height: 40px;
+        padding: 0 10px;
+        border: 1px solid #cbd4db;
+        border-radius: 4px;
+        color: #607d8b;
+    }
+}
+.btn {
+    background: none;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+
+    &.default {
+        background: #9e9e9e;
+        color: #fff;
+    }
+    &.danger {
+        background: #f44336;
+        color: #fff;
+    }
+    &.warning {
+        background: #ff9800;
+        color: #fff;
+    }
+    &.primary {
+        background: #03a9f4;
+        color: #fff;
+    }
+    &:hover {
+        opacity: .8;
+    }
+}
+.actions {
+    text-align: right;
+    margin: 20px 0 0 0;
+}

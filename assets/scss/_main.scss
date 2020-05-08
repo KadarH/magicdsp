@@ -1,0 +1,38 @@
+* {
+    box-sizing: border-box;
+    outline: none;
+    font-family: 'Roboto', sans-serif;
+}
+html, body {
+    min-height: 100vh;
+    background: #f6f8f9;
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 400;
+    color: #3d3d3d;
+    font-size: 1em;
+}
+#__nuxt {
+    min-height: 100vh;
+}
+#containerApp {
+    min-height: 100vh;
+    display: flex;
+}
+#mainPage {
+    width: 100%;
+
+    #containerMainPage {
+        min-height: 100vh;
+    }
+}
+h1, h2 {
+    color: #3d3d3d;
+}
+input {
+    font-weight: 400;
+}
+button {
+    cursor: pointer;
+}
