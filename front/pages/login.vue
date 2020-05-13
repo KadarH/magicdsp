@@ -7,18 +7,18 @@
             <div id="containerForms">
                 <h2>Connexion</h2>
 
-                <form id="loginForm">
+                <form id="loginForm" ref="loginform" @submit.prevent="login()">
                     <div class="input">
                         <label>Adresse email</label>
-                        <input type="email" v-model="email">
+                        <input type="email" name="email">
                     </div>
                     <div class="input">
                         <label>Mot de passe</label>
-                        <input type="password" v-model="password">
+                        <input type="password" name="password">
                     </div>
 
                     <div class="actions">
-                        <button class="btn primary" type="button" @click="login">Connexion</button>
+                        <button class="btn primary">Connexion</button>
                     </div>
                 </form>
 
@@ -26,26 +26,26 @@
 
                 <h2>Inscription</h2>
 
-                <form id="registerForm">
+                <form id="registerForm" @submit.prevent="register()">
                     <div class="input">
                         <label>Nom</label>
-                        <input type="text" v-model="lastname">
+                        <input type="text" name="lastname">
                     </div>
                     <div class="input">
                         <label>Prénom</label>
-                        <input type="text" v-model="firstname">
+                        <input type="text" name="firstname">
                     </div>
                     <div class="input">
                         <label>Adresse email</label>
-                        <input type="email" v-model="email">
+                        <input type="email" name="email">
                     </div>
                     <div class="input">
                         <label>Mot de passe</label>
-                        <input type="password" v-model="password">
+                        <input type="password" name="password">
                     </div>
 
                     <div class="actions">
-                        <button class="btn primary" type="button" @click="register">Inscription</button>
+                        <button class="btn primary">Inscription</button>
                     </div>
                 </form>
 
@@ -61,19 +61,25 @@
     export default {
         data() {
             return {
-                lastname: '',
-                firstname: '',
-                email: '',
-                password: ''
+                error: {}
             }
         },
+        mounted() {
+            this.$axios.$get('/sanctum/csrf-cookie');
+        },
         methods: {
-            login(e) {
-                e.preventDefault()
-                this.$router.push('/dashboard')
+            async login() {
+                this.error = {}
+
+                try {
+                    const formData = new FormData(this.$refs.loginform)
+                    await this.$auth.loginWith('local', { data: formData })
+                } catch (err) {
+                    this.error = err
+                    console.log(this.error.response)
+                }
             },
-            register(e) {
-                e.preventDefault()
+            register() {
                 this.$router.push('/dashboard')
             }
         }

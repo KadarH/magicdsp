@@ -13,7 +13,7 @@
                     <li @click="showMainMenu"><n-link to="/quote/list/waiting">Demandes en attentes (2)</n-link></li>
                     <li @click="showMainMenu"><n-link to="/quote/list/accepted">Demandes acceptées (1)</n-link></li>
                     <li @click="showMainMenu"><n-link to="/quote/list/refused">Demandes refusées (4)</n-link></li>
-                    <li @click="showMainMenu"><n-link to="/login">Déconnexion</n-link></li>
+                    <li @click="showMainMenu"><a href="#" @click.prevent="logout">Déconnexion</a></li>
                 </ul>
             </nav>
         </div>
@@ -42,6 +42,16 @@
             }
         },
         methods: {
+            async logout() {
+                try {
+                    await this.$auth.logout()
+                    
+                    this.$router.push('/dashboard')
+                } catch (err) {
+                    this.error = err
+                    console.log(this.error)
+                }
+            },
             showMainMenu() {
                 this.mainMenu = !this.mainMenu
             }

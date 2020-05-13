@@ -96,10 +96,14 @@
 <script>
     
     export default {
+        middleware: 'auth',
         layout: 'app',
         data() {
             return {
             }
+        },
+        mounted() {
+            console.log( this.$axios.$get('/api/toto') )
         },
         methods: {
            showQuotesList(index) {
