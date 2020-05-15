@@ -1,67 +1,46 @@
-#dashboard {
-    padding: 0 20px;
-    margin: 20px auto 64px auto;
-    
-    #newDemand {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        box-shadow: 0 0 50px 0 rgba(0, 0, 0, .2);
-        height: 44px;
-        background: #03a9f4;
-        color: #fff;
-        text-decoration: none;
-        text-transform: uppercase;
-        width: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    .container-quotes-list {
-        background: #fff;
-        padding: 10px;
-        box-shadow: 0 0 10px 0 rgba(0, 0, 0, .1);
-        margin: 0 0 10px 0;
-        border-radius: 4px;
+#newQuote {
+    #tasks {
+        .task {
+            background: #e0e0e0;
+            margin: 0 0 10px 0;
 
-        .title {
-            margin: 0;
-            font-weight: 400;
-            font-size: 1.2em;
-            color: #74777b;
-        }
-        .quotes-list {
-            display: none;
-            color: #6d7175;
-            border-collapse: collapse;
-            margin: 10px 0 0 0;
-
-            &.show {
-                display: block;
-            }
-            tbody {
+            .title {
+                height: 44px;
                 width: 100%;
-                display: block;
+                background: #e0e0e0;
+                padding: 10px;
+            }
+            .container {
+                padding: 10px;
 
-                tr {
-                    width: 100%;
-                    display: flex;
-                    border-bottom: 1px solid #e4e4e4;
-
-                    &:last-child {
-                        border: 0;
+                .input-file {
+                    label {
+                        input {
+                            display: none;
+                        }
+                        span {
+                            cursor: pointer;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            height: 200px;
+                            width: 100%;
+                            background: #9E9E9E;
+                            border: 3px dashed #607D8B;
+                        }
                     }
-                    td {
-                        margin: 0;
-                        padding: 10px 0;
-                        font-size: .9em;
-
-                        &.actions {
-                            margin: 0 0 0 auto;
+                    .preview {
+                        img {
+                            width: 100%;
                         }
                     }
                 }
             }
         }
+    }
+    #btnSubmit {
+        margin: 20px 0 0 0;
+        width: 100%;
+        height: 44px;
     }
 }

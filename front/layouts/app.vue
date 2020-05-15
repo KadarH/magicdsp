@@ -9,10 +9,10 @@
             </div>
             <nav>
                 <ul>
-                    <li @click="showMainMenu"><n-link to="/dashboard">Tableau de bord</n-link></li>
-                    <li @click="showMainMenu"><n-link to="/quote/list/waiting">Demandes en attentes (2)</n-link></li>
-                    <li @click="showMainMenu"><n-link to="/quote/list/accepted">Demandes acceptées (1)</n-link></li>
-                    <li @click="showMainMenu"><n-link to="/quote/list/refused">Demandes refusées (4)</n-link></li>
+                    <li @click="showMainMenu"><n-link to="/dashboard">Nouvelle demande</n-link></li>
+                    <li @click="showMainMenu"><n-link to="/quote/list/waiting">Demandes en attentes ({{quotesWaiting.length}})</n-link></li>
+                    <li @click="showMainMenu"><n-link to="/quote/list/accepted">Demandes acceptées ({{quotesAccepted.length}})</n-link></li>
+                    <li @click="showMainMenu"><n-link to="/quote/list/refused">Demandes refusées ({{quotesRefused.length}})</n-link></li>
                     <li @click="showMainMenu"><a href="#" @click.prevent="logout">Déconnexion</a></li>
                 </ul>
             </nav>
@@ -38,20 +38,55 @@
     export default {
         data() {
             return {
-                mainMenu: false
+                mainMenu: false,
+                quotes: [],
+                quotesWaiting: [],
+                quotesAccepted: [],
+                quotesRefused: []
             }
+        },
+        mounted() {
+            this.$axios.get('api/quotes')
+            .then(response => {
+                let data = response.data
+
+                if ( data.success ) {
+                    this.quotes = data.data.quotes
+
+                    this.quotes.map(quote => {
+                        if ( quote.waiting ) {
+                            this.quotesWaiting.push(quote)
+                        }
+                        if ( quote.accepted ) {
+                            this.quotesAccepted.push(quote)
+                        }
+                        if ( quote.refused ) {
+                            this.quotesRefused.push(quote)
+                        }
+                    })
+                }
+            })
+            .catch(error => {
+                console.log(error.response)
+            })
         },
         methods: {
             async logout() {
-                try {
-                    await this.$auth.logout()
-                    
-                    this.$router.push('/dashboard')
-                } catch (err) {
-                    this.error = err
-                    console.log(this.error)
-                }
-            },
+                await this.$axios.get('api/logout')
+                .then(response => {
+                    let data = response.data
+
+                    if ( data.success ) {
+                        localStorage.removeItem('auth')
+				        localStorage.removeItem('user')
+
+                        this.$router.push('/login')
+                    }
+                })
+                .catch(error => {
+                    console.log(error.response)
+                })
+			},
             showMainMenu() {
                 this.mainMenu = !this.mainMenu
             }

@@ -7,14 +7,14 @@
             <div id="containerForms">
                 <h2>Connexion</h2>
 
-                <form id="loginForm" ref="loginform" @submit.prevent="login()">
+                <form id="loginForm" ref="loginform" @submit.prevent="login">
                     <div class="input">
                         <label>Adresse email</label>
-                        <input type="email" name="email">
+                        <input type="email" v-model="formLogin.email">
                     </div>
                     <div class="input">
                         <label>Mot de passe</label>
-                        <input type="password" name="password">
+                        <input type="password" v-model="formLogin.password">
                     </div>
 
                     <div class="actions">
@@ -29,19 +29,19 @@
                 <form id="registerForm" @submit.prevent="register()">
                     <div class="input">
                         <label>Nom</label>
-                        <input type="text" name="lastname">
+                        <input type="text" v-model="formRegister.lastname">
                     </div>
                     <div class="input">
                         <label>Prénom</label>
-                        <input type="text" name="firstname">
+                        <input type="text" v-model="formRegister.firstname">
                     </div>
                     <div class="input">
                         <label>Adresse email</label>
-                        <input type="email" name="email">
+                        <input type="email" v-model="formRegister.email">
                     </div>
                     <div class="input">
                         <label>Mot de passe</label>
-                        <input type="password" name="password">
+                        <input type="password" v-model="formRegister.password">
                     </div>
 
                     <div class="actions">
@@ -59,9 +59,19 @@
 <script>
     
     export default {
+        middleware: 'notAuthenticated',
         data() {
             return {
-                error: {}
+                formLogin: {
+                    email: '',
+                    password: ''
+                },
+                formRegister: {
+                    lastname: '',
+                    firstname: '',
+                    email: '',
+                    password: ''
+                }
             }
         },
         mounted() {
@@ -69,15 +79,26 @@
         },
         methods: {
             async login() {
-                this.error = {}
+                await this.$axios.post('api/login', {
+                    email: this.formLogin.email,
+                    password: this.formLogin.password
+                })
+                .then(response => {
+                    let data = response.data
 
-                try {
-                    const formData = new FormData(this.$refs.loginform)
-                    await this.$auth.loginWith('local', { data: formData })
-                } catch (err) {
-                    this.error = err
-                    console.log(this.error.response)
-                }
+                    if ( data.success ) {
+                        data = data.data
+                        const auth = { token: data.token }
+
+                        localStorage.setItem("auth", JSON.stringify(auth))
+                        localStorage.setItem("user", JSON.stringify(data.user))
+
+                        this.$router.push('/dashboard')
+                    }
+                })
+                .catch(error => {
+                    console.log(error.response)
+                })
             },
             register() {
                 this.$router.push('/dashboard')

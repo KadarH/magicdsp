@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,10 +15,25 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+Route::post('login', 'AuthController@login');
+Route::get('logout', 'AuthController@logout');
 
-Route::middleware('auth:sanctum')->get('/toto', function (Request $request) {
-    return 'super toto';
+Route::middleware('auth:sanctum')->group(function() {
+
+    // Quotes
+    Route::get('quotes', 'QuotesController@index');
+    Route::get('quotes/{quote}', 'QuotesController@show');
+    Route::post('quotes', 'QuotesController@store');
+    Route::patch('quotes/{quote}', 'QuotesController@update');
+    Route::delete('quotes/{quote}', 'QuotesController@destroy');
+
+    // Tasks
+    Route::get('tasks', 'TasksController@index');
+    Route::get('tasks/{task}', 'TasksController@show');
+    Route::post('tasks', 'TasksController@store');
+    Route::patch('tasks/{task}', 'TasksController@update');
+    Route::delete('tasks/{task}', 'TasksController@destroy');
+    Route::post('tasks/upload/picture', 'TasksController@uploadPicture');
+    Route::post('tasks/delete/picture', 'TasksController@deletePicture');
+    
 });
