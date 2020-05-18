@@ -100,8 +100,29 @@
                     console.log(error.response)
                 })
             },
-            register() {
-                this.$router.push('/dashboard')
+            async register() {
+                await this.$axios.post('api/register', {
+                    firstname: this.formRegister.firstname,
+                    lastname: this.formRegister.lastname,
+                    email: this.formRegister.email,
+                    password: this.formRegister.password
+                })
+                .then(response => {
+                    let data = response.data
+
+                    if ( data.success ) {
+                        data = data.data
+                        const auth = { token: data.token }
+
+                        localStorage.setItem("auth", JSON.stringify(auth))
+                        localStorage.setItem("user", JSON.stringify(data.user))
+
+                        this.$router.push('/dashboard')
+                    }
+                })
+                .catch(error => {
+                    console.log(error.response)
+                })
             }
         }
     }
