@@ -65,7 +65,7 @@
         },
         data() {
             return {
-                pageTitle: 'Demande XXX',
+                pageTitle: '',
                 isLoading: true,
                 quote: {
                     brand: '',
@@ -77,8 +77,6 @@
             }
         },
         mounted() {
-            this.$store.commit('pageTitle/set', this.pageTitle)
-
             this.$axios.get('api/quotes/'+this.$route.params.id)
             .then(response => {
                 let data = response.data
@@ -95,6 +93,9 @@
                     if ( this.quote.waiting ) {
                         this.back = 'waiting'
                     }
+
+                    this.pageTitle = 'Demande ' + this.quote.id
+                    this.$store.commit('pageTitle/set', this.pageTitle)
                 }
 
                 this.isLoading = false
