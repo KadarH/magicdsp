@@ -27,7 +27,7 @@
 
                 <div id="tasks">
 
-                    <div class="task" v-for="(task, index) in formNewquote.tasks">
+                    <div class="task" :class='{ deleting: task.deleting, adding: task.adding }' v-for="(task, index) in formNewquote.tasks">
                         <header>
                             <h2 class="title">Coup #{{ index + 1 }}</h2>
                             <button class="btnDeleteTask" @click.prevent="removeTask(index)"><i class="fas fa-trash"></i></button>
@@ -50,10 +50,16 @@
                             </div>
 
                         </div>
+
+                        <div class="deleting">
+                            Suppression en cours ...
+                        </div>
+                        <div class="adding">
+                            Ajout en cours ...
+                        </div>
                     </div>
 
                     <button id="btnAddTask" class="btn" @click.prevent="addTask">Ajouter un coup</button>
-
                 </div>
 
                 <button type="submit" id="btnSubmit" class="btn primary">Envoyer la demande</button> 
@@ -96,6 +102,8 @@
         },
         methods: {
             handleFileUpload(event, index) {
+                this.formNewquote.tasks[index].adding = true
+
                 let formData = new FormData()
                 const file = event.target.files[0]
                 formData.append('file', file);
@@ -115,6 +123,8 @@
                         this.formNewquote.tasks[index].picture = data.file
                         this.formNewquote.tasks[index].url = URL.createObjectURL(file)
                     }
+
+                    this.formNewquote.tasks[index].adding = false
                 })
                 .catch(error => {
                     console.log(error.response)
@@ -147,7 +157,6 @@
                     this.isLoading = false
                 })
                 .catch(error => {
-                    this.isLoading = false
                     console.log(error.response)
                 })
             },
@@ -158,15 +167,16 @@
                 let taskInput = {
                     picture: '',
                     description: '',
-                    url: ''
+                    url: '',
+                    deleting: false,
+                    adding: false
                 }
 
                 this.formNewquote.tasks.push(taskInput)
             },
             removeTask(index) {
+                this.formNewquote.tasks[index].deleting = true
                 let indexToRemove = index
-
-
 
                 this.$axios.post('api/tasks/delete/picture', {
                     file: this.formNewquote.tasks[0].picture,
@@ -188,6 +198,8 @@
 
                         this.formNewquote.tasks = tmpTasks
                     }
+
+                    this.formNewquote.tasks[index].deleting = false
                 })
                 .catch(error => {
                     console.log(error.response)
