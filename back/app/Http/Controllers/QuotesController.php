@@ -23,7 +23,7 @@ class QuotesController extends Controller
     public function index(Request $request)
     {
         if ( $request->type ) {
-            $quotes = Quote::where($request->type, true)->get();
+            $quotes = Quote::where($request->type, true)->orderBy('created_at', 'DESC')->get();
         } else {
             $quotes = Quote::get();
         }
