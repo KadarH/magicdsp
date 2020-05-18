@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Task;
 use Illuminate\Support\Facades\Storage;
-use Auth;
 
 class TasksController extends Controller
 {
@@ -82,7 +81,7 @@ class TasksController extends Controller
         $file = $request->file;
         $fileNewName = time().'_'.$file->getClientOriginalName();
 
-        $storagePath = Storage::disk('public')->putFileAs('tasks', $file, $fileNewName);
+        Storage::disk('public')->putFileAs('tasks', $file, $fileNewName);
 
         return response()->json([
             'success' => true,

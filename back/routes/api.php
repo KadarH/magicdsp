@@ -35,5 +35,4 @@ Route::middleware('auth:sanctum')->group(function() {
     Route::delete('tasks/{task}', 'TasksController@destroy');
     Route::post('tasks/upload/picture', 'TasksController@uploadPicture');
     Route::post('tasks/delete/picture', 'TasksController@deletePicture');
-    
 });

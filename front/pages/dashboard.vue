@@ -40,7 +40,7 @@
                                     <span>Cliquer pour ajouter une photo</span>
                                 </label>
                                 <div class="preview" v-if="task.url">
-                                    <img :src="task.url" alt="Aperçu photo">
+                                    <img :src="task.url" alt="Photo du coup">
                                 </div>
                             </div>
 

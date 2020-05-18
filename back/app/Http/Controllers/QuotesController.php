@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Response;
 use App\Quote;
 use App\Task;
 use Auth;
@@ -35,6 +37,16 @@ class QuotesController extends Controller
 
     public function show(Quote $quote)
     {
+        $tasks = Task::where('quote_id', $quote->id)->get();
+
+        if ( !empty($tasks) ) {
+            foreach ( $tasks as $key => $task ) {
+                $tasks[$key]['picture'] = asset('storage/tasks/' . $task->picture);
+            }
+        }
+
+        $quote['tasks'] = $tasks;
+
         return response()->json([
             'success' => true,
             'message' => '',

@@ -1,4 +1,4 @@
-#newQuote {
+#newQuote, #getQuote {
     #tasks {
         .task {
             margin: 0 0 10px 0;
@@ -16,10 +16,9 @@
                 height: 40px;
 
                 .title {
-                    width: 100%;
-                    font-size: 1em;
                     font-weight: 500;
-                    color: #36404b;
+                    font-size: .8em;
+                    color: #607d8b;
                 }
                 .btnDeleteTask {
                     background: none;
@@ -108,5 +107,12 @@
         margin: 40px 0 0 0;
         width: 100%;
         height: 44px;
+    }
+    #backToList {
+        width: 100%;
+        margin: 20px 0 0 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 }

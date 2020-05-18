@@ -1,8 +1,9 @@
 <template>
     
-    <div id="pages-quotes-list" class="container-page">
+    <div id="pages-quotes-list" class="container-page" :class='{ loading: isLoading }'>
+        <Loading />
 
-        <table id="list-quotes">
+        <table id="list-quotes" v-if="quotes.length">
 
             <tbody>
                 <tr v-for="(quote, index) in quotes">
@@ -13,34 +14,46 @@
 
         </table>
 
+        <div v-else>
+            Aucune demande !
+        </div>
+
     </div>
 
 </template>
 
 <script>
 
+    import Loading from '~/components/Loading.vue'
     import moment from 'moment'
 
     export default {
         middleware: 'authenticated',
         layout: 'app',
+        components: {
+            Loading
+        },
         data() {
             return {
                 pageTitle: 'Demandes en attentes',
-                quotes: []
+                quotes: [],
+                isLoading: true
             }
         },
         mounted() {
             this.$store.commit('pageTitle/set', this.pageTitle)
             moment.locale('fr')
 
-            this.$axios.get('api/quotes?type=waiting')
+            this.$axios.get('api/quotes?type='+this.$route.params.type)
             .then(response => {
                 let data = response.data
+                console.log(response)
 
                 if ( data.success ) {
                     this.quotes = data.data.quotes
                 }
+
+                this.isLoading = false
             })
             .catch(error => {
                 console.log(error.response)

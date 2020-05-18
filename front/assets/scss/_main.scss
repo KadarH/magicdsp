@@ -2,6 +2,7 @@
     box-sizing: border-box;
     outline: none;
     font-family: 'Roboto', sans-serif;
+    -webkit-tap-highlight-color: transparent;
 }
 html, body {
     min-height: 100vh;
@@ -47,4 +48,9 @@ input {
 }
 button {
     cursor: pointer;
+}
+input, select, textarea {
+    &:disabled {
+        background: #ebebe4;
+    }
 }
