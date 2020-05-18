@@ -18,9 +18,13 @@ class QuotesController extends Controller
         ]);
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $quotes = Quote::get();
+        if ( $request->type ) {
+            $quotes = Quote::where($request->type, true)->get();
+        } else {
+            $quotes = Quote::get();
+        }
 
         return response()->json([
             'success' => true,

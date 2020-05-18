@@ -1,14 +1,31 @@
 <template>
     
-    <div>
-        <h1>Demande de devis 1</h1>
+    <div id="pages-quotes-id" class="container-page">
 
-        <div>
-            <p>Statut : statut de la demande</p>
-            <p>Date de la demande : 01/05/2020</p>
-        </div>
+        Quote ID
 
-        <n-link to="/dashboard">Retour</n-link>
     </div>
 
 </template>
+
+<script>
+
+    export default {
+        middleware: 'authenticated',
+        layout: 'app',
+        data() {
+            return {
+                pageTitle: 'Demande XXX'
+            }
+        },
+        mounted() {
+            this.$store.commit('pageTitle/set', this.pageTitle)
+        },
+        head() {
+            return {
+                title: this.pageTitle
+            };
+        },
+    }
+
+</script>

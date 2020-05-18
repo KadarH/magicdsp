@@ -13,6 +13,7 @@
 </template>
 
 <script>
+
     export default {
         middleware: 'authenticated',
         layout: 'app',
