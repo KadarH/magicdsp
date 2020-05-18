@@ -1,6 +1,6 @@
 <template>
     
-    <div class="container-page" :class='{ loading: isLoading }'>
+    <div id="pages-dashboard" class="container-page" :class='{ loading: isLoading }'>
         <Loading />
 
         <div id="newQuote">
@@ -154,7 +154,7 @@
                         data = data.data
                     }
 
-                    this.isLoading = false
+                    this.$router.push('/quotes/success')
                 })
                 .catch(error => {
                     console.log(error.response)

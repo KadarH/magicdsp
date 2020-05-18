@@ -10,9 +10,9 @@
             <nav>
                 <ul>
                     <li @click="showMainMenu"><n-link to="/dashboard">Nouvelle demande</n-link></li>
-                    <li @click="showMainMenu"><n-link to="/quote/list/waiting">Demandes en attentes ({{quotesWaiting.length}})</n-link></li>
-                    <li @click="showMainMenu"><n-link to="/quote/list/accepted">Demandes acceptées ({{quotesAccepted.length}})</n-link></li>
-                    <li @click="showMainMenu"><n-link to="/quote/list/refused">Demandes refusées ({{quotesRefused.length}})</n-link></li>
+                    <li @click="showMainMenu"><n-link to="/quotes/list/waiting">Demandes en attentes ({{quotesWaiting.length}})</n-link></li>
+                    <li @click="showMainMenu"><n-link to="/quotes/list/accepted">Demandes acceptées ({{quotesAccepted.length}})</n-link></li>
+                    <li @click="showMainMenu"><n-link to="/quotes/list/refused">Demandes refusées ({{quotesRefused.length}})</n-link></li>
                     <li @click="showMainMenu"><a href="#" @click.prevent="logout">Déconnexion</a></li>
                 </ul>
             </nav>
