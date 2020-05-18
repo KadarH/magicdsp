@@ -21,7 +21,11 @@ class IsAdmin
         if ( $user->admin ) {
             return $next($request);
         } else {
-            dd('not admin');
+            return response()->json([
+                'success' => false,
+                'message' => 'This user is not admin',
+                'data' => '',
+            ],200);
         }
 
     }
