@@ -20,7 +20,7 @@
 
         <div id="mainPage">
             <div id="mainTopbar">
-                <h1 class="title">title</h1>
+                <h1 class="title">{{ this.$store.state.pageTitle.pageTitle }}</h1>
                 <button id="btnShowMenu" @click="showMainMenu"><span></span></button>
             </div>
 

@@ -1,18 +1,35 @@
 #newQuote {
     #tasks {
         .task {
-            background: #e0e0e0;
             margin: 0 0 10px 0;
+            border: 1px solid #cbd4db;
+            border-radius: 4px;
+            overflow: hidden;
+            background: #f1f1f1;
 
-            .title {
-                height: 44px;
-                width: 100%;
-                background: #e0e0e0;
-                padding: 10px;
+            header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 10px 0 10px 10px;
+                height: 40px;
+
+                .title {
+                    width: 100%;
+                    font-size: 1em;
+                    font-weight: 500;
+                    color: #36404b;
+                }
+                .btnDeleteTask {
+                    background: none;
+                    color: #f44336;
+                    border: none;
+                    height: 40px;
+                    width: 40px;
+                    padding: 0;
+                }
             }
             .container {
-                padding: 10px;
-
                 .input-file {
                     label {
                         input {
@@ -23,10 +40,12 @@
                             display: flex;
                             align-items: center;
                             justify-content: center;
-                            height: 200px;
+                            height: 100px;
                             width: 100%;
-                            background: #9E9E9E;
-                            border: 3px dashed #607D8B;
+                            background: #dadada;
+                            font-style: italic;
+                            color: #607d8b;
+                            font-size: .9em;
                         }
                     }
                     .preview {
@@ -34,12 +53,22 @@
                             width: 100%;
                         }
                     }
+
+                }
+                .input {
+                    padding: 10px;
                 }
             }
         }
+        #btnAddTask {
+            background: rgba(#9e9e9e, .2);
+            width: 100%;
+            color: #6b665e;
+            border: 1px dashed #9e9e9e;
+        }
     }
     #btnSubmit {
-        margin: 20px 0 0 0;
+        margin: 40px 0 0 0;
         width: 100%;
         height: 44px;
     }

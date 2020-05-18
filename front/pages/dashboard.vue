@@ -4,8 +4,6 @@
         <Loading />
 
         <div id="newQuote">
-            <h1 class="title">Nouvelle demande</h1>
-
             <form @submit.prevent="newQuote" enctype="multipart/form-data">
                 <div class="input">
                     <label>Marque du véhicule</label>
@@ -30,13 +28,16 @@
                 <div id="tasks">
 
                     <div class="task" v-for="(task, index) in formNewquote.tasks">
-                        <h2 class="title">Coup #{{ index + 1 }}</h2>
-
+                        <header>
+                            <h2 class="title">Coup #{{ index + 1 }}</h2>
+                            <button class="btnDeleteTask" @click.prevent="removeTask(index)"><i class="fas fa-trash"></i></button>
+                        </header>
+                        
                         <div class="container">
                             <div class="input-file">
                                 <label v-if="!task.url">
                                     <input type="file" accept="image/*" @change="handleFileUpload($event, index)">
-                                    <span>Ajouter une photo</span>
+                                    <span>Cliquer pour ajouter une photo</span>
                                 </label>
                                 <div class="preview" v-if="task.url">
                                     <img :src="task.url" alt="Aperçu photo">
@@ -44,15 +45,14 @@
                             </div>
 
                             <div class="input">
-                                <label>Commentaire</label>
-                                <input type="text" v-model="task.description">
+                                <label>Ajouter un commentaire</label>
+                                <textarea v-model="task.description"></textarea>
                             </div>
 
-                            <button @click.prevent="removeTask(index)">Supprimer ce coup</button>
                         </div>
                     </div>
 
-                    <button @click.prevent="addTask">Ajouter un coup</button>
+                    <button id="btnAddTask" class="btn" @click.prevent="addTask">Ajouter un coup</button>
 
                 </div>
 
@@ -75,6 +75,7 @@
         },
         data() {
             return {
+                pageTitle: 'Nouvelle demande',
                 formNewquote: {
                     brand: '',
                     model: '',
@@ -85,7 +86,13 @@
             }
         },
         mounted() {
+            this.$store.commit('pageTitle/set', this.pageTitle)
             this.isLoading = false
+        },
+        head() {
+            return {
+                title: this.pageTitle
+            };
         },
         methods: {
             handleFileUpload(event, index) {
