@@ -46,12 +46,13 @@
 
             </form>
             
-            <ul class="admin-actions" v-if="currentUser.admin">
-                <li><button class="btn success" @click.prevent='toggle("accept")'>Accepter</button></li>
-                <li><button class="btn danger" @click.prevent='toggle("refuse")'>Refuser</button></li>
+            <ul class="actions">
+                <li v-if="currentUser.admin"><button class="btn default">Demander plus d'informations</button></li>
+                <li v-if="currentUser.admin"><button class="btn success" @click.prevent='toggle("accept")'>Accepter</button></li>
+                <li v-if="currentUser.admin"><button class="btn danger" @click.prevent='toggle("refuse")'>Refuser</button></li>
+                <li><n-link id="backToList" class="btn primary" :to="'/quotes/list/'+back">Retour à la liste</n-link></li>
             </ul>
             
-            <n-link id="backToList" class="btn primary" :to="'/quotes/list/'+back">Retour à la liste</n-link>
         </div>
 
     </div>
