@@ -31,7 +31,7 @@ class QuotesController extends Controller
         return response()->json([
             'success' => true,
             'message' => '',
-            'data' => ['quotes' => $quotes],
+            'data' => ['quotes' => $quotes]
         ],200);
     }
 
@@ -50,7 +50,7 @@ class QuotesController extends Controller
         return response()->json([
             'success' => true,
             'message' => '',
-            'data' => ['quote' => $quote],
+            'data' => ['quote' => $quote]
         ],200);
     }
 
@@ -78,7 +78,7 @@ class QuotesController extends Controller
         return response()->json([
             'success' => true,
             'message' => '',
-            'data' => ['quote' => $quote],
+            'data' => ['quote' => $quote]
         ],200);
     }
 
@@ -92,7 +92,7 @@ class QuotesController extends Controller
         return response()->json([
             'success' => true,
             'message' => '',
-            'data' => ['quote' => $quote],
+            'data' => ['quote' => $quote]
         ], 200); 
     }
 

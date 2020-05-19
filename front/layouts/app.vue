@@ -13,6 +13,12 @@
                     <li @click="showMainMenu"><n-link to="/quotes/list/waiting">Demandes en attentes ({{quotesWaiting.length}})</n-link></li>
                     <li @click="showMainMenu"><n-link to="/quotes/list/accepted">Demandes acceptées ({{quotesAccepted.length}})</n-link></li>
                     <li @click="showMainMenu"><n-link to="/quotes/list/refused">Demandes refusées ({{quotesRefused.length}})</n-link></li>
+                    <li @click="showAdminMenu" v-if="currentUser.admin">
+                        <span class="title">Administration</span>
+                        <ul :class="[this.adminMenu ? 'show' : '' ]">
+                            <li><n-link to="/admin/users">Tous les utilisateurs</n-link></li>
+                        </ul>
+                    </li>
                     <li @click="showMainMenu"><a href="#" @click.prevent="logout">Déconnexion</a></li>
                 </ul>
             </nav>
@@ -39,10 +45,19 @@
         data() {
             return {
                 mainMenu: false,
+                adminMenu: false,
                 quotes: [],
                 quotesWaiting: [],
                 quotesAccepted: [],
-                quotesRefused: []
+                quotesRefused: [],
+                currentUser: JSON.parse(localStorage.getItem('user'))
+            }
+        },
+        head() {
+            return {
+                bodyAttrs: {
+                    class: this.mainMenu ? 'menu-open' : ''
+                }
             }
         },
         mounted() {
@@ -78,7 +93,7 @@
 
                     if ( data.success ) {
                         localStorage.removeItem('auth')
-				        localStorage.removeItem('user')
+                        localStorage.removeItem('user')
 
                         this.$router.push('/login')
                     }
@@ -89,6 +104,9 @@
 			},
             showMainMenu() {
                 this.mainMenu = !this.mainMenu
+            },
+            showAdminMenu() {
+                this.adminMenu = !this.adminMenu
             }
         },
     }

@@ -13,6 +13,10 @@ html, body {
     font-weight: 400;
     color: #3d3d3d;
     font-size: 1em;
+
+    &.menu-open {
+        overflow: hidden;
+    }
 }
 #__nuxt {
     min-height: 100vh;

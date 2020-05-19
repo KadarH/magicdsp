@@ -46,6 +46,11 @@
 
             </form>
             
+            <ul class="admin-actions" v-if="currentUser.admin">
+                <li><button class="btn success" @click.prevent='toggle("accept")'>Accepter</button></li>
+                <li><button class="btn danger" @click.prevent='toggle("refuse")'>Refuser</button></li>
+            </ul>
+            
             <n-link id="backToList" class="btn primary" :to="'/quotes/list/'+back">Retour à la liste</n-link>
         </div>
 
@@ -73,7 +78,8 @@
                     doors: '',
                     tasks: []
                 },
-                back: ''
+                back: '',
+                currentUser: JSON.parse(localStorage.getItem('user'))
             }
         },
         mounted() {
@@ -109,6 +115,20 @@
                 title: this.pageTitle
             };
         },
+        methods: {
+            toggle(status) {
+                this.$axios.patch('api/admin/quotes/'+this.$route.params.id+'/'+status)
+                .then(response => {
+                    let data = response.data
+
+                    if ( data.success ) {
+                    }
+                })
+                .catch(error => {
+                    console.log(error.response)
+                })
+            }
+        }
     }
 
 </script>
