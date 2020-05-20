@@ -244,11 +244,8 @@
                     let data = response.data
 
                     if ( data.success ) {
-                        console.log(data.data)
-                        // this.$router.push('/quotes/'+this.$route.params.id+'/result?status=edit')
+                        this.$router.push('/quotes/'+this.$route.params.id+'/result?status=edit')
                     }
-
-                    this.isLoading = false
                 })
                 .catch(error => {
                     console.log(error.response)

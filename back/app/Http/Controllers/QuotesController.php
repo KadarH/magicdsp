@@ -91,7 +91,7 @@ class QuotesController extends Controller
     public function update(Request $request, Quote $quote)
     {
         $data = $this->validateRequest();
-        // $data['can_edit'] = false;
+        $data['can_edit'] = false;
 
         $quote->update($data);
 
