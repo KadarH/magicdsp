@@ -151,7 +151,6 @@
                     let data = response.data
 
                     if ( data.success ) {
-                        data = data.data
                     }
 
                     this.$router.push('/quotes/success')

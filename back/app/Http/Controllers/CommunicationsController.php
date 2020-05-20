@@ -11,7 +11,13 @@ class CommunicationsController extends Controller
 {
     public function show(Quote $quote)
     {
-
+        $communications = Communication::where('quote_id', $quote->id)->get();
+     
+        return response()->json([
+            'success' => true,
+            'message' => '',
+            'data' => ['communications' => $communications]
+        ],200);
     }
 
     public function store(Request $request, Quote $quote)

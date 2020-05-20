@@ -1,0 +1,72 @@
+#pages-quotes-communications {
+    .communications {
+        list-style: none;
+        margin: 0;
+        padding: 0 0 100px 0;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        
+        li {
+            display:inline-block;
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 2px;
+            font-size: .9em;
+            line-height: 1.6;
+
+            &.him {
+                background: #e2e2e2;
+            }
+            &.me {
+                background: #0084ff;
+                color: #fff;
+                align-self: flex-end;
+            }
+        }
+        .him + .me{
+            border-bottom-right-radius: 5px;
+        }
+        
+        .me + .me{
+            border-top-right-radius: 5px;
+            border-bottom-right-radius: 5px;
+        }
+        
+        .me:last-of-type {
+            border-bottom-right-radius: 10px;
+        }
+    }
+    .add-communication {
+        background: #e4e4e4;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        padding: 20px;
+
+        form {
+            display: flex;
+
+            textarea {
+                resize: none;
+                border: none;
+                border-radius: 4px;
+                padding: 10px;
+                height: 60px;
+                width: 100%;
+                margin: 0 20px 0 0;
+            }
+            button {
+                margin: auto 0 0 auto;
+                width: 44px;
+                min-width: 44px;
+                height: 44px;
+                border-radius: 100%;
+                border: none;
+                background: #fff;
+                color: #36404b;
+            }
+        }
+    }
+}
