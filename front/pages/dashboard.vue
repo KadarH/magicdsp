@@ -7,12 +7,12 @@
             <form @submit.prevent="newQuote" enctype="multipart/form-data">
                 <div class="input">
                     <label>Marque du véhicule</label>
-                    <input type="text" v-model="formNewquote.brand">
+                    <input type="text" v-model="formNewQuote.brand">
                 </div>
 
                 <div class="input">
                     <label>Modèle du véhicule</label>
-                    <input type="text" v-model="formNewquote.model">
+                    <input type="text" v-model="formNewQuote.model">
                 </div>
 
                 <div class="input">
@@ -27,7 +27,7 @@
 
                 <div id="tasks">
 
-                    <div class="task" :class='{ deleting: task.deleting, adding: task.adding }' v-for="(task, index) in formNewquote.tasks">
+                    <div class="task" :class='{ deleting: task.deleting, adding: task.adding }' v-for="(task, index) in formNewQuote.tasks">
                         <header>
                             <h2 class="title">Coup #{{ index + 1 }}</h2>
                             <button class="btnDeleteTask" @click.prevent="removeTask(index)"><i class="fas fa-trash"></i></button>
@@ -82,7 +82,7 @@
         data() {
             return {
                 pageTitle: 'Nouvelle demande',
-                formNewquote: {
+                formNewQuote: {
                     brand: '',
                     model: '',
                     doors: '',
@@ -102,7 +102,7 @@
         },
         methods: {
             handleFileUpload(event, index) {
-                this.formNewquote.tasks[index].adding = true
+                this.formNewQuote.tasks[index].adding = true
 
                 let formData = new FormData()
                 const file = event.target.files[0]
@@ -120,11 +120,11 @@
                     if ( data.success ) {
                         data = data.data
 
-                        this.formNewquote.tasks[index].picture = data.file
-                        this.formNewquote.tasks[index].url = URL.createObjectURL(file)
+                        this.formNewQuote.tasks[index].picture = data.file
+                        this.formNewQuote.tasks[index].url = URL.createObjectURL(file)
                     }
 
-                    this.formNewquote.tasks[index].adding = false
+                    this.formNewQuote.tasks[index].adding = false
                 })
                 .catch(error => {
                     console.log(error.response)
@@ -134,7 +134,7 @@
                 this.isLoading = true;
 
                 let tasks = []
-                this.formNewquote.tasks.map(task => {
+                this.formNewQuote.tasks.map(task => {
                     tasks.push({
                         description: task.description,
                         picture: task.picture
@@ -142,25 +142,25 @@
                 })
 
                 this.$axios.post('api/quotes', {
-                    brand: this.formNewquote.brand,
-                    model: this.formNewquote.model,
-                    doors: this.formNewquote.doors,
+                    brand: this.formNewQuote.brand,
+                    model: this.formNewQuote.model,
+                    doors: this.formNewQuote.doors,
                     tasks: tasks
                 })
                 .then(response => {
                     let data = response.data
 
                     if ( data.success ) {
+                        this.$router.push('/quotes/'+data.data.quote.id+'/result?status=create')
                     }
 
-                    this.$router.push('/quotes/success')
                 })
                 .catch(error => {
                     console.log(error.response)
                 })
             },
             selectDoors(e) {
-                this.formNewquote.doors = e.target.value
+                this.formNewQuote.doors = e.target.value
             },
             addTask() {
                 let taskInput = {
@@ -171,21 +171,21 @@
                     adding: false
                 }
 
-                this.formNewquote.tasks.push(taskInput)
+                this.formNewQuote.tasks.push(taskInput)
             },
             removeTask(index) {
-                this.formNewquote.tasks[index].deleting = true
+                this.formNewQuote.tasks[index].deleting = true
                 let indexToRemove = index
 
                 this.$axios.post('api/tasks/delete/picture', {
-                    file: this.formNewquote.tasks[0].picture,
+                    file: this.formNewQuote.tasks[0].picture,
                 })
                 .then(response => {
                     let data = response.data
 
                     if ( data.success ) {
                         let tmpTasks = []
-                        this.formNewquote.tasks.map((task, index) => {
+                        this.formNewQuote.tasks.map((task, index) => {
                             if ( index != indexToRemove ) {
                                 tmpTasks.push({
                                     description: task.description,
@@ -195,10 +195,10 @@
                             }
                         })
 
-                        this.formNewquote.tasks = tmpTasks
+                        this.formNewQuote.tasks = tmpTasks
                     }
 
-                    this.formNewquote.tasks[index].deleting = false
+                    this.formNewQuote.tasks[index].deleting = false
                 })
                 .catch(error => {
                     console.log(error.response)

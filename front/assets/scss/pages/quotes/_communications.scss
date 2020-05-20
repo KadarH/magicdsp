@@ -8,33 +8,40 @@
         align-items: flex-start;
         
         li {
-            display:inline-block;
-            padding: 10px;
-            border-radius: 10px;
-            margin-bottom: 2px;
-            font-size: .9em;
-            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            margin: 0 0 10px 0;
 
+            .body {
+                display:inline-block;
+                padding: 10px;
+                border-radius: 10px;
+                margin: 0 0 2px 0;
+                font-size: .9em;
+                line-height: 1.6;
+            }
             &.him {
-                background: #e2e2e2;
+                .body {
+                    background: #e2e2e2;
+                }
+                .date {
+                    text-align: left;
+                }
             }
             &.me {
-                background: #0084ff;
-                color: #fff;
                 align-self: flex-end;
+
+                .body {
+                    background: #0084ff;
+                    color: #fff;
+                }
             }
-        }
-        .him + .me{
-            border-bottom-right-radius: 5px;
-        }
-        
-        .me + .me{
-            border-top-right-radius: 5px;
-            border-bottom-right-radius: 5px;
-        }
-        
-        .me:last-of-type {
-            border-bottom-right-radius: 10px;
+            .date {
+                font-size: .8em;
+                font-style: italic;
+                color: #6d7379;
+                text-align: right;
+            }
         }
     }
     .add-communication {

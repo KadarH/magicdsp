@@ -42,6 +42,7 @@ Route::middleware('auth:sanctum')->group(function() {
     Route::post('tasks/delete/picture', 'TasksController@deletePicture');
 
     Route::middleware('isAdmin')->prefix('admin')->group(function() {
+        Route::patch('quotes/{quote}/edit', 'Admin\QuotesController@edit');
         Route::patch('quotes/{quote}/accept', 'Admin\QuotesController@accept');
         Route::patch('quotes/{quote}/refuse', 'Admin\QuotesController@refuse');
     });

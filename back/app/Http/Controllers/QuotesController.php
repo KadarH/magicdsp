@@ -93,7 +93,8 @@ class QuotesController extends Controller
     public function update(Quote $quote)
     {
         $data = $this->validateRequest();
-        
+        $data['can_edit'] = false;
+
         $quote->update($data);
         $quote = Quote::where('id', $quote->id)->first();
 

@@ -5,7 +5,8 @@
 
         <ul class="communications">
             <li v-for="(communication, index) in communications" :class="[ communication.user_id == currentUser.id ? 'me' : 'him' ]">
-                {{ communication.body }}
+                <span class="body">{{ communication.body }}</span>
+                <span class="date">{{ moment(communication.created_at).format('DD/MM/YYYY - h:mm:ss') }}</span>
             </li>
         </ul>
 
@@ -22,6 +23,7 @@
 <script>
 
     import Loading from '~/components/Loading.vue'
+    import moment from 'moment'
 
     export default {
         middleware: 'authenticated',
@@ -41,21 +43,9 @@
         mounted() {
             this.pageTitle = 'Communications Demande ' + this.$route.params.id
             this.$store.commit('pageTitle/set', this.pageTitle)
+            moment.locale('fr')
 
-            this.$axios.get('api/communications/'+this.$route.params.id)
-            .then(response => {
-                let data = response.data
-
-                if ( data.success ) {
-                    this.communications = data.data.communications
-                    console.log(this.communications)
-                }
-
-                this.isLoading = false
-            })
-            .catch(error => {
-                console.log(error.response)
-            })
+            this.getCommunications()
         },
         head() {
             return {
@@ -63,6 +53,30 @@
             };
         },
         methods: {
+            moment(date) {
+                return moment(date)
+            },
+            getCommunications() {
+                this.$axios.get('api/communications/'+this.$route.params.id)
+                .then(response => {
+                    let data = response.data
+
+                    if ( data.success ) {
+                        this.communications = data.data.communications
+
+                        if ( this.communications.length == 0 ) {
+                            if ( !this.currentUser.admin ) {
+                                this.$router.push('/quotes/'+this.$route.params.id)
+                            }
+                        }
+                    }
+
+                    this.isLoading = false
+                })
+                .catch(error => {
+                    console.log(error.response)
+                })
+            },
             addCommunication() {
                 let oldBody = this.body
                 this.body = ''
