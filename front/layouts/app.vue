@@ -82,7 +82,12 @@
                 }
             })
             .catch(error => {
-                console.log(error.response)
+                if ( error.response.data.message == 'Unauthenticated.' ) {
+                    localStorage.removeItem('auth')
+                    localStorage.removeItem('user')
+
+                    this.$router.push('/login')
+                }
             })
         },
         methods: {

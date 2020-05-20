@@ -23,9 +23,17 @@ class QuotesController extends Controller
     public function index(Request $request)
     {
         if ( $request->type ) {
-            $quotes = Quote::where($request->type, true)->where('user_id', Auth::id())->orderBy('created_at', 'DESC')->get();
+            if ( Auth::user()->admin ) {
+                $quotes = Quote::where($request->type, true)->orderBy('created_at', 'DESC')->get();
+            } else {
+                $quotes = Quote::where($request->type, true)->where('user_id', Auth::id())->orderBy('created_at', 'DESC')->get();
+            }
         } else {
-            $quotes = Quote::where('user_id', Auth::id())->get();
+            if ( Auth::user()->admin ) {
+                $quotes = Quote::orderBy('created_at', 'DESC')->get();
+            } else {
+                $quotes = Quote::where('user_id', Auth::id())->orderBy('created_at', 'DESC')->get();
+            }
         }
 
         return response()->json([
