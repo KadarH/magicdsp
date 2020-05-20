@@ -47,7 +47,7 @@
             </form>
             
             <ul class="actions">
-                <li v-if="currentUser.admin"><button class="btn default">Demander plus d'informations</button></li>
+                <li v-if="currentUser.admin"><n-link class="btn default" :to="'/quotes/'+this.$route.params.id+'/communications'">Demander plus d'informations</n-link></li>
                 <li v-if="currentUser.admin"><button class="btn success" @click.prevent='toggle("accept")'>Accepter</button></li>
                 <li v-if="currentUser.admin"><button class="btn danger" @click.prevent='toggle("refuse")'>Refuser</button></li>
                 <li><n-link id="backToList" class="btn primary" :to="'/quotes/list/'+back">Retour à la liste</n-link></li>
@@ -84,6 +84,9 @@
             }
         },
         mounted() {
+            this.pageTitle = 'Demande ' + this.$route.params.id
+            this.$store.commit('pageTitle/set', this.pageTitle)
+
             this.$axios.get('api/quotes/'+this.$route.params.id)
             .then(response => {
                 let data = response.data
@@ -100,9 +103,6 @@
                     if ( this.quote.waiting ) {
                         this.back = 'waiting'
                     }
-
-                    this.pageTitle = 'Demande ' + this.quote.id
-                    this.$store.commit('pageTitle/set', this.pageTitle)
                 }
 
                 this.isLoading = false

@@ -28,6 +28,10 @@ Route::middleware('auth:sanctum')->group(function() {
     Route::patch('quotes/{quote}', 'QuotesController@update');
     Route::delete('quotes/{quote}', 'QuotesController@destroy');
 
+    // Communications
+    Route::get('communications/{quote}', 'CommunicationsController@show');
+    Route::post('communications/{quote}', 'CommunicationsController@store');
+
     // Tasks
     Route::get('tasks', 'TasksController@index');
     Route::get('tasks/{task}', 'TasksController@show');
