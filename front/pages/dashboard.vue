@@ -178,7 +178,7 @@
                 let indexToRemove = index
 
                 this.$axios.post('api/tasks/delete/picture', {
-                    file: this.formNewQuote.tasks[0].picture,
+                    file: this.formNewQuote.tasks[index].picture,
                 })
                 .then(response => {
                     let data = response.data

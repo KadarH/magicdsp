@@ -70,7 +70,6 @@ class QuotesController extends Controller
         $quote = Quote::create($data);
 
         if ( !empty($request->tasks) ) {
-
             foreach ( $request->tasks as $task ) {
                 $newTask = new Task();
                 $newTask->description = $task['description'];
@@ -78,7 +77,6 @@ class QuotesController extends Controller
                 $newTask->quote_id = $quote->id;
                 $newTask->save();
             }
-
         }
 
         $quote = Quote::where('id', $quote->id)->first();
@@ -90,12 +88,31 @@ class QuotesController extends Controller
         ],200);
     }
 
-    public function update(Quote $quote)
+    public function update(Request $request, Quote $quote)
     {
         $data = $this->validateRequest();
-        $data['can_edit'] = false;
+        // $data['can_edit'] = false;
 
         $quote->update($data);
+
+        if ( !empty($request->tasks) ) {
+
+            foreach ( $request->tasks as $task ) {
+                if ( empty($task['id']) ) {
+                    $newTask = new Task();
+                    $newTask->description = $task['description'];
+                    $newTask->picture = $task['picture'];
+                    $newTask->quote_id = $quote->id;
+                    $newTask->save();
+                } else {
+                    $editTask = Task::where('id', $task['id'])->first();
+                    $editTask->description = $task['description'];
+                    $editTask->save();
+                }
+            }
+
+        }
+
         $quote = Quote::where('id', $quote->id)->first();
 
         return response()->json([

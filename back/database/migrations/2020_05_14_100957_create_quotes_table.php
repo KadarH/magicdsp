@@ -20,7 +20,6 @@ class CreateQuotesTable extends Migration
             $table->text('model')->nullable();
             $table->text('doors')->nullable();
             $table->foreignId('user_id')->references('id')->on('users');
-            $table->boolean('can_edit')->default(false);
             $table->boolean('waiting')->default(true);
             $table->boolean('accepted')->default(false);
             $table->boolean('refused')->default(false);

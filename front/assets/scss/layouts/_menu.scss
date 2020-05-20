@@ -69,6 +69,7 @@
                     text-decoration: none;
                     color: #fff;
                     padding: 0 20px;
+                    font-weight: 300;
 
                     &.nuxt-link-active {
                         &:before {
@@ -91,6 +92,7 @@
                     li {
                         a {
                             padding: 0 20px 0 30px;
+                            font-size: .9em;
                         }
                     }
                 }

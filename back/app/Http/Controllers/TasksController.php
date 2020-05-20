@@ -67,6 +67,7 @@ class TasksController extends Controller
 
     public function destroy(Task $task)
     {
+        Storage::disk('public')->delete('tasks/'.$task->picture);
         $task->delete();
   
         return response()->json([
