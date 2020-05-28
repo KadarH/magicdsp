@@ -1,65 +1,38 @@
 <template>
     
-    <div id="pages-quotes-id" class="container-page" :class='{ loading: isLoading }'>
+    <div id="pages-quotes-index" class="container-page" :class='{ loading: isLoading }'>
         <Loading />
 
-        <span v-if="currentUser.admin && quote.can_edit" class="can-edit">Vous avez demander à l'utilisateur d'effectuer des modifications !</span>
+        <!-- <span v-if="currentUser.admin && quote.can_edit" class="can-edit">Vous avez demander à l'utilisateur d'effectuer des modifications !</span> -->
 
-        <div id="getQuote">
-            <form @submit.prevent="newQuote" enctype="multipart/form-data">
-                <div class="input">
-                    <label>Marque du véhicule</label>
-                    <input type="text" v-model="quote.brand" disabled>
-                </div>
-
-                <div class="input">
-                    <label>Modèle du véhicule</label>
-                    <input type="text" v-model="quote.model" disabled>
-                </div>
-
-                <div class="input">
-                    <label>Nombre de portes</label>
-                    <input type="text" v-model="quote.doors" disabled>
-                </div>
-
-                <div id="tasks">
-
-                    <div class="task" v-for="(task, index) in quote.tasks">
-                        <header>
-                            <h2 class="title">Coup #{{ index + 1 }}</h2>
-                        </header>
-                        
-                        <div class="container">
-                            <div class="input-file">
-                                <div class="preview">
-                                    <img :src="task.picture" alt="Photo du coup">
-                                </div>
-                            </div>
-
-                            <div class="input">
-                                <label>Ajouter un commentaire</label>
-                                <textarea v-model="task.description" disabled></textarea>
-                            </div>
-
-                        </div>
-                    </div>
-
-                </div>
-
-            </form>
+        <div id="pages-quotes-success" class="container-page">
+            <div v-if="status == 'create'">
+                <h1>Votre demande a bien été envoyée !</h1>
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui laudantium enim adipisci esse delectus porro neque cumque consequatur fugit, perferendis atque? Neque voluptatibus nostrum, harum odio fuga incidunt aut modi.</p>
+            </div>
             
-            <ul class="actions">
-                <li v-if="currentUser.admin && communications.length == 0"><n-link class="btn default" :to="'/quotes/'+this.$route.params.id+'/communications'">Demander plus d'informations</n-link></li>
-                <li v-if="communications.length > 0"><n-link class="btn default" :to="'/quotes/'+this.$route.params.id+'/communications'">Accéder aux commentaires</n-link></li>
-                <li v-if="!currentUser.admin && quote.can_edit"><n-link class="btn default" :to="'/quotes/'+this.$route.params.id+'/edit'">Modifier</n-link></li>
-                <li v-if="currentUser.admin && !quote.can_edit"><button class="btn default" @click.prevent='toggle("edit")'>Autoriser la modification</button></li>
-                <li v-if="currentUser.admin && !quote.can_edit"><button class="btn success" @click.prevent='toggle("accept")'>Accepter</button></li>
-                <li v-if="currentUser.admin && !quote.can_edit"><button class="btn danger" @click.prevent='toggle("refuse")'>Refuser</button></li>
-                <li><n-link id="backToList" class="btn primary" :to="'/quotes/list/'+back">Retour à la liste</n-link></li>
-            </ul>
-            
+            <div v-if="status == 'edit'">
+                <h1>Vos modifications ont bien été enregistrées !</h1>
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui laudantium enim adipisci esse delectus porro neque cumque consequatur fugit, perferendis atque? Neque voluptatibus nostrum, harum odio fuga incidunt aut modi.</p>
+            </div>
+
+            <div v-if="status == 'meeting'">
+                <h1>Votre demande de rendez-vous a été prise en compte !</h1>
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui laudantium enim adipisci esse delectus porro neque cumque consequatur fugit, perferendis atque? Neque voluptatibus nostrum, harum odio fuga incidunt aut modi.</p>
+            </div>
         </div>
 
+        <ul class="actions">
+            <li v-if="currentUser.admin && communications.length == 0"><n-link class="btn default" :to="'/quotes/'+this.$route.params.id+'/communications'">Demander plus d'informations</n-link></li>
+            <li v-if="communications.length > 0"><n-link class="btn default" :to="'/quotes/'+this.$route.params.id+'/communications'">Accéder aux commentaires</n-link></li>
+            <li v-if="!currentUser.admin && quote.can_edit"><n-link class="btn default" :to="'/quotes/'+this.$route.params.id+'/edit'">Modifier</n-link></li>
+            <li v-if="currentUser.admin && !quote.can_edit"><button class="btn default" @click.prevent='toggle("edit")'>Autoriser la modification</button></li>
+            <li v-if="currentUser.admin && !quote.can_edit"><button class="btn success" @click.prevent='toggle("accept")'>Accepter</button></li>
+            <li v-if="currentUser.admin && !quote.can_edit"><button class="btn danger" @click.prevent='toggle("refuse")'>Refuser</button></li>
+            <li><n-link id="backToList" class="btn primary" :to="'/quotes/'+this.$route.params.id+'/show'">Voir la demande</n-link></li>
+            <li v-if="quote.accepted"><n-link id="backToList" class="btn primary" :to="'/quotes/'+this.$route.params.id+'/meetings'">Fixer un rendez-vous</n-link></li>
+            <li><n-link id="backToList" class="btn primary" :to="'/quotes/list/'+back">Retour à la liste</n-link></li>
+        </ul>
     </div>
 
 </template>
@@ -78,6 +51,7 @@
             return {
                 pageTitle: '',
                 isLoading: true,
+                status: this.$route.query.status,
                 quote: {
                     brand: '',
                     model: '',

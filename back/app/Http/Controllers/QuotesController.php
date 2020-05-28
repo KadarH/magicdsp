@@ -3,11 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Response;
 use App\Quote;
 use App\Task;
+use App\Garage;
 use Auth;
+use Spatie\GoogleCalendar\Event;
+use Carbon\Carbon;
 
 class QuotesController extends Controller
 {
@@ -120,6 +121,84 @@ class QuotesController extends Controller
             'message' => '',
             'data' => ['quote' => $quote]
         ], 200); 
+    }
+
+    public function meetings(Request $request, Quote $quote) {
+        $quote->meeting_date = Carbon::parse($request->date . ' ' . $request->hour);
+        $quote->garage_id = $request->garage_id;
+        $quote->save();
+
+        // Get total duration of tasks
+        $totalDuration = 0;
+        if ( !empty($quote->tasks) ) {
+            foreach( $quote->tasks as $task ) {
+                $totalDuration = $totalDuration + $task->duration;
+            }
+        }
+
+        $garage = Garage::where('id', $request->garage_id)->first();
+        $garage->google_calendar = unserialize($garage->google_calendar);
+
+        // Get all events from google calendar
+        $calendars = [];
+        foreach ( $garage->google_calendar as $calendar ) {
+            $calendars[$calendar['id']] = Event::get(Carbon::createFromDate($request->date.' 00:00:00'), Carbon::createFromDate($request->date.' 23:59:59'), [], $calendar['id']);
+        }
+
+        // Check if event already exist with this hour
+        $googleCalendarIdToCreateEvent = '';
+        foreach ( $calendars as $key => $calendar ) {
+
+            if ( empty($googleCalendarIdToCreateEvent) ) {
+
+                if ( $calendar->isEmpty() ) {
+                    $googleCalendarIdToCreateEvent = $key;
+                } else {
+                    $tmp = 0;
+                    foreach ( $calendar as $event ) {
+                        $startHour = Carbon::createFromDate($event->start->dateTime)->format('Y-m-d H:i');
+                        $endHour = Carbon::createFromDate($event->end->dateTime)->format('Y-m-d H:i');
+                        $requestFrom = Carbon::createFromDate($request->date . ' ' . $request->hour)->format('Y-m-d H:i');
+                        $requestTo = Carbon::createFromDate($request->date . ' ' . $request->hour)->addMinute($totalDuration)->format('Y-m-d H:i');
+
+                        if ( $requestFrom < $startHour && $requestTo > $startHour ) {
+                            $tmp++;
+                        }
+                        if ( $requestFrom < $endHour && $requestTo > $endHour ) {
+                            $tmp++;
+                        }
+                        if ( $requestFrom >= $startHour && $requestTo <= $endHour ) {
+                            $tmp++;
+                        }
+                    }
+                    if ( empty($tmp) ) {
+                        $googleCalendarIdToCreateEvent = $key;
+                    }
+                }
+
+            }
+
+        }
+
+        if ( !empty($googleCalendarIdToCreateEvent) ) {
+            Event::create([
+                'name' => 'RDV demande '.$quote->id,
+                'startDateTime' => Carbon::parse($request->date . ' ' . $request->hour),
+                'endDateTime' => Carbon::parse($request->date . ' ' . $request->hour)->addMinute($totalDuration),
+            ], $googleCalendarIdToCreateEvent);
+    
+            return response()->json([
+                'success' => true,
+                'message' => '',
+                'data' => ''
+            ], 200); 
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => '',
+                'data' => ''
+            ], 400); 
+        }
     }
 
     public function destroy(Quote $quote)

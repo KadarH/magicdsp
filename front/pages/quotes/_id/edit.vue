@@ -244,7 +244,7 @@
                     let data = response.data
 
                     if ( data.success ) {
-                        this.$router.push('/quotes/'+this.$route.params.id+'/result?status=edit')
+                        this.$router.push('/quotes/'+this.$route.params.id+'?status=edit')
                     }
                 })
                 .catch(error => {

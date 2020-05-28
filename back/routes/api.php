@@ -26,11 +26,16 @@ Route::middleware('auth:sanctum')->group(function() {
     Route::get('quotes/{quote}', 'QuotesController@show');
     Route::post('quotes', 'QuotesController@store');
     Route::patch('quotes/{quote}', 'QuotesController@update');
+    Route::patch('quotes/{quote}/meetings', 'QuotesController@meetings');
     Route::delete('quotes/{quote}', 'QuotesController@destroy');
 
     // Communications
     Route::get('communications/{quote}', 'CommunicationsController@show');
     Route::post('communications/{quote}', 'CommunicationsController@store');
+
+    // Garages
+    Route::get('garages', 'GaragesController@index');
+    Route::get('garages/{garage}/availabilities', 'GaragesController@availabilities');
 
     // Tasks
     Route::get('tasks', 'TasksController@index');
