@@ -28,6 +28,7 @@ class AuthController extends Controller
             }
         
             $token = $user->createToken($user->email)->plainTextToken;
+            $user['status'] = $user->status;
 
             return response()->json([
                 'success' => true,

@@ -79,12 +79,26 @@
                     border-bottom: 0;
                 }
                 .content {
+                    display: flex;
+
                     .hour {
                         display: inline-block;
                         font-size: .7em;
                         padding: 12px 20px;
                         border-right: 1px solid rgba(#000, .1);
                         transition: all .2s;
+                        color: #607D8B;
+                    }
+                    .free, .chosen {
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        color: #607D8B;
+                        padding: 0 0 0 20px;
+                        font-size: .9em;
+                    }
+                    .chosen {
+                        display: none;
                     }
                     &.closed {
                         opacity: .2;
@@ -97,8 +111,14 @@
                     &.selected {
                         background: #ff9800;
 
-                        .hour {
+                        .hour, .chosen {
                             color: #fff;
+                        }
+                        .free {
+                            display: none;
+                        }
+                        .chosen {
+                            display: flex;
                         }
                     }
                 }

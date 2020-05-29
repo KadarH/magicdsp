@@ -25,7 +25,7 @@
         </div>
 
         <div id="mainPage">
-            <div id="mainTopbar">
+            <div id="mainTopbar" :style="topBarBackground">
                 <h1 class="title">{{ this.$store.state.pageTitle.pageTitle }}</h1>
                 <button id="btnShowMenu" @click="showMainMenu"><span></span></button>
             </div>
@@ -50,7 +50,10 @@
                 quotesWaiting: [],
                 quotesAccepted: [],
                 quotesRefused: [],
-                currentUser: JSON.parse(localStorage.getItem('user'))
+                currentUser: JSON.parse(localStorage.getItem('user')),
+                topBarBackground: {
+                    backgroundColor: (JSON.parse(localStorage.getItem('user')).status.topbar_background ? JSON.parse(localStorage.getItem('user')).status.topbar_background : '')
+                }
             }
         },
         head() {
