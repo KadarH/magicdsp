@@ -32,6 +32,26 @@
                 padding: 0 0 30px 0;
                 border-bottom: 1px solid #eaeaea;
             }
+            #registerForm {
+                .status {
+                    margin: 0 0 10px 0;
+
+                    .title {
+                        display: block;
+                        margin: 0 0 10px 0;
+                        font-weight: 500;
+                        font-size: .8em;
+                        color: #607d8b;
+                    }
+                    .radio {
+                        margin: 0 0 10px 0;
+
+                        &:last-child {
+                            margin: 0;
+                        }
+                    }
+                }
+            }
         }
     }
 }

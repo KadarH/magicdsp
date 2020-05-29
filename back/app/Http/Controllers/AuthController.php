@@ -59,6 +59,7 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $request->validate([
+            'status_id' => 'required',
             'firstname' => 'required',
             'lastname' => 'required',
             'email' => 'required|email|unique:users',
@@ -66,6 +67,7 @@ class AuthController extends Controller
         ]);
 
         $user = new User();
+        $user->status_id = $request->status_id;
         $user->firstname = $request->firstname;
         $user->lastname = $request->lastname;
         $user->email = $request->email;

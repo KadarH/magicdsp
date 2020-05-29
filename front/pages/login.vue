@@ -27,6 +27,29 @@
                 <h2>Inscription</h2>
 
                 <form id="registerForm" @submit.prevent="register()">
+
+                    <div class="status">
+                        <span class="title">Vous êtes un :</span>
+
+                        <label class="radio">
+                            <input type="radio" value='1' v-model='formRegister.status_id'>
+                            <span class="fake"></span>
+                            <span class="name">particulier</span>
+                        </label>
+
+                        <label class="radio">
+                            <input type="radio" value='2' v-model='formRegister.status_id'>
+                            <span class="fake"></span>
+                            <span class="name">professionnel de l'automobile</span>
+                        </label>
+
+                        <label class="radio">
+                            <input type="radio" value='3' v-model='formRegister.status_id'>
+                            <span class="fake"></span>
+                            <span class="name">cabinet d'expertise</span>
+                        </label>
+                    </div>
+                    
                     <div class="input">
                         <label>Nom</label>
                         <input type="text" v-model="formRegister.lastname">
@@ -67,6 +90,7 @@
                     password: ''
                 },
                 formRegister: {
+                    status_id: '',
                     lastname: '',
                     firstname: '',
                     email: '',
@@ -102,6 +126,7 @@
             },
             async register() {
                 await this.$axios.post('api/register', {
+                    status_id: this.formRegister.status_id,
                     firstname: this.formRegister.firstname,
                     lastname: this.formRegister.lastname,
                     email: this.formRegister.email,
