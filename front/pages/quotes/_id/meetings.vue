@@ -33,7 +33,10 @@
 
         <div id="container-availabilities" v-if="dateSelected">
             <ul class="availabilities">
-                <li class="availability" @click="selectHour($event, index)" v-for="(availability, index) in availabilities" :class="availability"><span class="hour">{{ index }}</span></li>
+                <li class="availability" v-for="(availability, index) in availabilities">
+                    <div class="content" :class="availability" v-if="availability == 'opened'" @click="selectHour($event, index)"><span class="hour bb">{{ index }}</span></div>
+                    <div class="content" :class="availability" v-else><span class="hour zz">{{ index }}</span></div>
+                </li>
             </ul>
 
             <ul class="actions">
@@ -127,7 +130,6 @@
                 })
 
                 this.isLoading = true
-                e.target.classList.add('selected')
                 this.availabilities = ''
                 this.dateSelected = ''
 
@@ -143,6 +145,7 @@
                     if ( data.success ) {
                         this.availabilities = data.data.garage.availabilities
                         this.dateSelected = date
+                        e.target.classList.add('selected')
                     }
 
                     this.isLoading = false
@@ -152,7 +155,7 @@
                 })
             },
             selectHour(e, hour) {
-                let hours = document.querySelectorAll('.availability')
+                let hours = document.querySelectorAll('.availability .content')
                 hours.forEach(hour => {
                     hour.classList.remove('selected')
                 })

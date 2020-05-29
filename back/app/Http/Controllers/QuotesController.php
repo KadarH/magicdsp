@@ -17,7 +17,9 @@ class QuotesController extends Controller
         return request()->validate([
             'brand' => 'nullable',
             'model' => 'nullable',
-            'doors' => 'nullable'
+            'doors' => 'nullable',
+            'year' => 'nullable',
+            'plate_number' => 'nullable'
         ]);
     }
 

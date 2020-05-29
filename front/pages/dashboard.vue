@@ -16,6 +16,16 @@
                 </div>
 
                 <div class="input">
+                    <label>Année du véhicule</label>
+                    <input type="text" v-model="formNewQuote.year">
+                </div>
+
+                <div class="input">
+                    <label>Immatriculation</label>
+                    <input type="text" v-model="formNewQuote.plate_number">
+                </div>
+
+                <div class="input">
                     <label>Nombre de portes</label>
                     <select @change="selectDoors">
                         <option value="null" selected>Sélectionner une option</option>
@@ -86,6 +96,8 @@
                     brand: '',
                     model: '',
                     doors: '',
+                    year: '',
+                    plate_number: '',
                     tasks: []
                 },
                 isLoading: false
@@ -93,6 +105,13 @@
         },
         mounted() {
             this.$store.commit('pageTitle/set', this.pageTitle)
+
+            this.formNewQuote.tasks.push({
+                description: '',
+                picture: '',
+                url: ''
+            })
+
             this.isLoading = false
         },
         head() {
@@ -145,6 +164,8 @@
                     brand: this.formNewQuote.brand,
                     model: this.formNewQuote.model,
                     doors: this.formNewQuote.doors,
+                    year: this.formNewQuote.year,
+                    plate_number: this.formNewQuote.plate_number,
                     tasks: tasks
                 })
                 .then(response => {

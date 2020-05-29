@@ -78,26 +78,28 @@
                 &:last-child {
                     border-bottom: 0;
                 }
-                .hour {
-                    display: inline-block;
-                    font-size: .7em;
-                    padding: 12px 20px;
-                    border-right: 1px solid rgba(#000, .1);
-                    transition: all .2s;
-                }
-                &.closed {
-                    opacity: .2;
-                    background: #f6f8f9;
-                }
-                &.reserved, &.too_short {
-                    opacity: .2;
-                    background: #36404b;
-                }
-                &.selected {
-                    background: #ff9800;
-
+                .content {
                     .hour {
-                        color: #fff;
+                        display: inline-block;
+                        font-size: .7em;
+                        padding: 12px 20px;
+                        border-right: 1px solid rgba(#000, .1);
+                        transition: all .2s;
+                    }
+                    &.closed {
+                        opacity: .2;
+                        background: #f6f8f9;
+                    }
+                    &.reserved, &.too_short {
+                        opacity: .2;
+                        background: #36404b;
+                    }
+                    &.selected {
+                        background: #ff9800;
+
+                        .hour {
+                            color: #fff;
+                        }
                     }
                 }
             }

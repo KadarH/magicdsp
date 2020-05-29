@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddGarageIdQuotesTable extends Migration
+class AddFieldsQuotesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,9 @@ class AddGarageIdQuotesTable extends Migration
      */
     public function up()
     {
-        Schema::disableForeignKeyConstraints();
         Schema::table('quotes', function (Blueprint $table) {
-            $table->foreignId('garage_id')->references('id')->on('garages')->nullable();
+            $table->text('year')->nullable()->after('doors');
+            $table->text('plate_number')->nullable()->after('doors');
         });
     }
 
@@ -27,7 +27,8 @@ class AddGarageIdQuotesTable extends Migration
     public function down()
     {
         Schema::table('quotes', function (Blueprint $table) {
-            $table->dropColumn(['garage_id']);
+            $table->dropColumn(['year']);
+            $table->dropColumn(['plate_number']);
         });
     }
 }
