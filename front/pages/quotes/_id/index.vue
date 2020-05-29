@@ -19,18 +19,18 @@
             </div>
 
             <div v-if="status == 'meeting'">
-                <h1>Votre demande de rendez-vous pour le {{ moment(quote.meeting_date).format('dddd d MMMM YYYY à HH:mm') }} a été acceptée !</h1>
+                <h1>Votre demande de rendez-vous pour le {{ moment(quote.meeting_date).format('dddd DD MMMM YYYY à HH:mm') }} a été acceptée !</h1>
                 <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui laudantium enim adipisci esse delectus porro neque cumque consequatur fugit, perferendis atque? Neque voluptatibus nostrum, harum odio fuga incidunt aut modi.</p>
             </div>
         </div>
 
         <ul class="actions">
-            <li v-if="currentUser.admin && communications.length == 0"><n-link class="btn default" :to="'/quotes/'+this.$route.params.id+'/communications'">Demander plus d'informations</n-link></li>
-            <li v-if="communications.length > 0"><n-link class="btn default" :to="'/quotes/'+this.$route.params.id+'/communications'">Accéder aux commentaires</n-link></li>
-            <li v-if="!currentUser.admin && communications.length > 0"><n-link class="btn default" :to="'/quotes/'+this.$route.params.id+'/edit'">Modifier</n-link></li>
-            <li v-if="currentUser.admin"><n-link class="btn success" :to="'/quotes/'+this.$route.params.id+'/edit'">Faire une estimation</n-link></li>
-            <li v-if="quote.price && quote.duration"><button class="btn success" @click.prevent='toggle("accept")'>Accepter l'estimation</button></li>
-            <!-- <li v-if="currentUser.admin"><button class="btn danger" @click.prevent='toggle("refuse")'>Refuser la demande</button></li> -->
+            <li v-if="!quote.accepted && currentUser.admin && communications.length == 0"><n-link class="btn default" :to="'/quotes/'+this.$route.params.id+'/communications'">Demander plus d'informations</n-link></li>
+            <li v-if="!quote.accepted && communications.length > 0"><n-link class="btn default" :to="'/quotes/'+this.$route.params.id+'/communications'">Accéder aux commentaires</n-link></li>
+            <li v-if="!quote.accepted && !currentUser.admin && communications.length > 0"><n-link class="btn default" :to="'/quotes/'+this.$route.params.id+'/edit'">Modifier</n-link></li>
+            <li v-if="!quote.accepted && currentUser.admin"><n-link class="btn success" :to="'/quotes/'+this.$route.params.id+'/edit'">Faire une estimation</n-link></li>
+            <li v-if="!quote.accepted && !currentUser.admin && quote.price && quote.duration"><button class="btn success" @click.prevent='toggle("accept")'>Accepter l'estimation</button></li>
+            <li v-if="!quote.accepted && currentUser.admin"><button class="btn danger" @click.prevent='toggle("refuse")'>Refuser la demande</button></li>
             <li><n-link id="backToList" class="btn primary" :to="'/quotes/'+this.$route.params.id+'/show'">Voir la demande</n-link></li>
             <li v-if="quote.accepted && !quote.meeting_date"><n-link id="backToList" class="btn primary" :to="'/quotes/'+this.$route.params.id+'/meetings'">Fixer un rendez-vous</n-link></li>
             <li><n-link id="backToList" class="btn primary" :to="'/quotes/list/'+back">Retour à la liste</n-link></li>
@@ -127,7 +127,7 @@
                 return moment(date)
             },
             toggle(status) {
-                this.$axios.patch('api/admin/quotes/'+this.$route.params.id+'/'+status)
+                this.$axios.patch('api/quotes/'+this.$route.params.id+'/'+status)
                 .then(response => {
                     let data = response.data
 

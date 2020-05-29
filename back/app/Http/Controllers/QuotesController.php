@@ -147,6 +147,21 @@ class QuotesController extends Controller
         ], 200); 
     }
 
+    public function accept(Quote $quote) 
+    {
+        $quote->can_edit = false;
+        $quote->waiting = false;
+        $quote->accepted = true;
+        $quote->refused = false;
+        $quote->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => '',
+            'data' => ''
+        ],200);
+    }
+
     public function meetings(Request $request, Quote $quote) {
         $quote->meeting_date = Carbon::parse($request->date . ' ' . $request->hour);
         $quote->garage_id = $request->garage_id;
