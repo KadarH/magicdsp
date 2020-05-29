@@ -22,6 +22,9 @@ class CommunicationsController extends Controller
 
     public function store(Request $request, Quote $quote)
     {
+        $quote->can_edit = true;
+        $quote->save();
+
         $communication = new Communication();
         $communication->body = $request->body;
         $communication->user_id = Auth::id();
