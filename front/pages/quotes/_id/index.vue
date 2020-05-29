@@ -3,11 +3,9 @@
     <div id="pages-quotes-index" class="container-page" :class='{ loading: isLoading }'>
         <Loading />
 
-        <!-- <span v-if="currentUser.admin && quote.can_edit" class="can-edit">Vous avez demander à l'utilisateur d'effectuer des modifications !</span> -->
+        <span v-if="quote.price && quote.duration && quote.waiting">Une estimation de {{ quote.price }}€ pour une durée de {{ quote.duration }} a été établie !</span>
 
-        <span v-if="quote.price && quote.duration">Une estimation de {{ quote.price }}€ pour une durée de {{ quote.duration }} a été établie !</span>
-
-        <div id="pages-quotes-success" class="container-page">
+        <div v-if="status" id="pages-quotes-status">
             <div v-if="status == 'create'">
                 <h1>Votre demande a bien été envoyée !</h1>
                 <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui laudantium enim adipisci esse delectus porro neque cumque consequatur fugit, perferendis atque? Neque voluptatibus nostrum, harum odio fuga incidunt aut modi.</p>
@@ -21,6 +19,15 @@
             <div v-if="status == 'meeting'">
                 <h1>Votre demande de rendez-vous pour le {{ moment(quote.meeting_date).format('dddd DD MMMM YYYY à HH:mm') }} a été acceptée !</h1>
                 <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui laudantium enim adipisci esse delectus porro neque cumque consequatur fugit, perferendis atque? Neque voluptatibus nostrum, harum odio fuga incidunt aut modi.</p>
+            </div>
+        </div>
+
+        <div v-else id="pages-quotes-status">
+            <div v-if="quote.accepted" class="informations">
+                <h1>Informations</h1>
+                <div><span class="title">Rendez-vous :</span> {{ moment(quote.meeting_date).format('DD/MM/YYYY à HH:mm') }}</div>
+                <div><span class="title">Montant :</span> {{ quote.price }}€</div>
+                <div><span class="title">Durée :</span> {{ quote.duration }}</div>
             </div>
         </div>
 
