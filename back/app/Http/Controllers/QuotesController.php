@@ -51,12 +51,30 @@ class QuotesController extends Controller
         $tasks = Task::where('quote_id', $quote->id)->get();
 
         if ( !empty($tasks) ) {
+            $totalPrice = 0;
+            $totalDuration = 0;
+
             foreach ( $tasks as $key => $task ) {
+                if ( !empty($task['price']) ) {
+                    $totalPrice = $totalPrice + $task['price'];
+                }
+
+                if ( !empty($task['duration']) ) {
+                    $totalDuration = $totalDuration + $task['duration'];
+                }
+
+                if ( !Auth::user()->admin ) {
+                    unset($tasks[$key]['price']);
+                    unset($tasks[$key]['duration']);
+                }
+
                 $tasks[$key]['picture'] = asset('storage/tasks/' . $task->picture);
             }
         }
 
         $quote['tasks'] = $tasks;
+        $quote['price'] = $totalPrice;
+        $quote['duration'] = $totalDuration;
 
         return response()->json([
             'success' => true,
@@ -94,7 +112,7 @@ class QuotesController extends Controller
     public function update(Request $request, Quote $quote)
     {
         $data = $this->validateRequest();
-        $data['can_edit'] = false;
+        // $data['can_edit'] = false;
 
         $quote->update($data);
 
@@ -106,10 +124,14 @@ class QuotesController extends Controller
                     $newTask->description = $task['description'];
                     $newTask->picture = $task['picture'];
                     $newTask->quote_id = $quote->id;
+                    $newTask->price = $quote->price;
+                    $newTask->duration = $quote->duration;
                     $newTask->save();
                 } else {
                     $editTask = Task::where('id', $task['id'])->first();
                     $editTask->description = $task['description'];
+                    $editTask->price = $task['price'];
+                    $editTask->duration = $task['duration'];
                     $editTask->save();
                 }
             }

@@ -13,7 +13,9 @@ class TasksController extends Controller
         return request()->validate([
             'description' => 'nullable',
             'picture' => 'nullable',
-            'quote_id' => 'required'
+            'quote_id' => 'required',
+            'duration' => 'nullable',
+            'price' => 'nullable'
         ]);
     }
 

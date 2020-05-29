@@ -50,6 +50,13 @@
                                 <textarea v-model="task.description"></textarea>
                             </div>
 
+                            <div v-if="currentUser.admin">
+                                <label>Prix</label>
+                                <input type="text" v-model="task.price">
+                                <label>Temps</label>
+                                <input type="text" v-model="task.duration">
+                            </div>
+
                         </div>
 
                         <div class="deleting">
@@ -64,7 +71,11 @@
 
                 </div>
 
-                <ul class="actions">
+                <ul class="actions" v-if="currentUser.admin">
+                    <li><button class="btn success">Envoyer l'estimation</button></li>
+                    <li><n-link id="backToList" class="btn danger" :to="'/quotes/'+this.$route.params.id">Annuler</n-link></li>
+                </ul>
+                <ul class="actions" v-else>
                     <li><button class="btn success">Valider</button></li>
                     <li><n-link id="backToList" class="btn danger" :to="'/quotes/'+this.$route.params.id">Annuler</n-link></li>
                 </ul>
@@ -119,6 +130,8 @@
                         this.formEditQuote.tasks.push({
                             picture: task.picture,
                             description: task.description,
+                            price: task.price,
+                            duration: task.duration,
                             url: task.picture,
                             id: task.id,
                             deleting: false,
@@ -175,6 +188,8 @@
                 let taskInput = {
                     picture: '',
                     description: '',
+                    duration: '',
+                    price: '',
                     url: '',
                     id: '',
                     deleting: false,
@@ -208,7 +223,9 @@
                                     description: task.description,
                                     picture: task.picture,
                                     id: task.id,
-                                    url: task.url
+                                    url: task.url,
+                                    duration: task.duration,
+                                    price: task.price,
                                 })
                             }
                         })
@@ -230,7 +247,9 @@
                     tasks.push({
                         description: task.description,
                         picture: task.picture,
-                        id: task.id
+                        id: task.id,
+                        duration: task.duration,
+                        price: task.price
                     })
                 })
 

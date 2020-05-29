@@ -5,6 +5,8 @@
 
         <!-- <span v-if="currentUser.admin && quote.can_edit" class="can-edit">Vous avez demander à l'utilisateur d'effectuer des modifications !</span> -->
 
+        <span v-if="quote.price && quote.duration">Une estimation de {{ quote.price }}€ pour une durée de {{ quote.duration }} a été établie !</span>
+
         <div id="pages-quotes-success" class="container-page">
             <div v-if="status == 'create'">
                 <h1>Votre demande a bien été envoyée !</h1>
@@ -26,9 +28,9 @@
             <li v-if="currentUser.admin && communications.length == 0"><n-link class="btn default" :to="'/quotes/'+this.$route.params.id+'/communications'">Demander plus d'informations</n-link></li>
             <li v-if="communications.length > 0"><n-link class="btn default" :to="'/quotes/'+this.$route.params.id+'/communications'">Accéder aux commentaires</n-link></li>
             <li v-if="!currentUser.admin && communications.length > 0"><n-link class="btn default" :to="'/quotes/'+this.$route.params.id+'/edit'">Modifier</n-link></li>
-            <li v-if="currentUser.admin && !quote.can_edit"><button class="btn default" @click.prevent='toggle("edit")'>Autoriser la modification</button></li>
-            <li v-if="currentUser.admin && !quote.can_edit"><button class="btn success" @click.prevent='toggle("accept")'>Accepter</button></li>
-            <li v-if="currentUser.admin && !quote.can_edit"><button class="btn danger" @click.prevent='toggle("refuse")'>Refuser</button></li>
+            <li v-if="currentUser.admin"><n-link class="btn success" :to="'/quotes/'+this.$route.params.id+'/edit'">Faire une estimation</n-link></li>
+            <li v-if="quote.price && quote.duration"><button class="btn success" @click.prevent='toggle("accept")'>Accepter l'estimation</button></li>
+            <!-- <li v-if="currentUser.admin"><button class="btn danger" @click.prevent='toggle("refuse")'>Refuser la demande</button></li> -->
             <li><n-link id="backToList" class="btn primary" :to="'/quotes/'+this.$route.params.id+'/show'">Voir la demande</n-link></li>
             <li v-if="quote.accepted && !quote.meeting_date"><n-link id="backToList" class="btn primary" :to="'/quotes/'+this.$route.params.id+'/meetings'">Fixer un rendez-vous</n-link></li>
             <li><n-link id="backToList" class="btn primary" :to="'/quotes/list/'+back">Retour à la liste</n-link></li>
@@ -75,6 +77,14 @@
 
                 if ( data.success ) {
                     this.quote = data.data.quote
+
+                    if ( this.quote.duration ) {
+                        let totalMinutes = this.quote.duration
+                        let hours = Math.floor(totalMinutes / 60)
+                        let minutes = totalMinutes % 60
+
+                        this.quote.duration = hours + 'h' + minutes
+                    }
 
                     if ( this.quote.waiting ) {
                         this.back = 'waiting'
