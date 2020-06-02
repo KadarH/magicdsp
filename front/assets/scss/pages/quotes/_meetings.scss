@@ -58,6 +58,20 @@
                             color: #fff;
                         }
                     }
+                    .before {
+                        text-decoration: none;
+                        text-align: center;
+                        height: 44px;
+                        width: 100%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-size: .9em;
+                        color: #36404b;
+                        background: none;
+                        border: none;
+                        opacity: .4;
+                    }
                 }
             }
         }

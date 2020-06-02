@@ -35,7 +35,26 @@ Route::get('calendar', function () {
 
 Route::get('opening', function () {
     $tmp = [
-        0 => false,
+        0 => [
+            '09:00' => 'closed',
+            '09:30' => 'closed',
+            '10:00' => 'closed',
+            '10:30' => 'closed',
+            '11:00' => 'closed',
+            '11:30' => 'closed',
+            '12:00' => 'closed',
+            '12:30' => 'closed',
+            '13:00' => 'closed',
+            '13:30' => 'closed',
+            '14:00' => 'closed',
+            '14:30' => 'closed',
+            '15:00' => 'closed',
+            '15:30' => 'closed',
+            '16:00' => 'closed',
+            '16:30' => 'closed',
+            '17:00' => 'closed',
+            '17:30' => 'closed'
+        ],
         1 => [
             '09:00' => 'opened',
             '09:30' => 'opened',

@@ -23,6 +23,9 @@ class GaragesController extends Controller
 
     public function availabilities(Request $request, Garage $garage)
     {
+        $now = Date('Y-m-d H:i');
+        $now24h = Date('Y-m-d H:i', strtotime('+24 hours'));
+
         $garage->google_calendar = unserialize($garage->google_calendar);
         $garage->opening = unserialize($garage->opening);
 
@@ -140,6 +143,16 @@ class GaragesController extends Controller
 
         unset($garage->google_calendar);
         unset($garage->opening);
+
+        foreach ( $finalOpening as $key => $opening ) {
+            $toto = $request->date. ' ' . $key;
+
+            if ( $now24h >= $toto  ) {
+                if ( $opening == 'opened' ) {
+                    $finalOpening[$key] = 'reserved';
+                }
+            }
+        }
 
         $garage->availabilities = $finalOpening;
 

@@ -25,7 +25,10 @@
             <tbody>
                 <tr v-for="i in Math.ceil(dates.length / 7)">
                     <td v-for="date in dates.slice((i - 1) * 7, i * 7)">
-                        <button @click="selectDate($event, date)" v-if='date' class="btn-select-date" :class="{ 'current': moment(date).format('DD') == moment().date() }">{{ moment(date).format('DD') }}</button>
+                        <div v-if="date">
+                            <button v-if="moment(date).isAfter(moment())" @click="selectDate($event, date)" class="btn-select-date" :class="{ 'current': moment(date).format('DD') == moment().date() }">{{ moment(date).format('DD') }}</button>
+                            <span class="before" v-else>{{ moment(date).format('DD') }}</span>
+                        </div>
                     </td>
                 </tr>
             </tbody>
@@ -44,7 +47,7 @@
             </ul>
 
             <ul class="actions">
-                <li><button @click="confirmMeeting" class="btn primary">Valider</button></li>
+                <li v-if="hourSelected"><button @click="confirmMeeting" class="btn primary">Valider</button></li>
             </ul>
         </div>
     </div>
@@ -74,10 +77,14 @@
                 dateHour: '',
                 garages: '',
                 garageSelected: null,
+                hourSelected: '',
                 availabilities: []
             }
         },
         mounted() {
+            console.log(moment('2020-06-01').isBefore('2020-06-02'))
+
+
             this.$store.commit('pageTitle/set', this.pageTitle)
             moment.locale('fr')
 
@@ -126,6 +133,8 @@
             },
             selectGarage(e) {
                 this.garageSelected = e.target.value
+                // let toto = this.garages[e.target.value - 1].opening
+                // console.log(JSON.parse(toto))
             },
             selectDate(e, date) {
                 let buttons = document.querySelectorAll('.btn-select-date')
