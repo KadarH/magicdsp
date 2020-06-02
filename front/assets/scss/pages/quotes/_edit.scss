@@ -1,0 +1,15 @@
+.price-time {
+    .input {
+        display: flex;
+        align-items: center;
+        padding: 10px 10px 0 10px !important;
+
+        &:last-child {
+            padding: 0 10px 0 10px !important;
+        }
+        input {
+            width: 100px;
+            margin: 0 0 0 auto;
+        }
+    }
+}

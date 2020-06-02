@@ -50,11 +50,15 @@
                                 <textarea v-model="task.description"></textarea>
                             </div>
 
-                            <div v-if="currentUser.admin">
-                                <label>Prix</label>
-                                <input type="text" v-model="task.price">
-                                <label>Temps</label>
-                                <input type="text" v-model="task.duration">
+                            <div v-if="currentUser.admin" class="price-time">
+                                <div class="input">
+                                    <label>Prix (€)</label>
+                                    <input type="text" v-model="task.price">
+                                </div>
+                                <div class="input">
+                                    <label>Temps (min.)</label>
+                                    <input type="text" v-model="task.duration">
+                                </div>
                             </div>
 
                         </div>
@@ -122,7 +126,7 @@
                     let tasks = this.formEditQuote.tasks
                     this.formEditQuote.tasks = []
 
-                    if ( !this.formEditQuote.can_edit ) {
+                    if ( !this.formEditQuote.can_edit && !this.currentUser.admin ) {
                         this.$router.push('/quotes/'+this.$route.params.id)
                     }
 
