@@ -41,6 +41,12 @@
                                 <textarea v-model="task.description" disabled></textarea>
                             </div>
 
+                            <div class="input">
+                                <label>Emplacement</label>
+                                <select v-model="task.stroke" disabled>
+                                    <option :value="stroke.id" v-for="stroke in strokes" :key="stroke.id">{{ stroke.name }}</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
 
@@ -78,6 +84,7 @@
                     doors: '',
                     tasks: []
                 },
+                strokes: '',
                 communications: [],
                 currentUser: JSON.parse(localStorage.getItem('user'))
             }
@@ -92,6 +99,9 @@
 
                 if ( data.success ) {
                     this.quote = data.data.quote
+                    this.quote.tasks.map(task => {
+                        task.stroke = task.stroke_id
+                    })
                 }
 
                 this.isLoading = false
@@ -106,6 +116,20 @@
 
                 if ( data.success ) {
                     this.communications = data.data.communications
+                }
+
+                this.isLoading = false
+            })
+            .catch(error => {
+                console.log(error.response)
+            })
+
+            this.$axios.get('api/strokes')
+            .then(response => {
+                let data = response.data
+
+                if ( data.success ) {
+                    this.strokes = data.data.strokes
                 }
 
                 this.isLoading = false

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddGarageIdQuotesTable extends Migration
+class AddStrokeIdTasksTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,8 +14,8 @@ class AddGarageIdQuotesTable extends Migration
     public function up()
     {
         Schema::disableForeignKeyConstraints();
-        Schema::table('quotes', function (Blueprint $table) {
-            $table->foreignId('garage_id')->references('id')->on('garages')->default(null);
+        Schema::table('tasks', function (Blueprint $table) {
+            $table->foreignId('stroke_id')->nullable()->references('id')->on('strokes');
         });
     }
 
@@ -26,8 +26,8 @@ class AddGarageIdQuotesTable extends Migration
      */
     public function down()
     {
-        Schema::table('quotes', function (Blueprint $table) {
-            $table->dropColumn(['garage_id']);
+        Schema::table('tasks', function (Blueprint $table) {
+            $table->dropColumn(['stroke_id']);
         });
     }
 }

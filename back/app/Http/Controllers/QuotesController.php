@@ -95,6 +95,7 @@ class QuotesController extends Controller
                 $newTask = new Task();
                 $newTask->description = $task['description'];
                 $newTask->picture = $task['picture'];
+                $newTask->stroke_id = $task['stroke_id'];
                 $newTask->quote_id = $quote->id;
                 $newTask->save();
             }
@@ -112,7 +113,6 @@ class QuotesController extends Controller
     public function update(Request $request, Quote $quote)
     {
         $data = $this->validateRequest();
-        // $data['can_edit'] = false;
 
         $quote->update($data);
 
@@ -123,15 +123,29 @@ class QuotesController extends Controller
                     $newTask = new Task();
                     $newTask->description = $task['description'];
                     $newTask->picture = $task['picture'];
+                    $newTask->stroke_id = $task['stroke_id'];
                     $newTask->quote_id = $quote->id;
-                    $newTask->price = $quote->price;
-                    $newTask->duration = $quote->duration;
+
+                    if ( !empty($quote->price) ) {
+                        $newTask->price = $quote->price;
+                    }
+                    if ( !empty($quote->duration) ) {
+                        $newTask->duration = $quote->duration;
+                    }
+
                     $newTask->save();
                 } else {
                     $editTask = Task::where('id', $task['id'])->first();
                     $editTask->description = $task['description'];
-                    $editTask->price = $task['price'];
-                    $editTask->duration = $task['duration'];
+
+                    if ( !empty($task['price']) ) {
+                        $editTask->price = $task['price'];
+                    }
+                    if ( !empty($task['duration']) ) {
+                        $editTask->duration = $task['duration'];
+                    }
+                    
+                    $editTask->stroke_id = $task['stroke_id'];
                     $editTask->save();
                 }
             }
@@ -147,7 +161,7 @@ class QuotesController extends Controller
         ], 200); 
     }
 
-    public function accept(Quote $quote) 
+    public function accept(Quote $quote)
     {
         $quote->can_edit = false;
         $quote->waiting = false;

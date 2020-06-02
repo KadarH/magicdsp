@@ -59,6 +59,13 @@
                                 <textarea v-model="task.description"></textarea>
                             </div>
 
+                            <div class="input">
+                                <label>Emplacement</label>
+                                <select v-model="task.stroke">
+                                    <option value="null" selected>Sélectionner un emplacement</option>
+                                    <option v-for="stroke in strokes" :value="stroke.id">{{ stroke.name }}</option>
+                                </select>
+                            </div>
                         </div>
 
                         <div class="deleting">
@@ -100,6 +107,7 @@
                     plate_number: '',
                     tasks: []
                 },
+                strokes: '',
                 isLoading: false
             }
         },
@@ -109,10 +117,23 @@
             this.formNewQuote.tasks.push({
                 description: '',
                 picture: '',
-                url: ''
+                url: '',
+                stroke: null
             })
 
-            this.isLoading = false
+            this.$axios.get('api/strokes')
+            .then(response => {
+                let data = response.data
+
+                if ( data.success ) {
+                    this.strokes = data.data.strokes
+                }
+
+                this.isLoading = false
+            })
+            .catch(error => {
+                console.log(error.response)
+            })
         },
         head() {
             return {
@@ -156,7 +177,8 @@
                 this.formNewQuote.tasks.map(task => {
                     tasks.push({
                         description: task.description,
-                        picture: task.picture
+                        picture: task.picture,
+                        stroke_id: task.stroke
                     })
                 })
 
@@ -174,7 +196,6 @@
                     if ( data.success ) {
                         this.$router.push('/quotes/'+data.data.quote.id+'?status=create')
                     }
-
                 })
                 .catch(error => {
                     console.log(error.response)
@@ -187,6 +208,7 @@
                 let taskInput = {
                     picture: '',
                     description: '',
+                    stroke: null,
                     url: '',
                     deleting: false,
                     adding: false
@@ -211,7 +233,8 @@
                                 tmpTasks.push({
                                     description: task.description,
                                     picture: task.picture,
-                                    url: task.url
+                                    url: task.url,
+                                    stroke: task.stroke
                                 })
                             }
                         })

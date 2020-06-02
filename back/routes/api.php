@@ -38,6 +38,9 @@ Route::middleware('auth:sanctum')->group(function() {
     Route::get('garages', 'GaragesController@index');
     Route::get('garages/{garage}/availabilities', 'GaragesController@availabilities');
 
+    // Strokes
+    Route::get('strokes', 'StrokesController@index');
+
     // Tasks
     Route::get('tasks', 'TasksController@index');
     Route::get('tasks/{task}', 'TasksController@show');

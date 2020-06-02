@@ -50,6 +50,13 @@
                                 <textarea v-model="task.description"></textarea>
                             </div>
 
+                            <div class="input">
+                                <label>Emplacement</label>
+                                <select v-model="task.stroke">
+                                    <option :value="stroke.id" v-for="stroke in strokes" :key="stroke.id">{{ stroke.name }}</option>
+                                </select>
+                            </div>
+
                             <div v-if="currentUser.admin" class="price-time">
                                 <div class="input">
                                     <label>Prix (€)</label>
@@ -110,6 +117,7 @@
                     doors: '',
                     tasks: []
                 },
+                strokes: '',
                 currentUser: JSON.parse(localStorage.getItem('user'))
             }
         },
@@ -138,10 +146,25 @@
                             duration: task.duration,
                             url: task.picture,
                             id: task.id,
+                            stroke: task.stroke_id,
                             deleting: false,
                             adding: false
                         })
                     })
+                }
+
+                this.isLoading = false
+            })
+            .catch(error => {
+                console.log(error.response)
+            })
+
+            this.$axios.get('api/strokes')
+            .then(response => {
+                let data = response.data
+
+                if ( data.success ) {
+                    this.strokes = data.data.strokes
                 }
 
                 this.isLoading = false
@@ -228,6 +251,7 @@
                                     picture: task.picture,
                                     id: task.id,
                                     url: task.url,
+                                    stroke: task.stroke,
                                     duration: task.duration,
                                     price: task.price,
                                 })
@@ -253,6 +277,7 @@
                         picture: task.picture,
                         id: task.id,
                         duration: task.duration,
+                        stroke_id: task.stroke,
                         price: task.price
                     })
                 })
