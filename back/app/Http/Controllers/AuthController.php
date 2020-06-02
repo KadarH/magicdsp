@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\User;
 use Auth;
+use App\Status;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
@@ -28,7 +29,7 @@ class AuthController extends Controller
             }
         
             $token = $user->createToken($user->email)->plainTextToken;
-            $user['status'] = $user->status;
+            $user['status'] = Status::where('id', $user->status_id)->first();
 
             return response()->json([
                 'success' => true,
@@ -87,7 +88,7 @@ class AuthController extends Controller
                 }
             
                 $token = $user->createToken($user->email)->plainTextToken;
-                $user['status'] = $user->status;
+                $user['status'] = Status::where('id', $user->status_id)->first();
 
                 return response()->json([
                     'success' => true,
