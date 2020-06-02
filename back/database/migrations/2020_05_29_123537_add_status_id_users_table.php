@@ -15,7 +15,7 @@ class AddStatusIdUsersTable extends Migration
     {
         Schema::disableForeignKeyConstraints();
         Schema::table('users', function (Blueprint $table) {
-            $table->foreignId('status_id')->references('id')->on('status')->nullable();
+            $table->foreignId('status_id')->references('id')->on('status');
         });
     }
 

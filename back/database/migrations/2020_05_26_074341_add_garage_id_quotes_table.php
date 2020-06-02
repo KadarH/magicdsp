@@ -15,7 +15,7 @@ class AddGarageIdQuotesTable extends Migration
     {
         Schema::disableForeignKeyConstraints();
         Schema::table('quotes', function (Blueprint $table) {
-            $table->foreignId('garage_id')->references('id')->on('garages')->nullable();
+            $table->foreignId('garage_id')-nullable()->references('id')->on('garages');
         });
     }
 

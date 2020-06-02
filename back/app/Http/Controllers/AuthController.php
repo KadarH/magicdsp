@@ -60,19 +60,19 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $request->validate([
-            'status_id' => 'required',
             'firstname' => 'required',
             'lastname' => 'required',
             'email' => 'required|email|unique:users',
-            'password' => 'required'
+            'password' => 'required',
+            'status_id' => 'required'
         ]);
 
         $user = new User();
-        $user->status_id = $request->status_id;
         $user->firstname = $request->firstname;
         $user->lastname = $request->lastname;
         $user->email = $request->email;
         $user->password = Hash::make($request->password);
+        $user->status_id = $request->status_id;
 
         if ( $user->save() ) {
             if ( Auth::attempt(['email' => $request->email, 'password' => $request->password]) ) {
@@ -87,6 +87,7 @@ class AuthController extends Controller
                 }
             
                 $token = $user->createToken($user->email)->plainTextToken;
+                $user['status'] = $user->status;
 
                 return response()->json([
                     'success' => true,
