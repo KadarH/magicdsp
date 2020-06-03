@@ -47,9 +47,9 @@ class GaragesController extends Controller
         }
 
         foreach ( $calendars as $key => $calendar ) {
-            if ( $calendar->isEmpty() ) {
-            } else {
+            if ( !$calendar->isEmpty() ) {
                 foreach ( $calendar as $event ) {
+
                     $start = Carbon::parse($event->start->dateTime);
                     $end = Carbon::parse($event->end->dateTime);
 
@@ -64,10 +64,15 @@ class GaragesController extends Controller
                         if( $openings[$key][Carbon::parse($event->start->dateTime)->format('H:i')] == 'opened' ) {
                             $openings[$key][Carbon::parse($event->start->dateTime)->format('H:i')] = 'reserved';
                         }
-
+                        
+                        $startIncremented = Carbon::parse($event->start->dateTime);
                         while ( $diffInMinutes != 0 ) {
-                            if( $openings[$key][Carbon::parse($event->start->dateTime)->addMinute(30)->format('H:i')] == 'opened' ) {
-                                $openings[$key][Carbon::parse($event->start->dateTime)->addMinute(30)->format('H:i')] = 'reserved';
+                            $startIncremented = Carbon::parse($startIncremented)->addMinute(30)->format('H:i');
+
+                            if ( !empty($openings[$key][$startIncremented]) ) {
+                                if( $openings[$key][$startIncremented] == 'opened' ) {
+                                    $openings[$key][$startIncremented] = 'reserved';
+                                }
                             }
 
                             $diffInMinutes--;
@@ -100,6 +105,10 @@ class GaragesController extends Controller
 
                 if ( $finalOpening[Carbon::parse($request->date . ' ' . $hour)->addMinute($totalDuration)->format('H:i')] != 'opened' ) {
                     $heurequicoince = Carbon::parse($request->date . ' ' . $hour)->addMinute($totalDuration)->format('H:i');
+                    
+                    if ( $finalOpening[$hour] == 'opened' ) {
+                        $finalOpening[$hour] = 'too_short';
+                    }
 
                     while ( $taskHourNumber != 1 ) {
                         if ( $finalOpening[Carbon::parse($heurequicoince)->subMinutes(30)->format('H:i')] == 'closed' ) {
@@ -115,28 +124,7 @@ class GaragesController extends Controller
                     }
                 }
             } else {
-                // $taskHourNumber = $totalDuration / 30;
-                // $lastHour = array_key_last($finalOpening);
-                // $lastStatus = $finalOpening[array_key_last($finalOpening)];
-                // $heurequicoince = Carbon::parse($request->date . ' ' . $lastHour)->format('H:i');
-
-                // dump($lastHour);
-                // dump($lastStatus);
-
-                // while ( $taskHourNumber != 1 ) {
-                //     if ( $finalOpening[Carbon::parse($heurequicoince)->subMinutes(30)->format('H:i')] == 'closed' ) {
-                //         $finalOpening[Carbon::parse($heurequicoince)->subMinutes(30)->format('H:i')] = 'closed';
-                //     } elseif ( $finalOpening[Carbon::parse($heurequicoince)->subMinutes(30)->format('H:i')] == 'reserved' ) {
-                //         $finalOpening[Carbon::parse($heurequicoince)->subMinutes(30)->format('H:i')] = 'reserved';
-                //     } else {
-                //         $finalOpening[Carbon::parse($heurequicoince)->subMinutes(30)->format('H:i')] = 'too_short';
-                //     }
-
-                //     $heurequicoince = Carbon::parse($heurequicoince)->subMinutes(30)->format('H:i');
-                //     $taskHourNumber--;
-                // }
-
-                // $finalOpening[$lastHour] = 'too_short';
+                $finalOpening[$hour] = 'too_short';
             }
 
         }
@@ -145,9 +133,9 @@ class GaragesController extends Controller
         unset($garage->opening);
 
         foreach ( $finalOpening as $key => $opening ) {
-            $toto = $request->date. ' ' . $key;
+            $tmp = $request->date. ' ' . $key;
 
-            if ( $now24h >= $toto  ) {
+            if ( $now24h >= $tmp  ) {
                 if ( $opening == 'opened' ) {
                     $finalOpening[$key] = 'reserved';
                 }

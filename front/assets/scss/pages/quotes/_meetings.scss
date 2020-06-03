@@ -114,11 +114,7 @@
                     .chosen {
                         display: none;
                     }
-                    &.closed {
-                        opacity: .2;
-                        background: #f6f8f9;
-                    }
-                    &.reserved, &.too_short {
+                    &.reserved, &.too_short, &.closed {
                         opacity: .2;
                         background: #36404b;
                     }

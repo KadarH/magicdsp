@@ -238,6 +238,7 @@ class QuotesController extends Controller
                 'name' => 'RDV demande '.$quote->id,
                 'startDateTime' => Carbon::parse($request->date . ' ' . $request->hour),
                 'endDateTime' => Carbon::parse($request->date . ' ' . $request->hour)->addMinute($totalDuration),
+                'description' => '<b>Nom</b> : '.$quote->user->lastname.'<br><b>Prénom</b> : '.$quote->user->firstname.'<br><b>Marque du véhicule</b> : '.$quote->brand.'<br><b>Modèle du véhicule</b> : '.$quote->model.'<br><b>Numéro de plaque</b> : '.$quote->plate_number.''
             ], $googleCalendarIdToCreateEvent);
     
             return response()->json([

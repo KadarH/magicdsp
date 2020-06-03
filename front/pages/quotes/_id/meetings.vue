@@ -10,6 +10,10 @@
             </select>
         </div>
 
+        <select @change="selectMonth" v-model="monthSelected">
+            <option v-for='(month, index) in months' :value="index">{{ month }}</option>
+        </select>
+
         <table id="calendar" v-if="garageSelected">
             <thead>
                 <tr>
@@ -78,13 +82,25 @@
                 garages: '',
                 garageSelected: null,
                 hourSelected: '',
-                availabilities: []
+                availabilities: [],
+                monthSelected: moment().month(),
+                months: {
+                    0: 'Janvier',
+                    1: 'Février',
+                    2: 'Mars',
+                    3: 'Avril',
+                    4: 'Mai',
+                    5: 'Juin',
+                    6: 'Juillet',
+                    7: 'Août',
+                    8: 'Septembre',
+                    9: 'Octobre',
+                    10: 'Novembre',
+                    11: 'Décembre'
+                }
             }
         },
         mounted() {
-            console.log(moment('2020-06-01').isBefore('2020-06-02'))
-
-
             this.$store.commit('pageTitle/set', this.pageTitle)
             moment.locale('fr')
 
@@ -102,25 +118,7 @@
                 console.log(error.response)
             })
 
-            this.year = moment().format('YYYY')
-            this.month = moment().format('MM')
-            let days = moment(this.year+'-'+this.month).daysInMonth()
-            let currentDay = moment().date()
-
-            while ( days != 0 ) {
-                this.dates.push( moment(this.year+'-'+this.month+'-'+days).format('YYYY-MM-DD') )
-                days--;
-            }
-
-            this.dates.sort()
-
-            let firstDay = moment(this.dates[0]).format('d')
-            if ( firstDay != 1 ) {
-                while ( firstDay != 1 ) {
-                    this.dates.unshift(null)
-                    firstDay--;
-                }
-            }
+            this.getMonthDates(this.monthSelected)
         },
         head() {
             return {
@@ -128,13 +126,38 @@
             };
         },
         methods: {
+            getMonthDates(monthNumber) {
+                let days = ''
+                this.dates = []
+
+                this.year = moment().format('YYYY')
+                this.month = monthNumber + 1
+                days = moment(this.year+'-'+this.month).daysInMonth()
+                let currentDay = moment().date()
+
+                while ( days != 0 ) {
+                    this.dates.push( moment(this.year+'-'+this.month+'-'+days).format('YYYY-MM-DD') )
+                    days--;
+                }
+
+                this.dates.sort()
+
+                let firstDay = moment(this.dates[0]).format('d')
+                if ( firstDay != 1 ) {
+                    while ( firstDay != 1 ) {
+                        this.dates.unshift(null)
+                        firstDay--;
+                    }
+                }
+            },
             moment(date) {
                 return moment(date)
             },
             selectGarage(e) {
                 this.garageSelected = e.target.value
-                // let toto = this.garages[e.target.value - 1].opening
-                // console.log(JSON.parse(toto))
+            },
+            selectMonth(e) {
+                this.monthSelected = e.target.value
             },
             selectDate(e, date) {
                 let buttons = document.querySelectorAll('.btn-select-date')
