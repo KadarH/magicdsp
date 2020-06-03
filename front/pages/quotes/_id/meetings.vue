@@ -40,13 +40,13 @@
 
         <div id="container-availabilities" v-if="dateSelected">
             <ul class="availabilities">
-                <li class="availability" v-for="(availability, index) in availabilities">
-                    <div class="content" :class="availability" v-if="availability == 'opened'" @click="selectHour($event, index)">
+                <li class="availability" v-for="(availability, index) in availabilities" v-if="availability.display">
+                    <div class="content" :class="availability.status" v-if="availability.status == 'opened'" @click="selectHour($event, index)">
                         <span class="hour">{{ index }}</span>
                         <span class="free">Disponible</span>
                         <span class="chosen">Sélectionnée</span>
                     </div>
-                    <div class="content" :class="availability" v-else><span class="hour">{{ index }}</span></div>
+                    <div class="content" :class="availability.status" v-else><span class="hour">{{ index }}</span></div>
                 </li>
             </ul>
 

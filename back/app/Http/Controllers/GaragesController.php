@@ -20,12 +20,9 @@ class GaragesController extends Controller
             'data' => ['garages' => $garages]
         ], 200);
     }
-
+    
     public function availabilities(Request $request, Garage $garage)
     {
-        $now = Date('Y-m-d H:i');
-        $now24h = Date('Y-m-d H:i', strtotime('+24 hours'));
-
         $garage->google_calendar = unserialize($garage->google_calendar);
         $garage->opening = unserialize($garage->opening);
 
@@ -57,22 +54,22 @@ class GaragesController extends Controller
                     $diffInMinutes = $diffInMinutes / 30;
 
                     if ( $diffInMinutes == 1 ) {
-                        if( $openings[$key][Carbon::parse($event->start->dateTime)->format('H:i')] == 'opened' ) {
-                            $openings[$key][Carbon::parse($event->start->dateTime)->format('H:i')] = 'reserved';
+                        if( $openings[$key][Carbon::parse($event->start->dateTime)->format('H:i')]['status'] == 'opened' ) {
+                            $openings[$key][Carbon::parse($event->start->dateTime)->format('H:i')]['status'] = 'reserved';
                         }
                     } else {
-                        if( $openings[$key][Carbon::parse($event->start->dateTime)->format('H:i')] == 'opened' ) {
-                            $openings[$key][Carbon::parse($event->start->dateTime)->format('H:i')] = 'reserved';
+                        if( $openings[$key][Carbon::parse($event->start->dateTime)->format('H:i')]['status'] == 'opened' ) {
+                            $openings[$key][Carbon::parse($event->start->dateTime)->format('H:i')]['status'] = 'reserved';
                         }
-                        
-                        $startIncremented = Carbon::parse($event->start->dateTime);
-                        while ( $diffInMinutes != 0 ) {
-                            $startIncremented = Carbon::parse($startIncremented)->addMinute(30)->format('H:i');
 
-                            if ( !empty($openings[$key][$startIncremented]) ) {
-                                if( $openings[$key][$startIncremented] == 'opened' ) {
-                                    $openings[$key][$startIncremented] = 'reserved';
-                                }
+                        $diffInMinutes--;
+
+                        $startIncemented = Carbon::parse($event->start->dateTime);
+                        while ( $diffInMinutes != 0 ) {
+                            $startIncemented = Carbon::parse($startIncemented)->addMinute(30)->format('H:i');
+
+                            if( $openings[$key][$startIncemented]['status'] == 'opened' ) {
+                                $openings[$key][$startIncemented]['status'] = 'reserved';
                             }
 
                             $diffInMinutes--;
@@ -90,7 +87,7 @@ class GaragesController extends Controller
                 if ( empty($finalOpening[$hour]) ) {
                     $finalOpening[$hour] = $status;
                 } else {
-                    if ( $finalOpening[$hour] != 'opened' ) {
+                    if ( $finalOpening[$hour]['status'] != 'opened' ) {
                         $finalOpening[$hour] = $status; 
                     }
                 }
@@ -99,34 +96,24 @@ class GaragesController extends Controller
         }
 
         foreach ( $finalOpening as $hour => $status ) {
+            $taskHourNumber = $totalDuration / 30;
 
-            if ( !empty($finalOpening[Carbon::parse($request->date . ' ' . $hour)->addMinute($totalDuration)->format('H:i')]) ) {
-                $taskHourNumber = $totalDuration / 30;
+            if ( $finalOpening[Carbon::parse($request->date . ' ' . $hour)->addMinute($totalDuration)->format('H:i')]['status'] != 'opened' ) {
+                $heurequicoince = Carbon::parse($request->date . ' ' . $hour)->addMinute($totalDuration)->format('H:i');
 
-                if ( $finalOpening[Carbon::parse($request->date . ' ' . $hour)->addMinute($totalDuration)->format('H:i')] != 'opened' ) {
-                    $heurequicoince = Carbon::parse($request->date . ' ' . $hour)->addMinute($totalDuration)->format('H:i');
-                    
-                    if ( $finalOpening[$hour] == 'opened' ) {
-                        $finalOpening[$hour] = 'too_short';
+                while ( $taskHourNumber != 1 ) {
+                    if ( $finalOpening[Carbon::parse($heurequicoince)->subMinutes(30)->format('H:i')]['status'] == 'closed' ) {
+                        $finalOpening[Carbon::parse($heurequicoince)->subMinutes(30)->format('H:i')]['status'] = 'closed';
+                    } elseif ( $finalOpening[Carbon::parse($heurequicoince)->subMinutes(30)->format('H:i')]['status'] == 'reserved' ) {
+                        $finalOpening[Carbon::parse($heurequicoince)->subMinutes(30)->format('H:i')]['status'] = 'reserved';
+                    } else {
+                        $finalOpening[Carbon::parse($heurequicoince)->subMinutes(30)->format('H:i')]['status'] = 'too_short';
                     }
 
-                    while ( $taskHourNumber != 1 ) {
-                        if ( $finalOpening[Carbon::parse($heurequicoince)->subMinutes(30)->format('H:i')] == 'closed' ) {
-                            $finalOpening[Carbon::parse($heurequicoince)->subMinutes(30)->format('H:i')] = 'closed';
-                        } elseif ( $finalOpening[Carbon::parse($heurequicoince)->subMinutes(30)->format('H:i')] == 'reserved' ) {
-                            $finalOpening[Carbon::parse($heurequicoince)->subMinutes(30)->format('H:i')] = 'reserved';
-                        } else {
-                            $finalOpening[Carbon::parse($heurequicoince)->subMinutes(30)->format('H:i')] = 'too_short';
-                        }
-
-                        $heurequicoince = Carbon::parse($heurequicoince)->subMinutes(30)->format('H:i');
-                        $taskHourNumber--;
-                    }
+                    $heurequicoince = Carbon::parse($heurequicoince)->subMinutes(30)->format('H:i');
+                    $taskHourNumber--;
                 }
-            } else {
-                $finalOpening[$hour] = 'too_short';
             }
-
         }
 
         unset($garage->google_calendar);
@@ -135,9 +122,9 @@ class GaragesController extends Controller
         foreach ( $finalOpening as $key => $opening ) {
             $tmp = $request->date. ' ' . $key;
 
-            if ( $now24h >= $tmp  ) {
-                if ( $opening == 'opened' ) {
-                    $finalOpening[$key] = 'reserved';
+            if ( Date('Y-m-d H:i', strtotime('+24 hours')) >= $tmp  ) {
+                if ( $opening['status'] == 'opened' ) {
+                    $finalOpening[$key]['status'] = 'reserved';
                 }
             }
         }
@@ -150,4 +137,125 @@ class GaragesController extends Controller
             'data' => ['garage' => $garage]
         ], 200);
     }
+
+    // public function availabilities(Request $request, Garage $garage)
+    // {
+    //     $garage->google_calendar = unserialize($garage->google_calendar);
+    //     $garage->opening = unserialize($garage->opening);
+
+    //     // Get all events from google calendar
+    //     $calendars = [];
+    //     $openings = [];
+    //     foreach ( $garage->google_calendar as $calendar ) {
+    //         $calendars[$calendar['id']] = Event::get(Carbon::createFromDate($request->date.' 00:00:00'), Carbon::createFromDate($request->date.' 23:59:59'), [], $calendar['id']);
+    //         $openings[$calendar['id']] = $garage->opening[Carbon::createFromDate($request->date)->dayOfWeek];
+    //     }
+
+    //     // Get total duration of tasks
+    //     $quote = Quote::where('id', $request->quote_id)->first();
+    //     $totalDuration = 0;
+    //     if ( !empty($quote->tasks) ) {
+    //         foreach( $quote->tasks as $task ) {
+    //             $totalDuration = $totalDuration + $task->duration;
+    //         }
+    //     }
+
+    //     foreach ( $calendars as $key => $calendar ) {
+    //         if ( !$calendar->isEmpty() ) {
+    //             foreach ( $calendar as $event ) {
+
+    //                 $start = Carbon::parse($event->start->dateTime);
+    //                 $end = Carbon::parse($event->end->dateTime);
+
+    //                 $diffInMinutes = $start->diffInMinutes($end);
+    //                 $diffInMinutes = $diffInMinutes / 30;
+
+    //                 if ( $diffInMinutes == 1 ) {
+    //                     if( $openings[$key][Carbon::parse($event->start->dateTime)->format('H:i')] == 'opened' ) {
+    //                         $openings[$key][Carbon::parse($event->start->dateTime)->format('H:i')] = 'reserved';
+    //                     }
+    //                 } else {
+    //                     if( $openings[$key][Carbon::parse($event->start->dateTime)->format('H:i')] == 'opened' ) {
+    //                         $openings[$key][Carbon::parse($event->start->dateTime)->format('H:i')] = 'reserved';
+    //                     }
+                        
+    //                     $startIncemented = Carbon::parse($event->start->dateTime);
+    //                     while ( $diffInMinutes != 0 ) {
+    //                         $startIncemented = Carbon::parse($startIncemented)->addMinute(30)->format('H:i');
+
+    //                         if ( !empty($openings[$key][$startIncemented]) ) {
+    //                             if( $openings[$key][$startIncemented] == 'opened' ) {
+    //                                 $openings[$key][$startIncemented] = 'reserved';
+    //                             }
+    //                         }
+
+    //                         $diffInMinutes--;
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //     }
+
+    //     $finalOpening = [];
+
+    //     foreach ( $openings as $key => $opening ) {
+    //         foreach ( $opening as $hour => $status ) {
+
+    //             if ( empty($finalOpening[$hour]) ) {
+    //                 $finalOpening[$hour] = $status;
+    //             } else {
+    //                 if ( $finalOpening[$hour] != 'opened' ) {
+    //                     $finalOpening[$hour] = $status; 
+    //                 }
+    //             }
+
+    //         }
+    //     }
+
+    //     foreach ( $finalOpening as $hour => $status ) {
+
+    //         if ( !empty($finalOpening[Carbon::parse($request->date . ' ' . $hour)->addMinute($totalDuration)->format('H:i')]) ) {
+    //             $taskHourNumber = $totalDuration / 30;
+
+    //             if ( $finalOpening[Carbon::parse($request->date . ' ' . $hour)->addMinute($totalDuration)->format('H:i')] != 'opened' ) {
+    //                 $heurequicoince = Carbon::parse($request->date . ' ' . $hour)->addMinute($totalDuration)->format('H:i');
+
+    //                 while ( $taskHourNumber != 1 ) {
+    //                     if ( $finalOpening[Carbon::parse($heurequicoince)->subMinutes(30)->format('H:i')] == 'closed' ) {
+    //                         $finalOpening[Carbon::parse($heurequicoince)->subMinutes(30)->format('H:i')] = 'closed';
+    //                     } elseif ( $finalOpening[Carbon::parse($heurequicoince)->subMinutes(30)->format('H:i')] == 'reserved' ) {
+    //                         $finalOpening[Carbon::parse($heurequicoince)->subMinutes(30)->format('H:i')] = 'reserved';
+    //                     } else {
+    //                         $finalOpening[Carbon::parse($heurequicoince)->subMinutes(30)->format('H:i')] = 'too_short';
+    //                     }
+
+    //                     $heurequicoince = Carbon::parse($heurequicoince)->subMinutes(30)->format('H:i');
+    //                     $taskHourNumber--;
+    //                 }
+    //             }
+    //         }
+
+    //     }
+
+    //     unset($garage->google_calendar);
+    //     unset($garage->opening);
+
+    //     foreach ( $finalOpening as $key => $opening ) {
+    //         $tmp = $request->date. ' ' . $key;
+
+    //         if ( Date('Y-m-d H:i', strtotime('+24 hours')) >= $tmp  ) {
+    //             if ( $opening == 'opened' ) {
+    //                 $finalOpening[$key] = 'reserved';
+    //             }
+    //         }
+    //     }
+
+    //     $garage->availabilities = $finalOpening;
+
+    //     return response()->json([
+    //         'success' => true,
+    //         'message' => '',
+    //         'data' => ['garage' => $garage]
+    //     ], 200);
+    // }
 }
