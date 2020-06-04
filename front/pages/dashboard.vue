@@ -194,7 +194,7 @@
                     let data = response.data
 
                     if ( data.success ) {
-                        this.$router.push('/quotes/'+data.data.quote.id+'?status=create')
+                        this.$router.push('/quotes/'+data.data.quote.id)
                     }
                 })
                 .catch(error => {

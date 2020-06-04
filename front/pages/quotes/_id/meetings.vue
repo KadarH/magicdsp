@@ -242,7 +242,7 @@
                     let data = response.data
 
                     if ( data.success ) {
-                        this.$router.push('/quotes/'+this.$route.params.id+'?status=meeting')
+                        this.$router.push('/quotes/'+this.$route.params.id)
                     }
                 })
                 .catch(error => {
