@@ -34,6 +34,9 @@ Route::middleware('auth:sanctum')->group(function() {
     Route::get('communications/{quote}', 'CommunicationsController@show');
     Route::post('communications/{quote}', 'CommunicationsController@store');
 
+    // Notifications
+    Route::get('notifications', 'NotificationsController@index');
+
     // Garages
     Route::get('garages', 'GaragesController@index');
     Route::get('garages/{garage}/availabilities', 'GaragesController@availabilities');

@@ -13,6 +13,7 @@
                     <li @click="showMainMenu"><n-link to="/quotes/list/waiting">Demandes en attentes ({{quotesWaiting.length}})</n-link></li>
                     <li @click="showMainMenu"><n-link to="/quotes/list/accepted">Demandes acceptées ({{quotesAccepted.length}})</n-link></li>
                     <li @click="showMainMenu"><n-link to="/quotes/list/refused">Demandes refusées ({{quotesRefused.length}})</n-link></li>
+                    <li @click="showMainMenu"><n-link to="/notifications">Notifications ({{notifications.length}})</n-link></li>
                     <li @click="showAdminMenu" v-if="currentUser.admin">
                         <span class="title">Administration</span>
                         <ul :class="[this.adminMenu ? 'show' : '' ]">
@@ -27,7 +28,10 @@
         <div id="mainPage">
             <div id="mainTopbar" :style="topBarBackground">
                 <h1 class="title">{{ this.$store.state.pageTitle.pageTitle }}</h1>
-                <button id="btnShowMenu" @click="showMainMenu"><span></span></button>
+                <button id="btnShowMenu" @click="showMainMenu">
+                    <div class="notifications" v-if="notifications.length"></div>
+                    <span></span>
+                </button>
             </div>
 
             <div id="containerMainPage">
@@ -49,6 +53,7 @@
                 quotes: [],
                 quotesWaiting: [],
                 quotesAccepted: [],
+                notifications: [],
                 quotesRefused: [],
                 currentUser: JSON.parse(localStorage.getItem('user')),
                 topBarBackground: {
@@ -91,6 +96,18 @@
 
                     this.$router.push('/login')
                 }
+            })
+
+            this.$axios.get('api/notifications')
+            .then(response => {
+                let data = response.data
+
+                if ( data.success ) {
+                    this.notifications = data.data.notifications
+                }
+            })
+            .catch(error => {
+                console.log(error.response)
             })
         },
         methods: {
