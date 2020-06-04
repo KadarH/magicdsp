@@ -9,7 +9,7 @@ class NotificationsController extends Controller
 {
     public function index()
     {
-        $notifications = Notification::get();
+        $notifications = Notification::orderBy('created_at', 'DESC')->get();
 
         return response()->json([
             'success' => true,
