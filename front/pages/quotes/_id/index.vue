@@ -20,6 +20,11 @@
                 <div><span class="title">Montant :</span> {{ quote.price }}€</div>
                 <div><span class="title">Durée :</span> {{ quote.duration }}</div>
             </div>
+
+            <div v-if="quote.refused">
+                <h1>Vous avez refusé cette demande !</h1>
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Deleniti aspernatur libero distinctio sapiente! Eius repudiandae quae explicabo sit assumenda neque culpa nam maiores doloremque quibusdam deserunt iure, facilis ipsum soluta.</p>
+            </div>
         </div>
 
         <div v-else>
@@ -38,6 +43,11 @@
                 <div><span class="title">Rendez-vous :</span> {{ moment(quote.meeting_date).format('DD/MM/YYYY à HH:mm') }}</div>
                 <div><span class="title">Montant :</span> {{ quote.price }}€</div>
                 <div><span class="title">Durée :</span> {{ quote.duration }}</div>
+            </div>
+
+            <div v-if="quote.refused">
+                <h1>Cette demande a été refusée !</h1>
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Deleniti aspernatur libero distinctio sapiente! Eius repudiandae quae explicabo sit assumenda neque culpa nam maiores doloremque quibusdam deserunt iure, facilis ipsum soluta.</p>
             </div>
         </div>
 
