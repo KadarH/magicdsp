@@ -17,7 +17,9 @@ class CreateNotificationsTable extends Migration
             $table->id();
             $table->text('content');
             $table->text('url');
+            $table->boolean('read')->default(false);
             $table->foreignId('quote_id')->references('id')->on('quotes');
+            $table->foreignId('user_id')->references('id')->on('users');
             $table->timestamps();
         });
     }
