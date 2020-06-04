@@ -38,11 +38,22 @@ export default {
   ** Nuxt.js modules
   */
   modules: [
-    '@nuxtjs/axios'
+    '@nuxtjs/axios',
+    '@nuxtjs/onesignal',
+    '@nuxtjs/pwa'
   ],
   axios: {
     baseURL: "http://localhost:8000",
     credentials: true
+  },
+  oneSignal: {
+    init: {
+      appId: 'b5004127-4151-444a-9401-2e7030cf5f6f',
+      allowLocalhostAsSecureOrigin: true,
+      welcomeNotification: {
+        disable: true
+      }
+    }
   },
   /*
   ** Build configuration

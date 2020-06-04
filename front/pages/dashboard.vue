@@ -108,7 +108,8 @@
                     tasks: []
                 },
                 strokes: '',
-                isLoading: false
+                isLoading: false,
+                currentUser: JSON.parse(localStorage.getItem('user'))
             }
         },
         mounted() {
@@ -134,6 +135,11 @@
             .catch(error => {
                 console.log(error.response)
             })
+
+            // OneSignal.push(function() {
+            //     OneSignal.setExternalUserId(this.currentUser.id)
+            // })
+            console.log(this.currentUser.id)
         },
         head() {
             return {
