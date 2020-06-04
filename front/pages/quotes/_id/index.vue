@@ -52,12 +52,12 @@
         </div>
 
         <ul class="actions">
-            <li v-if="!quote.accepted && currentUser.admin && communications.length == 0"><n-link class="btn default" :to="'/quotes/'+this.$route.params.id+'/communications'">Demander plus d'informations</n-link></li>
-            <li v-if="!quote.accepted && communications.length > 0"><n-link class="btn default" :to="'/quotes/'+this.$route.params.id+'/communications'">Accéder aux commentaires</n-link></li>
-            <li v-if="!quote.accepted && !currentUser.admin && communications.length > 0"><n-link class="btn default" :to="'/quotes/'+this.$route.params.id+'/edit'">Modifier</n-link></li>
-            <li v-if="!quote.accepted && currentUser.admin"><n-link class="btn success" :to="'/quotes/'+this.$route.params.id+'/edit'">Faire une estimation</n-link></li>
-            <li v-if="!quote.accepted && !currentUser.admin && quote.price && quote.duration"><button class="btn success" @click.prevent='toggle("accept")'>Accepter l'estimation et fixer une date</button></li>
-            <li v-if="!quote.accepted && currentUser.admin"><button class="btn danger" @click.prevent='toggle("refuse")'>Refuser la demande</button></li>
+            <li v-if="quote.waiting && currentUser.admin && communications.length == 0"><n-link class="btn default" :to="'/quotes/'+this.$route.params.id+'/communications'">Demander plus d'informations</n-link></li>
+            <li v-if="quote.waiting && communications.length > 0"><n-link class="btn default" :to="'/quotes/'+this.$route.params.id+'/communications'">Accéder aux commentaires</n-link></li>
+            <li v-if="quote.waiting && !currentUser.admin && communications.length > 0"><n-link class="btn default" :to="'/quotes/'+this.$route.params.id+'/edit'">Modifier</n-link></li>
+            <li v-if="quote.waiting && currentUser.admin"><n-link class="btn success" :to="'/quotes/'+this.$route.params.id+'/edit'">Faire une estimation</n-link></li>
+            <li v-if="quote.waiting && !currentUser.admin && quote.price && quote.duration"><button class="btn success" @click.prevent='toggle("accept")'>Accepter l'estimation et fixer une date</button></li>
+            <li v-if="quote.waiting && currentUser.admin"><button class="btn danger" @click.prevent='toggle("refuse")'>Refuser la demande</button></li>
             <li><n-link id="backToList" class="btn primary" :to="'/quotes/'+this.$route.params.id+'/show'">Voir la demande</n-link></li>
             <li v-if="!currentUser.admin && quote.accepted && !quote.meeting_date"><n-link id="backToList" class="btn primary" :to="'/quotes/'+this.$route.params.id+'/meetings'">Fixer un rendez-vous</n-link></li>
             <li><n-link id="backToList" class="btn primary" :to="'/quotes/list/'+back">Retour à la liste</n-link></li>
@@ -156,14 +156,23 @@
             toggle(status) {
                 this.isLoading = true
 
-                this.$axios.patch('api/quotes/'+this.$route.params.id+'/'+status)
+                this.$axios.patch('api/admin/quotes/'+this.$route.params.id+'/'+status)
                 .then(response => {
                     let data = response.data
 
+                    console.log(data)
                     if ( data.success ) {
                         if ( status == 'accept' ) {
                             this.$router.push('/quotes/'+this.$route.params.id+'/meetings')
                         }
+
+                        if ( status == 'refuse' ) {
+                            this.quote.waiting = false
+                            this.quote.accepted = false
+                            this.quote.refused = true
+                        }
+                        
+                        this.isLoading = false
                     }
                 })
                 .catch(error => {
