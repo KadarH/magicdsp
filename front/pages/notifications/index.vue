@@ -8,7 +8,7 @@
             <tbody>
                 <tr v-for="(notification, index) in notifications">
                     <td><span v-if="!notification.read" class="unread"></span>{{ notification.content }}</td>
-                    <td class="date">{{ moment(notification.created_at).format('H:m d/m/Y') }}</td>
+                    <td class="date">{{ moment(notification.created_at).format('H:mm d/m/Y') }}</td>
                 </tr>
             </tbody>
 
