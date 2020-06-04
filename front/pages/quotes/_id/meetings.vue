@@ -10,33 +10,41 @@
             </select>
         </div>
 
-        <select @change="selectMonth" v-model="monthSelected">
-            <option v-for='(month, index) in months' :value="index">{{ month }}</option>
-        </select>
+        <div v-if="garageSelected">
+            <div class="dates-filters">
+                <select @change="selectMonth" v-model="monthSelected">
+                    <option v-for='(month, index) in months' :value="index">{{ month }}</option>
+                </select>
 
-        <table id="calendar" v-if="garageSelected">
-            <thead>
-                <tr>
-                    <th>Lun.</th>
-                    <th>Mar.</th>
-                    <th>Mer.</th>
-                    <th>Jeu.</th>
-                    <th>Ven.</th>
-                    <th>Sam.</th>
-                    <th>Dim.</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="i in Math.ceil(dates.length / 7)">
-                    <td v-for="date in dates.slice((i - 1) * 7, i * 7)">
-                        <div v-if="date">
-                            <button v-if="moment(date).isAfter(moment())" @click="selectDate($event, date)" class="btn-select-date" :class="{ 'current': moment(date).format('DD') == moment().date() }">{{ moment(date).format('DD') }}</button>
-                            <span class="before" v-else>{{ moment(date).format('DD') }}</span>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+                <select @change="selectYear" v-model="yearSelected">
+                    <option v-for='(year, index) in years' :value="index">{{ year }}</option>
+                </select>
+            </div>
+
+            <table id="calendar">
+                <thead>
+                    <tr>
+                        <th>Lun.</th>
+                        <th>Mar.</th>
+                        <th>Mer.</th>
+                        <th>Jeu.</th>
+                        <th>Ven.</th>
+                        <th>Sam.</th>
+                        <th>Dim.</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="i in Math.ceil(dates.length / 7)">
+                        <td v-for="date in dates.slice((i - 1) * 7, i * 7)">
+                            <div v-if="date">
+                                <button v-if="moment(date).isAfter(moment())" @click="selectDate($event, date)" class="btn-select-date" :class="{ 'current': moment(date).format('DD') == moment().date() }">{{ moment(date).format('DD') }}</button>
+                                <span class="before" v-else>{{ moment(date).format('DD') }}</span>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
         <div id="container-availabilities" v-if="dateSelected">
             <ul class="availabilities">
@@ -84,6 +92,7 @@
                 hourSelected: '',
                 availabilities: [],
                 monthSelected: moment().month(),
+                yearSelected: '',
                 months: {
                     0: 'Janvier',
                     1: 'Février',
@@ -97,12 +106,30 @@
                     9: 'Octobre',
                     10: 'Novembre',
                     11: 'Décembre'
-                }
+                },
+                years: []
             }
         },
         mounted() {
             this.$store.commit('pageTitle/set', this.pageTitle)
             moment.locale('fr')
+
+            let count = 3
+            let currentYear = moment().year()
+
+            while ( count != 0 ) {
+                this.years.push(currentYear)
+                currentYear++
+                count--
+            }
+
+            this.years.map((year, index) => {
+                if ( year == moment().year() ) {
+                    this.yearSelected = index
+                }
+            })
+
+            this.getMonthDates(this.monthSelected, this.years[this.yearSelected])
 
             this.$axios.get('api/garages')
             .then(response => {
@@ -117,8 +144,6 @@
             .catch(error => {
                 console.log(error.response)
             })
-
-            this.getMonthDates(this.monthSelected)
         },
         head() {
             return {
@@ -126,27 +151,28 @@
             };
         },
         methods: {
-            getMonthDates(monthNumber) {
-                let days = ''
+            getMonthDates(month, year) {
+                month = parseFloat(month) + 1
                 this.dates = []
-
-                this.year = moment().format('YYYY')
-                this.month = monthNumber + 1
-                days = moment(this.year+'-'+this.month).daysInMonth()
-                let currentDay = moment().date()
+                let days = moment(year+'-'+month).daysInMonth()
 
                 while ( days != 0 ) {
-                    this.dates.push( moment(this.year+'-'+this.month+'-'+days).format('YYYY-MM-DD') )
-                    days--;
+                    this.dates.push( moment(year+'-'+month+'-'+days).format('YYYY-MM-DD') )
+                    days--
                 }
 
                 this.dates.sort()
 
                 let firstDay = moment(this.dates[0]).format('d')
+
+                if ( firstDay == 0 ) {
+                    firstDay = 7
+                }
+
                 if ( firstDay != 1 ) {
                     while ( firstDay != 1 ) {
                         this.dates.unshift(null)
-                        firstDay--;
+                        firstDay--
                     }
                 }
             },
@@ -158,6 +184,11 @@
             },
             selectMonth(e) {
                 this.monthSelected = e.target.value
+                this.getMonthDates(this.monthSelected, this.years[this.yearSelected])
+            },
+            selectYear(e) {
+                this.yearSelected = e.target.value
+                this.getMonthDates(this.monthSelected, this.years[this.yearSelected])
             },
             selectDate(e, date) {
                 let buttons = document.querySelectorAll('.btn-select-date')
