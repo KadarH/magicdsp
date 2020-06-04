@@ -136,10 +136,10 @@
                 console.log(error.response)
             })
 
-            // OneSignal.push(function() {
-            //     OneSignal.setExternalUserId(this.currentUser.id)
-            // })
-            console.log(this.currentUser.id)
+            let currentUserId = this.currentUser.id
+            OneSignal.push(function() {
+                OneSignal.setExternalUserId(currentUserId)
+            })
         },
         head() {
             return {
