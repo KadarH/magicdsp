@@ -136,9 +136,8 @@
                 console.log(error.response)
             })
 
-            let currentUserId = this.currentUser.id
-            OneSignal.push(function() {
-                OneSignal.setExternalUserId(currentUserId)
+            OneSignal.push(() => {
+                OneSignal.setExternalUserId(this.currentUser.id)
             })
         },
         head() {
