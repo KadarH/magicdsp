@@ -110,8 +110,6 @@
                     this.notifications = data.data.notifications
 
                     this.notifications.map(notification => {
-                        console.log(notification)
-
                         if ( !notification.read ) {
                             this.notificationsUnread = true
                         }

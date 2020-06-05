@@ -24,6 +24,11 @@ export default {
   */
   css: [
   ],
+  generate: {
+    routes: [
+      '/quotes/list/:type'
+    ]
+  },
   /*
   ** Plugins to load before mounting the App
   */
@@ -43,16 +48,16 @@ export default {
     '@nuxtjs/pwa'
   ],
   axios: {
-    // baseURL: "http://localhost:8000",
-    baseURL: "http://magicdsp-back.tqz.be",
+    // baseURL: "https://magicdsp-back.tqz.be",
+    baseURL: "http://localhost:8000",
     credentials: true
   },
   oneSignal: {
     init: {
       appId: 'b5004127-4151-444a-9401-2e7030cf5f6f',
       allowLocalhostAsSecureOrigin: true,
-      welcomeNotification: {
-        disable: true
+      notifyButton: {
+        enable: true,
       }
     }
   },
