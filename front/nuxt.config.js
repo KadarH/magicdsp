@@ -43,7 +43,8 @@ export default {
     '@nuxtjs/pwa'
   ],
   axios: {
-    baseURL: "http://localhost:8000",
+    // baseURL: "http://localhost:8000",
+    baseURL: "http://magicdsp-back.tqz.be",
     credentials: true
   },
   oneSignal: {
