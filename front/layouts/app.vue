@@ -119,6 +119,14 @@
             .catch(error => {
                 console.log(error.response)
             })
+
+            OneSignal.push(() => {
+                OneSignal.on('subscriptionChange', function (isSubscribed) {
+                    if ( isSubscribed === true ) {
+                        OneSignal.sendTag("user_id", this.currentUser.id)
+                    }
+                });
+            });
         },
         methods: {
             async logout() {
@@ -143,7 +151,7 @@
             showAdminMenu() {
                 this.adminMenu = !this.adminMenu
             }
-        },
+        }
     }
 
 </script>

@@ -135,10 +135,6 @@
             .catch(error => {
                 console.log(error.response)
             })
-
-            OneSignal.push(() => {
-                OneSignal.setExternalUserId(this.currentUser.id)
-            })
         },
         head() {
             return {
