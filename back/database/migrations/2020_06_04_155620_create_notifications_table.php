@@ -15,9 +15,11 @@ class CreateNotificationsTable extends Migration
     {
         Schema::create('notifications', function (Blueprint $table) {
             $table->id();
-            $table->text('content');
-            $table->text('url');
+            $table->text('title')->nullable();
+            $table->text('content')->nullable();
+            $table->text('url')->nullable();
             $table->boolean('read')->default(false);
+            $table->boolean('admin')->default(false);
             $table->foreignId('quote_id')->references('id')->on('quotes');
             $table->foreignId('user_id')->references('id')->on('users');
             $table->timestamps();

@@ -24,11 +24,6 @@ export default {
   */
   css: [
   ],
-  generate: {
-    routes: [
-      '/quotes/list/:type'
-    ]
-  },
   /*
   ** Plugins to load before mounting the App
   */

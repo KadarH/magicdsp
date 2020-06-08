@@ -6,9 +6,11 @@ use Illuminate\Http\Request;
 use App\Quote;
 use App\Task;
 use App\Garage;
+use App\Notification;
 use Auth;
 use Spatie\GoogleCalendar\Event;
 use Carbon\Carbon;
+use OneSignal;
 
 class QuotesController extends Controller
 {
@@ -102,6 +104,34 @@ class QuotesController extends Controller
         }
 
         $quote = Quote::where('id', $quote->id)->first();
+
+        $notification = new Notification();
+        $notification->title = "Demande créée";
+        $notification->content = "Une demande de devis a été créée";
+        $notification->user_id = Auth::id();
+        $notification->quote_id = $quote->id;
+        $notification->admin = true;
+        
+        if ( $notification->save() ) {
+
+            $parameters = [
+                'headings' => [
+                    'fr' => 'Demande créée'
+                ],
+                'contents' => [
+                    'fr' => 'Une demande de devis a été créée'
+                ],
+                'big_picture' => 'https://push.tqz.be/img/logo_small.png',
+                'ios_attachments' => [
+                    "id" => "https://push.tqz.be/img/logo_small.png"
+                ],
+                'chrome_web_badge' => 'https://push.tqz.be/img/badge.png',
+                'ios_badgeType'  => 'Increase',
+                'ios_badgeCount' => 1,
+                'included_segments' => array('All')
+            ];
+
+        }
 
         return response()->json([
             'success' => true,
