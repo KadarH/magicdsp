@@ -20,7 +20,7 @@ class CommunicationsController extends Controller
             'success' => true,
             'message' => '',
             'data' => ['communications' => $communications]
-        ],200);
+        ], 200);
     }
 
     public function store(Request $request, Quote $quote)
@@ -117,6 +117,6 @@ class CommunicationsController extends Controller
             'success' => true,
             'message' => '',
             'data' => ['communication' => $communication]
-        ],200);
+        ], 200);
     }
 }

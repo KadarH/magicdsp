@@ -46,7 +46,7 @@ class QuotesController extends Controller
             'success' => true,
             'message' => '',
             'data' => ['quotes' => $quotes]
-        ],200);
+        ], 200);
     }
 
     public function show(Quote $quote)
@@ -83,7 +83,7 @@ class QuotesController extends Controller
             'success' => true,
             'message' => '',
             'data' => ['quote' => $quote]
-        ],200);
+        ], 200);
     }
 
     public function store(Request $request)
@@ -152,7 +152,7 @@ class QuotesController extends Controller
             'success' => true,
             'message' => '',
             'data' => ['quote' => $quote]
-        ],200);
+        ], 200);
     }
 
     public function update(Request $request, Quote $quote)
@@ -218,7 +218,7 @@ class QuotesController extends Controller
             'success' => true,
             'message' => '',
             'data' => ''
-        ],200);
+        ], 200);
     }
 
     public function meetings(Request $request, Quote $quote) {
