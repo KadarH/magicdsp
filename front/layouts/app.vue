@@ -121,7 +121,7 @@
             })
 
             OneSignal.push(() => {
-                OneSignal.on('subscriptionChange', function (isSubscribed) {
+                OneSignal.on('subscriptionChange', (isSubscribed) => {
                     if ( isSubscribed === true ) {
                         OneSignal.sendTag("user_id", this.currentUser.id)
                     }
