@@ -107,8 +107,8 @@ class QuotesController extends Controller
         $quote = Quote::where('id', $quote->id)->first();
 
         $notification = new Notification();
-        $notification->title = "Demande créée";
-        $notification->content = "Une demande de devis a été créée";
+        $notification->title = "FROM USER - Demande créée";
+        $notification->content = "FROM USER - Une demande de devis a été créée";
         $notification->user_id = Auth::id();
         $notification->quote_id = $quote->id;
         $notification->admin = true;
@@ -119,12 +119,12 @@ class QuotesController extends Controller
             foreach ( $admins as $admin ) {
                 $parameters = [
                     'headings' => [
-                        'en' => 'Quote created',
-                        'fr' => 'Demande créée'
+                        'en' => 'FROM USER - Quote created',
+                        'fr' => 'FROM USER - Demande créée'
                     ],
                     'contents' => [
-                        'en' => 'A quote request has been created',
-                        'fr' => 'Une demande de devis a été créée'
+                        'en' => 'FROM USER - A quote request has been created',
+                        'fr' => 'FROM USER - Une demande de devis a été créée'
                     ],
                     'big_picture' => 'https://push.tqz.be/img/logo_small.png',
                     'ios_attachments' => [
@@ -216,8 +216,8 @@ class QuotesController extends Controller
         if ( $quote->save() ) {
 
             $notification = new Notification();
-            $notification->title = "Demande refusée";
-            $notification->content = "La demande de devis a été refusée";
+            $notification->title = "FROM USER - Demande refusée";
+            $notification->content = "FROM USER - La demande de devis a été refusée";
             $notification->user_id = Auth::id();
             $notification->quote_id = $quote->id;
             $notification->admin = true;
@@ -228,12 +228,12 @@ class QuotesController extends Controller
                 foreach ( $admins as $admin ) {
                     $parameters = [
                         'headings' => [
-                            'en' => 'Quote created',
-                            'fr' => 'Demande acceptée'
+                            'en' => 'FROM USER - Quote created',
+                            'fr' => 'FROM USER - Demande acceptée'
                         ],
                         'contents' => [
-                            'en' => 'A quote request has been created',
-                            'fr' => 'Une demande de devis a été acceptée'
+                            'en' => 'FROM USER - A quote request has been created',
+                            'fr' => 'FROM USER - Une demande de devis a été acceptée'
                         ],
                         'big_picture' => 'https://push.tqz.be/img/logo_small.png',
                         'ios_attachments' => [

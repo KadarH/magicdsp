@@ -36,25 +36,28 @@ class CommunicationsController extends Controller
         if ( $communication->save() ) {
 
             $notification = new Notification();
-            $notification->title = "Commentaire ajouté";
-            $notification->content = "Un commentaire a été ajouté dans la conversation";
             $notification->user_id = Auth::id();
             $notification->quote_id = $quote->id;
 
             if ( !Auth::user()->admin ) {
                 $notification->admin = true;
+                $notification->title = "FROM USER - Commentaire ajouté";
+                $notification->content = "FROM USER - Un commentaire a été ajouté dans la conversation";
+            } else {
+                $notification->title = "FROM ADMIN - Commentaire ajouté";
+                $notification->content = "FROM ADMIN - Un commentaire a été ajouté dans la conversation";
             }
 
             if ( $notification->save() ) {
                 if ( Auth::user()->admin ) {
                     $parameters = [
                         'headings' => [
-                            'en' => 'Communication added',
-                            'fr' => 'Commentaire ajouté'
+                            'en' => 'FROM ADMIN - Communication added',
+                            'fr' => 'FROM ADMIN - Commentaire ajouté'
                         ],
                         'contents' => [
-                            'en' => 'A comment has been added',
-                            'fr' => 'Commentaire ajouté dans la conversation'
+                            'en' => 'FROM ADMIN - A comment has been added',
+                            'fr' => 'FROM ADMIN - Commentaire ajouté dans la conversation'
                         ],
                         'big_picture' => 'https://push.tqz.be/img/logo_small.png',
                         'ios_attachments' => [
@@ -81,12 +84,12 @@ class CommunicationsController extends Controller
                     foreach ( $admins as $admin ) {
                         $parameters = [
                             'headings' => [
-                                'en' => 'Communication added',
-                                'fr' => 'Commentaire ajouté'
+                                'en' => 'FROM USER - Communication added',
+                                'fr' => 'FROM USER - Commentaire ajouté'
                             ],
                             'contents' => [
-                                'en' => 'A comment has been added',
-                                'fr' => 'Commentaire ajouté dans la conversation'
+                                'en' => 'FROM USER - A comment has been added',
+                                'fr' => 'FROM USER - Commentaire ajouté dans la conversation'
                             ],
                             'big_picture' => 'https://push.tqz.be/img/logo_small.png',
                             'ios_attachments' => [
