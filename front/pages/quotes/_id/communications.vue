@@ -37,7 +37,7 @@
                 communications: [],
                 body: '',
                 isLoading: true,
-                currentUser: JSON.parse(localStorage.getItem('user'))
+                currentUser: this.$cookies.get('user')
             }
         },
         mounted() {

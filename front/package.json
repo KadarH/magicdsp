@@ -14,6 +14,7 @@
     "@fortawesome/fontawesome-free": "^5.13.0",
     "@nuxtjs/auth": "^4.9.1",
     "@nuxtjs/onesignal": "^3.0.0-beta.16",
+    "cookie-universal-nuxt": "^2.1.4",
     "moment": "^2.24.0",
     "nuxt": "^2.0.0"
   },

@@ -114,8 +114,8 @@
                         data = data.data
                         const auth = { token: data.token }
 
-                        localStorage.setItem("auth", JSON.stringify(auth))
-                        localStorage.setItem("user", JSON.stringify(data.user))
+                        this.$cookies.set('auth', JSON.stringify(auth))
+                        this.$cookies.set('user', JSON.stringify(data.user))
 
                         this.$router.push('/dashboard')
                     }
@@ -139,8 +139,8 @@
                         data = data.data
                         const auth = { token: data.token }
 
-                        localStorage.setItem("auth", JSON.stringify(auth))
-                        localStorage.setItem("user", JSON.stringify(data.user))
+                        this.$cookies.set('auth', JSON.stringify(auth))
+                        this.$cookies.set('user', JSON.stringify(data.user))
 
                         this.$router.push('/dashboard')
                     }

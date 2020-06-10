@@ -59,9 +59,9 @@
                 notifications: [],
                 notificationsUnread: false,
                 quotesRefused: [],
-                currentUser: JSON.parse(localStorage.getItem('user')),
+                currentUser: this.$cookies.get('user'),
                 topBarBackground: {
-                    backgroundColor: (JSON.parse(localStorage.getItem('user')).status.topbar_background ? JSON.parse(localStorage.getItem('user')).status.topbar_background : '')
+                    backgroundColor: (this.$cookies.get('user').status.topbar_background ? this.$cookies.get('user').status.topbar_background : '')
                 }
             }
         },
@@ -95,8 +95,8 @@
             })
             .catch(error => {
                 if ( error.response.data.message == 'Unauthenticated.' ) {
-                    localStorage.removeItem('auth')
-                    localStorage.removeItem('user')
+                    this.$cookies.remove('auth')
+                    this.$cookies.remove('user')
 
                     this.$router.push('/login')
                 }
@@ -135,8 +135,8 @@
                     let data = response.data
 
                     if ( data.success ) {
-                        localStorage.removeItem('auth')
-                        localStorage.removeItem('user')
+                        this.$cookies.remove('auth')
+                        this.$cookies.remove('user')
 
                         this.$router.push('/login')
                     }
