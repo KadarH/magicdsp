@@ -53,7 +53,7 @@ class CommunicationsController extends Controller
                             'fr' => 'Commentaire ajouté'
                         ],
                         'contents' => [
-                            'en' => 'A quote request has been created',
+                            'en' => 'A comment has been added',
                             'fr' => 'Commentaire ajouté dans la conversation'
                         ],
                         'big_picture' => 'https://push.tqz.be/img/logo_small.png',
@@ -85,7 +85,7 @@ class CommunicationsController extends Controller
                                 'fr' => 'Commentaire ajouté'
                             ],
                             'contents' => [
-                                'en' => 'A quote request has been created',
+                                'en' => 'A comment has been added',
                                 'fr' => 'Commentaire ajouté dans la conversation'
                             ],
                             'big_picture' => 'https://push.tqz.be/img/logo_small.png',

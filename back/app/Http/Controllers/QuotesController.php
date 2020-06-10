@@ -212,7 +212,51 @@ class QuotesController extends Controller
         $quote->waiting = false;
         $quote->accepted = true;
         $quote->refused = false;
-        $quote->save();
+        
+        if ( $quote->save() ) {
+
+            $notification = new Notification();
+            $notification->title = "Demande refusée";
+            $notification->content = "La demande de devis a été refusée";
+            $notification->user_id = Auth::id();
+            $notification->quote_id = $quote->id;
+            $notification->admin = true;
+
+            if ( $notification->save() ) {
+                $admins = User::where('admin', true)->get();
+
+                foreach ( $admins as $admin ) {
+                    $parameters = [
+                        'headings' => [
+                            'en' => 'Quote created',
+                            'fr' => 'Demande acceptée'
+                        ],
+                        'contents' => [
+                            'en' => 'A quote request has been created',
+                            'fr' => 'Une demande de devis a été acceptée'
+                        ],
+                        'big_picture' => 'https://push.tqz.be/img/logo_small.png',
+                        'ios_attachments' => [
+                            "id" => "https://push.tqz.be/img/logo_small.png"
+                        ],
+                        'chrome_web_badge' => 'https://push.tqz.be/img/badge.png',
+                        'ios_badgeType'  => 'Increase',
+                        'ios_badgeCount' => 1,
+                        'filters' => [
+                            [
+                                "field" => "tag", 
+                                "key" => "user_id", 
+                                "relation" => "=", 
+                                "value" => $admin->id
+                            ]
+                        ],
+                        'included_segments' => ['All']
+                    ];
+    
+                    OneSignal::sendNotificationCustom($parameters);
+                }
+            }
+        }
 
         return response()->json([
             'success' => true,
