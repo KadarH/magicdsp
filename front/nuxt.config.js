@@ -1,10 +1,10 @@
 
 export default {
   mode: 'universal',
-  server: {
-    port: 8000,
-    host: 'https://magicdsp.tqz.be/'
-  },
+  // server: {
+  //   port: 8000,
+  //   host: 'https://magicdsp.tqz.be/'
+  // },
   /*
   ** Headers of the page
   */
@@ -48,8 +48,8 @@ export default {
     'cookie-universal-nuxt'
   ],
   axios: {
-    baseURL: "https://magicdsp-back.tqz.be",
-    // baseURL: "http://localhost:8000",
+    // baseURL: "https://magicdsp-back.tqz.be",
+    baseURL: "http://localhost:8000",
     credentials: true
   },
   oneSignal: {
