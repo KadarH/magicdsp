@@ -37,6 +37,10 @@ Route::middleware('auth:sanctum')->group(function() {
     // Notifications
     Route::get('notifications', 'NotificationsController@index');
 
+    // Status
+    Route::get('status', 'StatusController@index');
+    Route::get('status/{status}', 'StatusController@show');
+
     // Garages
     Route::get('garages', 'GaragesController@index');
     Route::get('garages/{garage}/availabilities', 'GaragesController@availabilities');
@@ -55,6 +59,8 @@ Route::middleware('auth:sanctum')->group(function() {
 
     Route::middleware('isAdmin')->prefix('admin')->group(function() {
         Route::patch('quotes/{quote}/refuse', 'Admin\QuotesController@refuse');
+
+        Route::get('users/status/{status}/quotes', 'Admin\UsersController@statusQuotes');
     });
 
 });

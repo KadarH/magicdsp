@@ -15,6 +15,6 @@ class StrokesController extends Controller
             'success' => true,
             'message' => '',
             'data' => ['strokes' => $strokes]
-        ],200);
+        ], 200);
     }
 }

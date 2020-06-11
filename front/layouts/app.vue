@@ -20,7 +20,9 @@
                     <li @click="showAdminMenu" v-if="currentUser.admin">
                         <span class="title">Administration</span>
                         <ul :class="[this.adminMenu ? 'show' : '' ]">
-                            <li><n-link to="/admin/users">Tous les utilisateurs</n-link></li>
+                            <li @click="showMainMenu"><n-link to="/admin/users">Tous les utilisateurs</n-link></li>
+
+                            <li @click="showMainMenu" v-for="status in status"><n-link :to="'/admin/users/status/'+status.id+'/quotes'">Demandes des "{{status.name}}"</n-link></li>
                         </ul>
                     </li>
                     <li @click="showMainMenu"><a href="#" @click.prevent="logout">Déconnexion</a></li>
@@ -57,6 +59,7 @@
                 quotesWaiting: [],
                 quotesAccepted: [],
                 notifications: [],
+                status: '',
                 notificationsUnread: false,
                 quotesRefused: [],
                 currentUser: this.$cookies.get('user'),
@@ -73,6 +76,18 @@
             }
         },
         mounted() {
+            this.$axios.get('api/status')
+            .then(response => {
+                let data = response.data
+
+                if ( data.success ) {
+                    this.status = data.data.status
+                }
+            })
+            .catch(error => {
+                console.log(error.response)
+            })
+
             this.$axios.get('api/quotes')
             .then(response => {
                 let data = response.data

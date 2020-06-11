@@ -35,16 +35,31 @@
         },
         data() {
             return {
-                pageTitle: 'Demandes en attentes',
+                pageTitle: '',
                 quotes: [],
+                status: '',
                 isLoading: true
             }
         },
         mounted() {
-            this.$store.commit('pageTitle/set', this.pageTitle)
             moment.locale('fr')
 
-            this.$axios.get('api/quotes?type='+this.$route.params.type)
+            this.$axios.get('api/status/'+this.$route.params.id)
+            .then(response => {
+                let data = response.data
+
+                if ( data.success ) {
+                    this.status = data.data.status
+
+                    this.pageTitle = 'Demandes des "' + this.status.name + '"'
+                    this.$store.commit('pageTitle/set', this.pageTitle)
+                }
+            })
+            .catch(error => {
+                console.log(error.response)
+            })
+
+            this.$axios.get('api/admin/users/status/'+this.$route.params.id+'/quotes')
             .then(response => {
                 let data = response.data
 
