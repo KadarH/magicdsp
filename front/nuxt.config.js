@@ -44,8 +44,8 @@ export default {
     'cookie-universal-nuxt'
   ],
   axios: {
-    // baseURL: "https://magicdsp-back.tqz.be",
-    baseURL: "http://localhost:8000",
+    baseURL: "https://magicdsp-back.tqz.be",
+    // baseURL: "http://localhost:8000",
     credentials: true
   },
   oneSignal: {
