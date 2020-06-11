@@ -18,8 +18,8 @@ class QuotesController extends Controller
         if ( $quote->save() ) {
 
             $notification = new Notification();
-            $notification->title = "FROM ADMIN - Demande refusée";
-            $notification->content = "FROM ADMIN - La demande de devis a été refusée";
+            $notification->title = "FROM ADMIN - Demande refusée - ID:".$quote->id;
+            $notification->content = "FROM ADMIN - La demande de devis a été refusée - ID:".$quote->id;
             $notification->user_id = Auth::id();
             $notification->quote_id = $quote->id;
             $notification->admin = false;
@@ -27,12 +27,12 @@ class QuotesController extends Controller
             if ( $notification->save() ) {
                 $parameters = [
                     'headings' => [
-                        'en' => 'FROM ADMIN - Quote refused',
-                        'fr' => 'FROM ADMIN - Demande de devis refusée'
+                        'en' => 'FROM ADMIN - Quote refused - ID:'.$quote->id,
+                        'fr' => 'FROM ADMIN - Demande de devis refusée - ID:'.$quote->id
                     ],
                     'contents' => [
-                        'en' => 'FROM ADMIN - A quote request has been refused',
-                        'fr' => 'FROM ADMIN - La demande de devis a été refusée'
+                        'en' => 'FROM ADMIN - A quote request has been refused - ID:'.$quote->id,
+                        'fr' => 'FROM ADMIN - La demande de devis a été refusée - ID:'.$quote->id
                     ],
                     'big_picture' => 'https://push.tqz.be/img/logo_small.png',
                     'ios_attachments' => [

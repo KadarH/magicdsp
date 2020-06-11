@@ -1,6 +1,10 @@
 
 export default {
   mode: 'universal',
+  server: {
+    port: 8000,
+    host: 'https://magicdsp.tqz.be/'
+  },
   /*
   ** Headers of the page
   */
