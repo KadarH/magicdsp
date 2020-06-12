@@ -21,8 +21,8 @@
                         <span class="title">Administration</span>
                         <ul :class="[this.adminMenu ? 'show' : '' ]">
                             <li @click="showMainMenu"><n-link to="/admin/users">Tous les utilisateurs</n-link></li>
-
                             <li @click="showMainMenu" v-for="status in status"><n-link :to="'/admin/users/status/'+status.id+'/quotes'">Demandes des "{{status.name}}"</n-link></li>
+                            <li @click="showMainMenu"><n-link to="/admin/garages">Tous les garages</n-link></li>
                         </ul>
                     </li>
                     <li @click="showMainMenu"><a href="#" @click.prevent="logout">Déconnexion</a></li>

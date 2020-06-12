@@ -13,7 +13,11 @@ class GaragesController extends Controller
 {
     public function index()
     {
-        $garages = Garage::where('status_id', Auth::user()->status_id)->get();
+        if ( Auth::user()->admin ) {
+            $garages = Garage::get();
+        } else {
+            $garages = Garage::where('status_id', Auth::user()->status_id)->get();
+        }
 
         return response()->json([
             'success' => true,

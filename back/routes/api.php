@@ -60,6 +60,14 @@ Route::middleware('auth:sanctum')->group(function() {
     Route::post('tasks/delete/picture', 'TasksController@deletePicture');
 
     Route::middleware('isAdmin')->prefix('admin')->group(function() {
+        // Garages
+        Route::get('garages/{garage}', 'Admin\GaragesController@show');
+        Route::post('garages', 'Admin\GaragesController@store');
+        Route::patch('garages/{garage}', 'Admin\GaragesController@update');
+        Route::delete('garages/{garage}', 'Admin\GaragesController@destroy');
+
+        // Users
+        Route::get('users', 'Admin\UsersController@index');
         Route::get('users/status/{status}/quotes', 'Admin\UsersController@statusQuotes');
     });
 

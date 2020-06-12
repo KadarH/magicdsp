@@ -1,17 +1,25 @@
 <template>
     
-    <div id="pages-users-list" class="container-page" :class='{ loading: isLoading }'>
+    <div id="pages-garages-list" class="container-page" :class='{ loading: isLoading }'>
         <Loading />
 
-        <table id="list-users" v-if="users.length">
+        <table id="list-garages" v-if="garages.length">
 
             <tbody>
-                <tr v-for="user in users">
-                    <td>{{ user.firstname }} {{ user.lastname }} - {{ user.email }}</td>
+                <tr v-for="(garage, index) in garages">
+                    <td><n-link :to="'/admin/garages/'+garage.id">{{ garage.name }}</n-link></td>
                 </tr>
             </tbody>
 
         </table>
+
+        <div v-else>
+            Aucune garage !
+        </div>
+
+        <ul class="actions">
+            <li><n-link class="btn primary" to="/admin/garages/add">Ajouter un garage</n-link></li>
+        </ul>
     </div>
 
 </template>
@@ -28,20 +36,20 @@
         },
         data() {
             return {
-                pageTitle: 'Utilisateurs',
-                users: [],
+                pageTitle: 'Garages',
+                garages: [],
                 isLoading: true
             }
         },
         mounted() {
             this.$store.commit('pageTitle/set', this.pageTitle)
 
-            this.$axios.get('api/admin/users')
+            this.$axios.get('api/garages')
             .then(response => {
                 let data = response.data
 
                 if ( data.success ) {
-                    this.users = data.data.users
+                    this.garages = data.data.garages
                 }
 
                 this.isLoading = false
