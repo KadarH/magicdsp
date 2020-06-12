@@ -8,7 +8,7 @@
             <tbody>
                 <tr v-for="(notification, index) in notifications" @click="read(notification)">
                     <td><span v-if="!notification.read" class="unread"></span>{{ notification.content }}</td>
-                    <td class="date">{{ moment(notification.created_at).format('H:mm d/m/Y') }}</td>
+                    <td class="date">{{ moment(notification.created_at).format('H:m DD/MM/Y') }}</td>
                 </tr>
             </tbody>
 
@@ -73,8 +73,6 @@
                     if ( data.success ) {
                         notification.read = true
                     }
-
-                    // this.isLoading = false
                 })
                 .catch(error => {
                     console.log(error.response)
