@@ -17,9 +17,47 @@
                     </select>
                 </div>
 
+                <div>
+                    <label>Calendrier Google</label>
+                    <div v-for='calendar in formEditGarage.google_calendar'>
+                        <label>Nom</label>
+                        <input type="text" v-model="calendar.name">
+                        <label>ID</label>
+                        <input type="text" v-model="calendar.id">
+                    </div>
+                    <button type="button" @click="addCalendar">Ajouter un calendrier</button>
+                </div>
+
+                <div>
+                    <div v-for="(day, index) in formEditGarage.opening">
+                        <div>
+                            <span>{{moment().day(index).format('dddd')}}</span>
+                            <table>
+                                <tbody>
+                                    <tr v-for="(hour, index) in day">
+                                        <td>{{index}}</td>
+                                        <td>
+                                            <select v-model="hour.status">
+                                                <option value="opened">Ouvert</option>
+                                                <option value="closed">Fermé</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <select v-model="hour.display">
+                                                <option value="true">Afficher</option>
+                                                <option value="false">Masquer</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
                 <ul class="actions">
                     <li><button class="btn success">Modifier</button></li>
-                    <li><n-link id="backToList" class="btn danger" :to="'/quotes/'+this.$route.params.id">Annuler</n-link></li>
+                    <li><n-link id="backToList" class="btn danger" :to="'/admin/garages'">Annuler</n-link></li>
                 </ul>
             </form>
         </div>
@@ -31,6 +69,7 @@
 <script>
 
     import Loading from '~/components/Loading.vue'
+    import moment from 'moment'
 
     export default {
         middleware: 'authenticated',
@@ -45,13 +84,14 @@
                 formEditGarage: {
                     name: '',
                     status_id: null,
-                    opening: null,
-                    google_calendar: null
+                    opening: [],
+                    google_calendar: []
                 },
                 status: {}
             }
         },
         mounted() {
+            moment.locale('fr')
             this.pageTitle = 'Modifier garage ' + this.$route.params.id
             this.$store.commit('pageTitle/set', this.pageTitle)
 
@@ -61,6 +101,10 @@
 
                 if ( data.success ) {
                     this.formEditGarage = data.data.garage
+                    
+                    if ( !this.formEditGarage.google_calendar || this.formEditGarage.google_calendar == '' || this.formEditGarage.google_calendar == null ) {
+                        this.formEditGarage.google_calendar = []
+                    }
                 }
 
                 this.isLoading = false
@@ -101,12 +145,25 @@
 
                     if ( data.success ) {
                         this.formEditGarage = data.data.garage
+
+                        if ( !this.formEditGarage.google_calendar || this.formEditGarage.google_calendar == '' || this.formEditGarage.google_calendar == null ) {
+                            this.formEditGarage.google_calendar = []
+                        }
                     }
 
                     this.isLoading = false
                 })
                 .catch(error => {
                     console.log(error.response)
+                })
+            },
+            moment(date) {
+                return moment(date)
+            },
+            addCalendar() {
+                this.formEditGarage.google_calendar.push({
+                    name: '',
+                    id: ''
                 })
             }
         }

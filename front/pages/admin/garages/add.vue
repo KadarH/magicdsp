@@ -82,7 +82,7 @@
                     let data = response.data
 
                     if ( data.success ) {
-                        this.$router.push('/admin/garage/'+data.data.garage.id)
+                        this.$router.push('/admin/garage/'+data.data.garage.id+'/edit')
                     }
                 })
                 .catch(error => {
