@@ -156,7 +156,7 @@
             toggle(status) {
                 this.isLoading = true
 
-                this.$axios.patch('api/admin/quotes/'+this.$route.params.id+'/'+status)
+                this.$axios.patch('api/quotes/'+this.$route.params.id+'/'+status)
                 .then(response => {
                     let data = response.data
 
