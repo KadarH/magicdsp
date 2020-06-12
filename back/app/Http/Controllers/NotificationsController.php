@@ -17,4 +17,16 @@ class NotificationsController extends Controller
             'data' => ['notifications' => $notifications]
         ], 200); 
     }
+
+    public function read(Notification $notification)
+    {
+        $notification->read = true;
+        $notification->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => '',
+            'data' => ''
+        ], 200); 
+    }
 }

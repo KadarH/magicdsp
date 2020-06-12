@@ -36,6 +36,7 @@ Route::middleware('auth:sanctum')->group(function() {
 
     // Notifications
     Route::get('notifications', 'NotificationsController@index');
+    Route::patch('notifications/{notification}/read', 'NotificationsController@read');
 
     // Status
     Route::get('status', 'StatusController@index');

@@ -6,7 +6,7 @@
         <table id="list-notifications" v-if="notifications.length">
 
             <tbody>
-                <tr v-for="(notification, index) in notifications">
+                <tr v-for="(notification, index) in notifications" @click="read(notification)">
                     <td><span v-if="!notification.read" class="unread"></span>{{ notification.content }}</td>
                     <td class="date">{{ moment(notification.created_at).format('H:mm d/m/Y') }}</td>
                 </tr>
@@ -47,7 +47,6 @@
             this.$axios.get('api/notifications')
             .then(response => {
                 let data = response.data
-                console.log(response)
 
                 if ( data.success ) {
                     this.notifications = data.data.notifications
@@ -62,6 +61,24 @@
         methods: {
             moment(date) {
                 return moment(date)
+            },
+            read(notification) {
+                console.log(notification)
+
+                this.$axios.patch('api/notifications/'+notification.id+'/read')
+                .then(response => {
+                    let data = response.data
+                    console.log(response)
+
+                    if ( data.success ) {
+                        notification.read = true
+                    }
+
+                    // this.isLoading = false
+                })
+                .catch(error => {
+                    console.log(error.response)
+                })
             }
         },
         head() {
