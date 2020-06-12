@@ -29,6 +29,7 @@ Route::middleware('auth:sanctum')->group(function() {
     Route::patch('quotes/{quote}/meetings', 'QuotesController@meetings');
     Route::delete('quotes/{quote}', 'QuotesController@destroy');
     Route::patch('quotes/{quote}/accept', 'QuotesController@accept');
+    Route::patch('quotes/{quote}/refuse', 'QuotesController@refuse');
 
     // Communications
     Route::get('communications/{quote}', 'CommunicationsController@show');
@@ -59,8 +60,6 @@ Route::middleware('auth:sanctum')->group(function() {
     Route::post('tasks/delete/picture', 'TasksController@deletePicture');
 
     Route::middleware('isAdmin')->prefix('admin')->group(function() {
-        Route::patch('quotes/{quote}/refuse', 'Admin\QuotesController@refuse');
-
         Route::get('users/status/{status}/quotes', 'Admin\UsersController@statusQuotes');
     });
 

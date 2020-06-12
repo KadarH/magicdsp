@@ -7,12 +7,13 @@ use Spatie\GoogleCalendar\Event;
 use App\Garage;
 use App\Quote;
 use Carbon\Carbon;
+use Auth;
 
 class GaragesController extends Controller
 {
     public function index()
     {
-        $garages = Garage::get();
+        $garages = Garage::where('status_id', Auth::user()->status_id)->get();
 
         return response()->json([
             'success' => true,
