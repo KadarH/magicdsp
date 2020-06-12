@@ -3,7 +3,7 @@
     <div id="pages-quotes-index" class="container-page" :class='{ loading: isLoading }'>
         <Loading />
 
-        <div v-if="currentUser.admin">
+        <div v-if="currentUser.admin" class="status">
             <div v-if="quote.waiting && !quote.price && !quote.duration">
                 <h1>Nouvelle demande !</h1>
                 <p>Nouvelle demande en attente d'actions.</p>
@@ -14,11 +14,11 @@
                 <p>Estimation de {{ quote.price }}€ pour une durée de {{ quote.duration }}.</p>
             </div>
 
-            <div v-if="quote.accepted && quote.meeting_date && quote.garage_id" class="informations">
+            <div v-if="quote.accepted && quote.meeting_date && quote.garage_id">
                 <h1>L'utilisateur a accepté le devis et fixé un rendez-vous !</h1>
-                <div><span class="title">Rendez-vous :</span> {{ moment(quote.meeting_date).format('DD/MM/YYYY à HH:mm') }}</div>
-                <div><span class="title">Montant :</span> {{ quote.price }}€</div>
-                <div><span class="title">Durée :</span> {{ quote.duration }}</div>
+                <p><span class="title">Rendez-vous :</span> {{ moment(quote.meeting_date).format('DD/MM/YYYY à HH:mm') }}</p>
+                <p><span class="title">Montant :</span> {{ quote.price }}€</p>
+                <p><span class="title">Durée :</span> {{ quote.duration }}</p>
             </div>
 
             <div v-if="quote.refused">
@@ -27,7 +27,7 @@
             </div>
         </div>
 
-        <div v-else>
+        <div v-else class="status">
             <div v-if="quote.waiting && !quote.price && !quote.duration">
                 <h1>Votre demande a bien été envoyée !</h1>
                 <p>Demande envoyée et en attente de vérification par un admin.</p>
@@ -38,11 +38,11 @@
                 <p>Une estimation de {{ quote.price }}€ pour une durée de {{ quote.duration }} a été établie.</p>
             </div>
 
-            <div v-if="quote.accepted && quote.meeting_date && quote.garage_id" class="informations">
+            <div v-if="quote.accepted && quote.meeting_date && quote.garage_id">
                 <h1>Informations</h1>
-                <div><span class="title">Rendez-vous :</span> {{ moment(quote.meeting_date).format('DD/MM/YYYY à HH:mm') }}</div>
-                <div><span class="title">Montant :</span> {{ quote.price }}€</div>
-                <div><span class="title">Durée :</span> {{ quote.duration }}</div>
+                <p><span class="title">Rendez-vous :</span> {{ moment(quote.meeting_date).format('DD/MM/YYYY à HH:mm') }}</p>
+                <p><span class="title">Montant :</span> {{ quote.price }}€</p>
+                <p><span class="title">Durée :</span> {{ quote.duration }}</p>
             </div>
 
             <div v-if="quote.refused">
