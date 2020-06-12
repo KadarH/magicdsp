@@ -6,8 +6,8 @@
         <table id="list-garages" v-if="garages.length">
 
             <tbody>
-                <tr v-for="(garage, index) in garages">
-                    <td><n-link :to="'/admin/garages/'+garage.id">{{ garage.name }}</n-link></td>
+                <tr v-for="garage in garages">
+                    <td><n-link :to="'/admin/garages/'+garage.id+'/edit'">{{ garage.name }}</n-link></td>
                 </tr>
             </tbody>
 

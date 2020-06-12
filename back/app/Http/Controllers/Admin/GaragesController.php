@@ -53,7 +53,7 @@ class GaragesController extends Controller
         return response()->json([
             'success' => true,
             'message' => '',
-            'data' => ['gara$garage' => $garage]
+            'data' => ['garage' => $garage]
         ], 200); 
     }
 
