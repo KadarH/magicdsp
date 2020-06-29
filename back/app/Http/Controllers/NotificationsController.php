@@ -2,20 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Notification;
+use Auth;
 
 class NotificationsController extends Controller
 {
     public function index()
     {
-        $notifications = Notification::orderBy('created_at', 'DESC')->get();
+        if ( Auth::user()->admin ) {
+            $notifications = Notification::where('admin', true)->orderBy('created_at', 'DESC')->get();
+        } else {
+            $notifications = Notification::where('user_id', Auth::id())->orderBy('created_at', 'DESC')->get();
+        }
 
         return response()->json([
             'success' => true,
             'message' => '',
             'data' => ['notifications' => $notifications]
-        ], 200); 
+        ], 200);
     }
 
     public function read(Notification $notification)
