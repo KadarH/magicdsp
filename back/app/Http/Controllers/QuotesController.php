@@ -386,11 +386,25 @@ class QuotesController extends Controller
         }
 
         if ( !empty($googleCalendarIdToCreateEvent) ) {
+
+            $tasks = Task::where('quote_id', $quote->id)->get();
+            $tasksDescription = '';
+            $totalTasksPrice = 0;
+
+            foreach ( $tasks as $key => $task ) {
+                $keyMoreOne = $key + 1;
+                $tasksDescription .= '<b>Tâche #'.$keyMoreOne.'<b><br>';
+                $tasksDescription .= '<b>Prix '.$task->price.'€<b><br>';
+                $tasksDescription .= '<b>Photo '.asset('storage/tasks/'.$task->picture).'<b><br>';
+                $totalTasksPrice = $totalTasksPrice + $task->price;
+            }
+
             Event::create([
                 'name' => 'RDV demande '.$quote->id,
                 'startDateTime' => Carbon::parse($request->date . ' ' . $request->hour),
                 'endDateTime' => Carbon::parse($request->date . ' ' . $request->hour)->addMinute($totalDuration),
-                'description' => '<b>Nom</b> : '.$quote->user->lastname.'<br><b>Prénom</b> : '.$quote->user->firstname.'<br><b>Marque du véhicule</b> : '.$quote->brand.'<br><b>Modèle du véhicule</b> : '.$quote->model.'<br><b>Numéro de plaque</b> : '.$quote->plate_number.''
+                'description' => '<b>Montant total</b> : '.$totalTasksPrice.'€<br><b>Nom</b> : '.$quote->user->lastname.'<br><b>Prénom</b> : '.$quote->user->firstname.'<br><b>Marque du véhicule</b> : '.$quote->brand.'<br><b>Modèle du véhicule</b> : '.$quote->model.'<br><b>Numéro de plaque</b> : '.$quote->plate_number.'<br>'.$tasksDescription.'
+                '
             ], $googleCalendarIdToCreateEvent);
     
             return response()->json([
