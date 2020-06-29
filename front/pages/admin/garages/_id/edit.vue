@@ -63,6 +63,7 @@
 
                 <ul class="actions">
                     <li><button class="btn success">Modifier</button></li>
+                    <li><button class="btn danger" type="button" @click="deleteGarage">Supprimer</button></li>
                     <li><n-link id="backToList" class="btn danger" :to="'/admin/garages'">Annuler</n-link></li>
                 </ul>
             </form>
@@ -137,6 +138,21 @@
             }
         },
         methods: {
+            deleteGarage() {
+                this.isLoading = true
+
+                this.$axios.delete('api/admin/garages/'+this.$route.params.id)
+                .then(response => {
+                    let data = response.data
+
+                    if ( data.success ) {
+                        this.$router.push('/admin/garages')
+                    }
+                })
+                .catch(error => {
+                    console.log(error.response)
+                })
+            },
             deleteCalendar(index) {
                 this.formEditGarage.google_calendar.splice(index, 1)
             },
