@@ -7,6 +7,8 @@ use App\User;
 use Auth;
 use App\Status;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
+use Carbon\Carbon;
 
 class AuthController extends Controller
 {
@@ -106,6 +108,73 @@ class AuthController extends Controller
                     'data' => ''
                 ], 400);
             }
+        }
+    }
+
+    public function passwordForgot(Request $request)
+    {
+        $user = User::where('email', $request->email)->first();
+        
+        if ( !empty($user) ) {
+            $user->password_reset_at = date('Y-m-d H:i:s');
+            $user->password_reset_token = Str::random(200);
+            $user->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => '',
+                'data' => ''
+            ], 200);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => '',
+                'data' => ''
+            ], 400);
+        }
+    }
+
+    public function passwordReset(Request $request)
+    {
+        $user = User::where('password_reset_token', $request->token)->first();
+
+        if ( !empty($user) ) {
+            return response()->json([
+                'success' => true,
+                'message' => '',
+                'data' => ''
+            ], 200);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => '',
+                'data' => ''
+            ], 400);
+        }
+    }
+
+    public function passwordNew(Request $request)
+    {
+        $user = User::where('password_reset_token', $request->token)->first();
+        $diff = Carbon::now()->diffInMinutes(Carbon::parse($user->password_reset_at));
+
+        if ( $diff < 60 ) {
+            $user->password = Hash::make($request->password);
+            $user->password_reset_at = null;
+            $user->password_reset_token = null;
+            $user->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => '',
+                'data' => ''
+            ], 200);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => '',
+                'data' => ''
+            ], 400);
         }
     }
 }

@@ -95,7 +95,7 @@
 
             </div>
 
-            <n-link to="#" class="link-forgot-password">Mot de passe oublié ?</n-link>
+            <n-link to="/password/forgot" class="link-forgot-password">Mot de passe oublié ?</n-link>
 
         </div>
         
