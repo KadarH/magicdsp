@@ -10,6 +10,15 @@
         input {
             width: 70%;
             margin: 0 0 0 auto;
+            border: none;
+            color: #fff;
+            
+            &.price {
+                background: #8bc34a;
+            }
+            &.time {
+                background: #f44336;
+            }
         }
     }
 }

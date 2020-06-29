@@ -1,8 +1,7 @@
-#pages-users-list {
-    #list-users {
+#pages-users-show {
+    #list-quotes {
         border-collapse: collapse;
         width: 100%;
-        margin: 0 0 20px 0;
 
         tbody {
             width: 100%;
@@ -16,7 +15,12 @@
 
                     a {
                         color: #03a9f4;
-                        display: flex;
+                    }
+                    &.date {
+                        text-align: right;
+                        font-style: italic;
+                        font-size: .8em;
+                        color: #5a7684;
                     }
                 }
                 &:last-child {

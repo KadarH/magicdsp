@@ -68,6 +68,7 @@ Route::middleware('auth:sanctum')->group(function() {
 
         // Users
         Route::get('users', 'Admin\UsersController@index');
+        Route::get('users/{user}', 'Admin\UsersController@show');
         Route::get('users/status/{status}/quotes', 'Admin\UsersController@statusQuotes');
     });
 

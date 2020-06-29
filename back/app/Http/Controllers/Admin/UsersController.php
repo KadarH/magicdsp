@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\User;
 use App\Status;
+use App\Quote;
 
 class UsersController extends Controller
 {
@@ -17,6 +17,19 @@ class UsersController extends Controller
             'success' => true,
             'message' => '',
             'data' => ['users' => $users]
+        ], 200);
+    }
+
+    public function show(User $user)
+    {
+        $quotes = Quote::where('user_id', $user->id)->get();
+
+        $user['quotes'] = $quotes;
+
+        return response()->json([
+            'success' => true,
+            'message' => '',
+            'data' => ['user' => $user]
         ], 200);
     }
 

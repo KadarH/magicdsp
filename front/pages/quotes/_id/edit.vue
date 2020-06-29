@@ -60,11 +60,11 @@
                             <div v-if="currentUser.admin" class="price-time">
                                 <div class="input">
                                     <label>Prix (€)</label>
-                                    <input type="text" v-model="task.price">
+                                    <input type="text" v-model="task.price" class="price">
                                 </div>
                                 <div class="input">
                                     <label>Temps (min.)</label>
-                                    <input type="text" v-model="task.duration">
+                                    <input type="text" v-model="task.duration" class="time">
                                 </div>
                             </div>
 

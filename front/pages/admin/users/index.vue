@@ -7,7 +7,8 @@
 
             <tbody>
                 <tr v-for="user in users">
-                    <td>{{ user.firstname }} {{ user.lastname }} - {{ user.email }}</td>
+                    <td><n-link :to="'/admin/users/'+user.id">{{ user.firstname }} {{ user.lastname }}</n-link></td>
+                    <td align="right">{{ user.email }}</td>
                 </tr>
             </tbody>
 
