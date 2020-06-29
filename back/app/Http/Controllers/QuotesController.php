@@ -22,7 +22,8 @@ class QuotesController extends Controller
             'model' => 'nullable',
             'doors' => 'nullable',
             'year' => 'nullable',
-            'plate_number' => 'nullable'
+            'plate_number' => 'nullable',
+            'chassis_number' => 'nullable'
         ]);
     }
 

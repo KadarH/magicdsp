@@ -18,6 +18,21 @@
                 </div>
 
                 <div class="input">
+                    <label>Année du véhicule</label>
+                    <input type="text" v-model="quote.year" disabled>
+                </div>
+
+                <div class="input">
+                    <label>Immatriculation</label>
+                    <input type="text" v-model="quote.plate_number" disabled>
+                </div>
+
+                <div class="input">
+                    <label>Numéro de chassis</label>
+                    <input type="text" v-model="quote.chassis_number" disabled>
+                </div>
+
+                <div class="input">
                     <label>Nombre de portes</label>
                     <input type="text" v-model="quote.doors" disabled>
                 </div>
@@ -26,13 +41,13 @@
 
                     <div class="task" v-for="(task, index) in quote.tasks">
                         <header>
-                            <h2 class="title">Coup #{{ index + 1 }}</h2>
+                            <h2 class="title">Photo #{{ index + 1 }}</h2>
                         </header>
                         
                         <div class="container">
                             <div class="input-file">
                                 <div class="preview">
-                                    <img :src="task.picture" alt="Photo du coup">
+                                    <img :src="task.picture" alt="Photo">
                                 </div>
                             </div>
 
@@ -82,6 +97,9 @@
                     brand: '',
                     model: '',
                     doors: '',
+                    year: '',
+                    plate_number: '',
+                    chassis_number: '',
                     tasks: []
                 },
                 strokes: '',
@@ -90,7 +108,7 @@
             }
         },
         mounted() {
-            this.pageTitle = 'Demande ' + this.$route.params.id
+            this.pageTitle = 'Devis ' + this.$route.params.id
             this.$store.commit('pageTitle/set', this.pageTitle)
 
             this.$axios.get('api/quotes/'+this.$route.params.id)

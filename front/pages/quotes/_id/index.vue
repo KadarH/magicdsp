@@ -5,8 +5,8 @@
 
         <div v-if="currentUser.admin" class="status">
             <div v-if="quote.waiting && !quote.price && !quote.duration">
-                <h1>Nouvelle demande !</h1>
-                <p>Nouvelle demande en attente d'actions.</p>
+                <h1>Nouveau devis !</h1>
+                <p>Nouveau devis en attente d'actions.</p>
             </div>
 
             <div v-if="quote.waiting && quote.price && quote.duration">
@@ -22,15 +22,15 @@
             </div>
 
             <div v-if="quote.refused">
-                <h1>Vous avez refusé cette demande !</h1>
+                <h1>Vous avez refusé ce devis !</h1>
                 <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Deleniti aspernatur libero distinctio sapiente! Eius repudiandae quae explicabo sit assumenda neque culpa nam maiores doloremque quibusdam deserunt iure, facilis ipsum soluta.</p>
             </div>
         </div>
 
         <div v-else class="status">
             <div v-if="quote.waiting && !quote.price && !quote.duration">
-                <h1>Votre demande a bien été envoyée !</h1>
-                <p>Demande envoyée et en attente de vérification par un admin.</p>
+                <h1>Votre devis a bien été envoyé !</h1>
+                <p>Devis envoyé et en attente de vérification par un admin.</p>
             </div>
 
             <div v-if="quote.waiting && quote.price && quote.duration">
@@ -46,7 +46,7 @@
             </div>
 
             <div v-if="quote.refused">
-                <h1>Cette demande a été refusée !</h1>
+                <h1>Ce devis a été refusé !</h1>
                 <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Deleniti aspernatur libero distinctio sapiente! Eius repudiandae quae explicabo sit assumenda neque culpa nam maiores doloremque quibusdam deserunt iure, facilis ipsum soluta.</p>
             </div>
         </div>
@@ -57,8 +57,8 @@
             <li v-if="quote.waiting && !currentUser.admin && communications.length > 0"><n-link class="btn default" :to="'/quotes/'+this.$route.params.id+'/edit'">Modifier</n-link></li>
             <li v-if="quote.waiting && currentUser.admin"><n-link class="btn success" :to="'/quotes/'+this.$route.params.id+'/edit'">Faire une estimation</n-link></li>
             <li v-if="quote.waiting && !currentUser.admin && quote.price && quote.duration"><button class="btn success" @click.prevent='toggle("accept")'>Accepter l'estimation et fixer une date</button></li>
-            <li v-if="quote.waiting && currentUser.admin"><button class="btn danger" @click.prevent='toggle("refuse")'>Refuser la demande</button></li>
-            <li><n-link id="backToList" class="btn primary" :to="'/quotes/'+this.$route.params.id+'/show'">Voir la demande</n-link></li>
+            <li v-if="quote.waiting && currentUser.admin"><button class="btn danger" @click.prevent='toggle("refuse")'>Refuser le devis</button></li>
+            <li><n-link id="backToList" class="btn primary" :to="'/quotes/'+this.$route.params.id+'/show'">Voir le devis</n-link></li>
             <li v-if="!currentUser.admin && quote.accepted && !quote.meeting_date"><n-link id="backToList" class="btn primary" :to="'/quotes/'+this.$route.params.id+'/meetings'">Fixer un rendez-vous</n-link></li>
             <li><n-link id="backToList" class="btn primary" :to="'/quotes/list/'+back">Retour à la liste</n-link></li>
         </ul>
@@ -95,7 +95,7 @@
         },
         mounted() {
             moment.locale('fr')
-            this.pageTitle = 'Demande ' + this.$route.params.id
+            this.pageTitle = 'Devis ' + this.$route.params.id
             this.$store.commit('pageTitle/set', this.pageTitle)
 
             this.$axios.get('api/quotes/'+this.$route.params.id)

@@ -15,7 +15,7 @@
         </table>
 
         <div v-else>
-            Aucune demande !
+            Aucun devis !
         </div>
 
     </div>
@@ -51,7 +51,7 @@
                 if ( data.success ) {
                     this.status = data.data.status
 
-                    this.pageTitle = 'Demandes des "' + this.status.name + '"'
+                    this.pageTitle = 'Devis des "' + this.status.name + '"'
                     this.$store.commit('pageTitle/set', this.pageTitle)
                 }
             })

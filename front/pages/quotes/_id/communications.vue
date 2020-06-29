@@ -41,7 +41,7 @@
             }
         },
         mounted() {
-            this.pageTitle = 'Communications Demande ' + this.$route.params.id
+            this.pageTitle = 'Communications devis ' + this.$route.params.id
             this.$store.commit('pageTitle/set', this.pageTitle)
             moment.locale('fr')
 

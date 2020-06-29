@@ -15,7 +15,7 @@
         </table>
 
         <div v-else>
-            Aucune demande !
+            Aucun devis !
         </div>
 
     </div>
@@ -35,7 +35,7 @@
         },
         data() {
             return {
-                pageTitle: 'Demandes en attentes',
+                pageTitle: 'Devis en attentes',
                 quotes: [],
                 isLoading: true
             }

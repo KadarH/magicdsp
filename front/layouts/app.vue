@@ -9,10 +9,10 @@
             </div>
             <nav>
                 <ul>
-                    <li @click="showMainMenu"><n-link to="/dashboard">Nouvelle demande</n-link></li>
-                    <li @click="showMainMenu"><n-link to="/quotes/list/waiting">Demandes en attentes ({{quotesWaiting.length}})</n-link></li>
-                    <li @click="showMainMenu"><n-link to="/quotes/list/accepted">Demandes acceptées ({{quotesAccepted.length}})</n-link></li>
-                    <li @click="showMainMenu"><n-link to="/quotes/list/refused">Demandes refusées ({{quotesRefused.length}})</n-link></li>
+                    <li @click="showMainMenu"><n-link to="/dashboard">Nouveau devis</n-link></li>
+                    <li @click="showMainMenu"><n-link to="/quotes/list/waiting">Devis en attentes ({{quotesWaiting.length}})</n-link></li>
+                    <li @click="showMainMenu"><n-link to="/quotes/list/accepted">Devis acceptés ({{quotesAccepted.length}})</n-link></li>
+                    <li @click="showMainMenu"><n-link to="/quotes/list/refused">Devis refusés ({{quotesRefused.length}})</n-link></li>
 
                     <li @click="showMainMenu" v-if="notificationsUnread"><n-link to="/notifications">Notifications <span class="count-notifications">{{notifications.length}}</span></n-link></li>
                     <li @click="showMainMenu" v-else><n-link to="/notifications">Notifications ({{notifications.length}})</n-link></li>
@@ -21,7 +21,7 @@
                         <span class="title">Administration</span>
                         <ul :class="[this.adminMenu ? 'show' : '' ]">
                             <li @click="showMainMenu"><n-link to="/admin/users">Tous les utilisateurs</n-link></li>
-                            <li @click="showMainMenu" v-for="status in status"><n-link :to="'/admin/users/status/'+status.id+'/quotes'">Demandes des "{{status.name}}"</n-link></li>
+                            <li @click="showMainMenu" v-for="status in status"><n-link :to="'/admin/users/status/'+status.id+'/quotes'">Devis des "{{status.name}}"</n-link></li>
                             <li @click="showMainMenu"><n-link to="/admin/garages">Tous les garages</n-link></li>
                         </ul>
                     </li>

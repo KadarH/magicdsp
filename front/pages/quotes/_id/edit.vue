@@ -16,6 +16,21 @@
                 </div>
 
                 <div class="input">
+                    <label>Année du véhicule</label>
+                    <input type="text" v-model="formEditQuote.year">
+                </div>
+
+                <div class="input">
+                    <label>Immatriculation</label>
+                    <input type="text" v-model="formEditQuote.plate_number">
+                </div>
+
+                <div class="input">
+                    <label>Numéro de chassis</label>
+                    <input type="text" v-model="formEditQuote.chassis_number">
+                </div>
+
+                <div class="input">
                     <label>Nombre de portes</label>
                     <select @change="selectDoors">
                         <option value="null" selected>Sélectionner une option</option>
@@ -29,7 +44,7 @@
 
                     <div class="task" :class='{ deleting: task.deleting, adding: task.adding }' v-for="(task, index) in formEditQuote.tasks">
                         <header>
-                            <h2 class="title">Coup #{{ index + 1 }}</h2>
+                            <h2 class="title">Photo #{{ index + 1 }}</h2>
                             <div v-if="task.deleting">aaaaaa</div>
                             <button class="btnDeleteTask" @click.prevent="removeTask(index)"><i class="fas fa-trash"></i></button>
                         </header>
@@ -41,7 +56,7 @@
                                     <span>Cliquer pour ajouter une photo</span>
                                 </label>
                                 <div class="preview" v-if="task.url">
-                                    <img :src="task.url" alt="Photo du coup">
+                                    <img :src="task.url" alt="Photo">
                                 </div>
                             </div>
 
@@ -78,7 +93,7 @@
                         </div>
                     </div>
 
-                    <button id="btnAddTask" class="btn" @click.prevent="addTask">Ajouter un coup</button>
+                    <button id="btnAddTask" class="btn" @click.prevent="addTask">Ajouter une photo</button>
 
                 </div>
 
@@ -115,6 +130,9 @@
                     brand: '',
                     model: '',
                     doors: '',
+                    year: '',
+                    plate_number: '',
+                    chassis_number: '',
                     tasks: []
                 },
                 strokes: '',
@@ -122,7 +140,7 @@
             }
         },
         mounted() {
-            this.pageTitle = 'Modifier Demande ' + this.$route.params.id
+            this.pageTitle = 'Modifier devis ' + this.$route.params.id
             this.$store.commit('pageTitle/set', this.pageTitle)
 
             this.$axios.get('api/quotes/'+this.$route.params.id)
@@ -286,6 +304,9 @@
                     brand: this.formEditQuote.brand,
                     model: this.formEditQuote.model,
                     doors: this.formEditQuote.doors,
+                    year: this.formEditQuote.year,
+                    plate_number: this.formEditQuote.plate_number,
+                    chassis_number: this.formEditQuote.chassis_number,
                     tasks: tasks
                 })
                 .then(response => {
