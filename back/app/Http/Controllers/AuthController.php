@@ -63,6 +63,8 @@ class AuthController extends Controller
         $request->validate([
             'firstname' => 'required',
             'lastname' => 'required',
+            'address' => 'required',
+            'phone_number' => 'required',
             'email' => 'required|email|unique:users',
             'password' => 'required',
             'status_id' => 'required'
@@ -71,6 +73,8 @@ class AuthController extends Controller
         $user = new User();
         $user->firstname = $request->firstname;
         $user->lastname = $request->lastname;
+        $user->address = $request->address;
+        $user->phone_number = $request->phone_number;
         $user->email = $request->email;
         $user->password = Hash::make($request->password);
         $user->status_id = $request->status_id;
