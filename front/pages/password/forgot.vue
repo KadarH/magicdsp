@@ -7,7 +7,7 @@
             <div id="containerForms">
                 <h2>Mot de passe oublié</h2>
 
-                <form id="loginReset" ref="loginReset" @submit.prevent="reset">
+                <form id="loginReset" ref="loginReset" @submit.prevent="reset" v-if="!success">
                     <div class="input">
                         <label>Adresse email</label>
                         <input type="email" v-model="email">
@@ -18,8 +18,7 @@
                     </div>
                 </form>
 
-                <div v-if="success">Demande ok, email bientôt, suivre insctruction !</div>
-
+                <div class="success" v-else>Votre demande a bien été enregistrée. Dans quelques minutes, vous recevrez un email avec un lien pour réinitialiser votre mot de passe.</div>
             </div>
 
             <n-link to="/login" class="link-forgot-password">Connexion/Inscription</n-link>

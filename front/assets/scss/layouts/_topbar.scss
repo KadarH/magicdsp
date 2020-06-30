@@ -16,10 +16,30 @@
         font-size: 1em;
         font-weight: 400;
     }
-    button {
+    #link-notifications {
+        color: #fff;
+        text-decoration: none;
         margin: 0 0 0 auto;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 10px;
+        position: relative;
+
+        i {
+            font-size: 1.4em;
+        }
+        .number {
+            position: absolute;
+            color: #f44336;
+            font-size: .7em;
+            font-weight: bold;
+        }
+    }
+    button {
         padding: 0 16px;
-        width: 60px;
+        min-width: 60px;
         height: 60px;
         background: none;
         border: none;

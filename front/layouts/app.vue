@@ -14,8 +14,8 @@
                     <li @click="showMainMenu"><n-link to="/quotes/list/accepted">Devis acceptés ({{quotesAccepted.length}})</n-link></li>
                     <li @click="showMainMenu"><n-link to="/quotes/list/refused">Devis refusés ({{quotesRefused.length}})</n-link></li>
 
-                    <li @click="showMainMenu" v-if="notificationsUnread"><n-link to="/notifications">Notifications <span class="count-notifications">{{notifications.length}}</span></n-link></li>
-                    <li @click="showMainMenu" v-else><n-link to="/notifications">Notifications ({{notifications.length}})</n-link></li>
+                    <!-- <li @click="showMainMenu" v-if="notificationsUnread"><n-link to="/notifications">Notifications <span class="count-notifications">{{notifications.length}}</span></n-link></li> -->
+                    <li @click="showMainMenu"><n-link to="/notifications">Notifications ({{notifications.length}})</n-link></li>
 
                     <li @click="showAdminMenu" v-if="currentUser.admin">
                         <span class="title">Administration</span>
@@ -33,8 +33,12 @@
         <div id="mainPage">
             <div id="mainTopbar" :style="topBarBackground">
                 <h1 class="title">{{ this.$store.state.pageTitle.pageTitle }}</h1>
+                <n-link id="link-notifications" to="/notifications">
+                    <i class="fas fa-bell"></i>
+                    <span class="number">{{totalNotificationsUnread}}</span>
+                </n-link>
                 <button id="btnShowMenu" @click="showMainMenu">
-                    <div class="notifications" v-if="notificationsUnread"></div>
+                    <!-- <div class="notifications" v-if="notificationsUnread"></div> -->
                     <span></span>
                 </button>
             </div>
@@ -61,6 +65,7 @@
                 notifications: [],
                 status: '',
                 notificationsUnread: false,
+                totalNotificationsUnread: 0,
                 quotesRefused: [],
                 currentUser: this.$cookies.get('user'),
                 topBarBackground: {
@@ -127,6 +132,7 @@
                     this.notifications.map(notification => {
                         if ( !notification.read ) {
                             this.notificationsUnread = true
+                            this.totalNotificationsUnread++
                         }
                     })
                 }

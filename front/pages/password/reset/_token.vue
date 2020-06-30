@@ -7,7 +7,7 @@
             <div id="containerForms">
                 <h2>Modifier votre mot de passe</h2>
 
-                <form id="loginReset" ref="loginReset" @submit.prevent="reset">
+                <form id="loginReset" ref="loginReset" @submit.prevent="reset" v-if="!success">
                     <div class="input">
                         <label>Mot de passe</label>
                         <input type="password" v-model="password">
@@ -18,9 +18,8 @@
                     </div>
                 </form>
 
+                <div class="success" v-else>Votre mot de passe a bien été modifié. Vous pouvez dès à présent vous connecter avec votre nouveau mot de passe.</div>
             </div>
-
-            <div v-if="success">Mot de passe modifié, retourner sur /login</div>
 
             <n-link to="/login" class="link-forgot-password">Connexion/Inscription</n-link>
         </div>
@@ -44,8 +43,7 @@
             .then(response => {
                 let data = response.data
 
-                if ( data.success ) {
-                } else {
+                if ( !data.success ) {
                     this.$router.push('/login')
                 }
             })

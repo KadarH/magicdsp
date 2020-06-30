@@ -9,6 +9,8 @@ use App\Status;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
+use App\Mail\PasswordReset;
+use Illuminate\Support\Facades\Mail;
 
 class AuthController extends Controller
 {
@@ -113,12 +115,18 @@ class AuthController extends Controller
 
     public function passwordForgot(Request $request)
     {
+        $request->validate([
+            'email' => 'required|email'
+        ]);
+
         $user = User::where('email', $request->email)->first();
         
         if ( !empty($user) ) {
             $user->password_reset_at = date('Y-m-d H:i:s');
             $user->password_reset_token = Str::random(200);
             $user->save();
+
+            Mail::to($user->email)->send(new PasswordReset($user));
 
             return response()->json([
                 'success' => true,
@@ -134,16 +142,34 @@ class AuthController extends Controller
         }
     }
 
-    public function passwordReset(Request $request)
+    public function passwordReset($token)
     {
-        $user = User::where('password_reset_token', $request->token)->first();
-
-        if ( !empty($user) ) {
+        if ( empty($token) ) {
             return response()->json([
-                'success' => true,
+                'success' => false,
                 'message' => '',
                 'data' => ''
-            ], 200);
+            ], 400);
+        }
+
+        $user = User::where('password_reset_token', $token)->first();
+
+        if ( !empty($user) ) {
+            $diff = Carbon::now()->diffInMinutes(Carbon::parse($user->password_reset_at));
+
+            if ( $diff < 60 ) {
+                return response()->json([
+                    'success' => true,
+                    'message' => '',
+                    'data' => ''
+                ], 200);
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'message' => '',
+                    'data' => ''
+                ], 400);
+            }
         } else {
             return response()->json([
                 'success' => false,
@@ -155,20 +181,34 @@ class AuthController extends Controller
 
     public function passwordNew(Request $request)
     {
+        $request->validate([
+            'password' => 'required',
+            'token' => 'required'
+        ]);
+
         $user = User::where('password_reset_token', $request->token)->first();
-        $diff = Carbon::now()->diffInMinutes(Carbon::parse($user->password_reset_at));
 
-        if ( $diff < 60 ) {
-            $user->password = Hash::make($request->password);
-            $user->password_reset_at = null;
-            $user->password_reset_token = null;
-            $user->save();
+        if ( !empty($user) ) {
+            $diff = Carbon::now()->diffInMinutes(Carbon::parse($user->password_reset_at));
 
-            return response()->json([
-                'success' => true,
-                'message' => '',
-                'data' => ''
-            ], 200);
+            if ( $diff < 60 ) {
+                $user->password = Hash::make($request->password);
+                $user->password_reset_at = null;
+                $user->password_reset_token = null;
+                $user->save();
+
+                return response()->json([
+                    'success' => true,
+                    'message' => '',
+                    'data' => ''
+                ], 200);
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'message' => '',
+                    'data' => ''
+                ], 400);
+            }
         } else {
             return response()->json([
                 'success' => false,
