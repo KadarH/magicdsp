@@ -1,8 +1,8 @@
 {
-  "name": "MagicDSP",
+  "name": "magicdsp",
   "version": "1.0.0",
-  "description": "My awesome Nuxt.js project",
-  "author": "TQZsprl",
+  "description": "MagicDSP",
+  "author": "Jonathan Hulet - TQZ SPRL",
   "private": true,
   "scripts": {
     "dev": "nuxt",
