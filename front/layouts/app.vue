@@ -141,7 +141,6 @@
                 console.log(error.response)
             })
 
-            window.OneSignal = window.OneSignal || []
             OneSignal.push(() => {
                 OneSignal.on('subscriptionChange', (isSubscribed) => {
                     if ( isSubscribed === true ) {
