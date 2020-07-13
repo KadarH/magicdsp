@@ -48,7 +48,7 @@ export default {
     'cookie-universal-nuxt'
   ],
   axios: {
-    baseURL: "http://api.magic-dsp.com/",
+    baseURL: "https://api.magic-dsp.com/",
     credentials: true
   },
   oneSignal: {
