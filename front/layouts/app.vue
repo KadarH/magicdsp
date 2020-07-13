@@ -81,8 +81,6 @@
             }
         },
         mounted() {
-            let OneSignal = window.OneSignal || []
-
             this.$axios.get('api/status')
             .then(response => {
                 let data = response.data
@@ -143,7 +141,7 @@
                 console.log(error.response)
             })
 
-            OneSignal.push(() => {
+            window.OneSignal.push(() => {
                 OneSignal.on('subscriptionChange', (isSubscribed) => {
                     if ( isSubscribed === true ) {
                         OneSignal.sendTag("user_id", this.currentUser.id)
