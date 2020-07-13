@@ -81,6 +81,8 @@
             }
         },
         mounted() {
+            window.OneSignal = window.OneSignal || []
+            
             this.$axios.get('api/status')
             .then(response => {
                 let data = response.data
