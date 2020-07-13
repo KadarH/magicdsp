@@ -15,7 +15,7 @@ return [
     |
     */
 
-    'paths' => ['https://app.magic-dsp.com/*'],
+    'paths' => ['https://app.magic-dsp.com/api*', 'https://app.magic-dsp.com/sanctum/csrf-cookie'],
 
     'allowed_methods' => ['*'],
 
