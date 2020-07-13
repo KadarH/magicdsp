@@ -15,7 +15,7 @@ return [
     |
     */
 
-    'paths' => ['api/*'],
+    'paths' => ['https://app.magic-dsp.com/*'],
 
     'allowed_methods' => ['*'],
 
