@@ -15,11 +15,11 @@ return [
     |
     */
 
-    'paths' => ['https://app.magic-dsp.com/api*', 'https://app.magic-dsp.com/sanctum/csrf-cookie'],
+    'paths' => ['api/*', 'sanctum/csrf-cookie'],
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['*'],
+    'allowed_origins' => ['https://app.magic-dsp.com'],
 
     'allowed_origins_patterns' => [],
 
