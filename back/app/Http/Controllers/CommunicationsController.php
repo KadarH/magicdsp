@@ -42,23 +42,23 @@ class CommunicationsController extends Controller
 
                 if ( !Auth::user()->admin ) {
                     $notification->admin = true;
-                    $notification->title = "FROM USER - Commentaire ajouté - ID:".$quote->id;
-                    $notification->content = "FROM USER - Un commentaire a été ajouté dans la conversation - ID:".$quote->id;
+                    $notification->title = "Commentaire ajouté - ID:".$quote->id;
+                    $notification->content = "Un commentaire a été ajouté dans la conversation - ID:".$quote->id;
                 } else {
-                    $notification->title = "FROM ADMIN - Commentaire ajouté - ID:".$quote->id;
-                    $notification->content = "FROM ADMIN - Un commentaire a été ajouté dans la conversation - ID:".$quote->id;
+                    $notification->title = "Commentaire ajouté - ID:".$quote->id;
+                    $notification->content = "Un commentaire a été ajouté dans la conversation - ID:".$quote->id;
                 }
 
                 if ( $notification->save() ) {
                     if ( Auth::user()->admin ) {
                         $parameters = [
                             'headings' => [
-                                'en' => 'FROM ADMIN - Communication added - ID:'.$quote->id,
-                                'fr' => 'FROM ADMIN - Commentaire ajouté - ID:'.$quote->id
+                                'en' => 'Communication added - ID:'.$quote->id,
+                                'fr' => 'Commentaire ajouté - ID:'.$quote->id
                             ],
                             'contents' => [
-                                'en' => 'FROM ADMIN - A comment has been added - ID:'.$quote->id,
-                                'fr' => 'FROM ADMIN - Commentaire ajouté dans la conversation - ID:'.$quote->id
+                                'en' => 'A comment has been added - ID:'.$quote->id,
+                                'fr' => 'Commentaire ajouté dans la conversation - ID:'.$quote->id
                             ],
                             'big_picture' => 'https://push.tqz.be/img/logo_small.png',
                             'ios_attachments' => [
@@ -85,12 +85,12 @@ class CommunicationsController extends Controller
                         foreach ( $admins as $admin ) {
                             $parameters = [
                                 'headings' => [
-                                    'en' => 'FROM USER - Communication added - ID:'.$quote->id,
-                                    'fr' => 'FROM USER - Commentaire ajouté - ID:'.$quote->id
+                                    'en' => 'Communication added - ID:'.$quote->id,
+                                    'fr' => 'Commentaire ajouté - ID:'.$quote->id
                                 ],
                                 'contents' => [
-                                    'en' => 'FROM USER - A comment has been added - ID:'.$quote->id,
-                                    'fr' => 'FROM USER - Commentaire ajouté dans la conversation - ID:'.$quote->id
+                                    'en' => 'A comment has been added - ID:'.$quote->id,
+                                    'fr' => 'Commentaire ajouté dans la conversation - ID:'.$quote->id
                                 ],
                                 'big_picture' => 'https://push.tqz.be/img/logo_small.png',
                                 'ios_attachments' => [
