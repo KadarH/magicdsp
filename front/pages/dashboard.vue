@@ -5,24 +5,28 @@
 
         <div id="newQuote">
             <form @submit.prevent="newQuote" enctype="multipart/form-data">
-                <div class="input">
-                    <label>Marque du véhicule</label>
+                <div class="input" :class="errors.brand !== undefined ? 'error' : ''">
+                    <label>Marque du véhicule*</label>
                     <input type="text" v-model="formNewQuote.brand">
+                    <span class="error-message" v-if="errors.brand !== undefined">*Ce champ est obligatoire</span>
                 </div>
 
-                <div class="input">
-                    <label>Modèle du véhicule</label>
+                <div class="input" :class="errors.model !== undefined ? 'error' : ''">
+                    <label>Modèle du véhicule*</label>
                     <input type="text" v-model="formNewQuote.model">
+                    <span class="error-message" v-if="errors.model !== undefined">*Ce champ est obligatoire</span>
                 </div>
 
-                <div class="input">
-                    <label>Année du véhicule</label>
+                <div class="input" :class="errors.year !== undefined ? 'error' : ''">
+                    <label>Année du véhicule*</label>
                     <input type="text" v-model="formNewQuote.year">
+                    <span class="error-message" v-if="errors.year !== undefined">*Ce champ est obligatoire</span>
                 </div>
 
-                <div class="input">
-                    <label>Immatriculation</label>
+                <div class="input" :class="errors.plate_number !== undefined ? 'error' : ''">
+                    <label>Immatriculation*</label>
                     <input type="text" v-model="formNewQuote.plate_number">
+                    <span class="error-message" v-if="errors.plate_number !== undefined">*Ce champ est obligatoire</span>
                 </div>
 
                 <div class="input">
@@ -30,17 +34,19 @@
                     <input type="text" v-model="formNewQuote.chassis_number">
                 </div>
 
-                <div class="input">
-                    <label>Nombre de portes</label>
+                <div class="input" :class="errors.doors !== undefined ? 'error' : ''">
+                    <label>Nombre de portes*</label>
                     <select @change="selectDoors">
                         <option value="null" selected>Sélectionner une option</option>
                         <option value="3 portes">3 portes</option>
                         <option value="5 portes">5 portes</option>
                         <option value="Autres">Autre</option>
                     </select>
+                    <span class="error-message" v-if="errors.doors !== undefined">*Ce champ est obligatoire</span>
                 </div>
 
                 <div id="tasks">
+                    <span class="error-message" v-if="errors.tasks !== undefined">*Vous devez ajouter au moins une photo</span>
 
                     <div class="task" :class='{ deleting: task.deleting, adding: task.adding }' v-for="(task, index) in formNewQuote.tasks">
                         <header>
@@ -115,7 +121,8 @@
                 },
                 strokes: '',
                 isLoading: false,
-                currentUser: this.$cookies.get('user')
+                currentUser: this.$cookies.get('user'),
+                errors: []
             }
         },
         mounted() {
@@ -179,6 +186,7 @@
             },
             newQuote() {
                 this.isLoading = true;
+                this.errors = []
 
                 let tasks = []
                 this.formNewQuote.tasks.map(task => {
@@ -189,25 +197,34 @@
                     })
                 })
 
-                this.$axios.post('api/quotes', {
-                    brand: this.formNewQuote.brand,
-                    model: this.formNewQuote.model,
-                    doors: this.formNewQuote.doors,
-                    year: this.formNewQuote.year,
-                    plate_number: this.formNewQuote.plate_number,
-                    chassis_number: this.formNewQuote.chassis_number,
-                    tasks: tasks
-                })
-                .then(response => {
-                    let data = response.data
-
-                    if ( data.success ) {
-                        this.$router.push('/quotes/'+data.data.quote.id)
+                if ( tasks[0].picture == '' ) {
+                    this.errors = {
+                        tasks: true
                     }
-                })
-                .catch(error => {
-                    console.log(error.response)
-                })
+
+                    this.isLoading = false
+                } else {
+                    this.$axios.post('api/quotes', {
+                        brand: this.formNewQuote.brand,
+                        model: this.formNewQuote.model,
+                        doors: this.formNewQuote.doors,
+                        year: this.formNewQuote.year,
+                        plate_number: this.formNewQuote.plate_number,
+                        chassis_number: this.formNewQuote.chassis_number,
+                        tasks: tasks
+                    })
+                    .then(response => {
+                        let data = response.data
+
+                        if ( data.success ) {
+                            this.$router.push('/quotes/'+data.data.quote.id)
+                        }
+                    })
+                    .catch(error => {
+                        this.errors = error.response.data.errors
+                        this.isLoading = false
+                    })
+                }
             },
             selectDoors(e) {
                 this.formNewQuote.doors = e.target.value

@@ -17,6 +17,15 @@ html, body {
     &.menu-open {
         overflow: hidden;
     }
+
+    &[page=login],
+    &[page=index],
+    &[page=password-forgot],
+    &[page=password-reset-token] {
+        #onesignal-bell-container {
+            display: none !important;
+        }
+    }
 }
 #__nuxt {
     min-height: 100vh;

@@ -68,6 +68,13 @@
                     console.log(error.response)
                 })
             }
+        },
+        head() {
+            return {
+                bodyAttrs: {
+                    'page': 'password-reset-token'
+                }
+            }
         }
     }
 

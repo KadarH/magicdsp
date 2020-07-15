@@ -180,6 +180,13 @@
                     this.errors = error.response.data.errors
                 })
             }
+        },
+        head() {
+            return {
+                bodyAttrs: {
+                    'page': 'login'
+                }
+            }
         }
     }
 

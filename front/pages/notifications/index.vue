@@ -72,6 +72,7 @@
 
                     if ( data.success ) {
                         notification.read = true
+                        this.$store.commit('notifications/decrement')
                     }
                 })
                 .catch(error => {

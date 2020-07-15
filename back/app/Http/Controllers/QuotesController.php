@@ -18,11 +18,11 @@ class QuotesController extends Controller
     protected function validateRequest()
     {
         return request()->validate([
-            'brand' => 'nullable',
-            'model' => 'nullable',
-            'doors' => 'nullable',
-            'year' => 'nullable',
-            'plate_number' => 'nullable',
+            'brand' => 'required',
+            'model' => 'required',
+            'doors' => 'required',
+            'year' => 'required',
+            'plate_number' => 'required',
             'chassis_number' => 'nullable'
         ]);
     }
@@ -94,15 +94,13 @@ class QuotesController extends Controller
         $data['user_id'] = Auth::id();
         $quote = Quote::create($data);
 
-        if ( !empty($request->tasks) ) {
-            foreach ( $request->tasks as $task ) {
-                $newTask = new Task();
-                $newTask->description = $task['description'];
-                $newTask->picture = $task['picture'];
-                $newTask->stroke_id = $task['stroke_id'];
-                $newTask->quote_id = $quote->id;
-                $newTask->save();
-            }
+        foreach ( $request->tasks as $task ) {
+            $newTask = new Task();
+            $newTask->description = $task['description'];
+            $newTask->picture = $task['picture'];
+            $newTask->stroke_id = $task['stroke_id'];
+            $newTask->quote_id = $quote->id;
+            $newTask->save();
         }
 
         $quote = Quote::where('id', $quote->id)->first();

@@ -35,7 +35,7 @@
                 <h1 class="title">{{ this.$store.state.pageTitle.pageTitle }}</h1>
                 <n-link id="link-notifications" to="/notifications">
                     <i class="fas fa-bell"></i>
-                    <span class="number">{{totalNotificationsUnread}}</span>
+                    <span class="number">{{ this.$store.state.notifications.unread }}</span>
                 </n-link>
                 <button id="btnShowMenu" @click="showMainMenu">
                     <!-- <div class="notifications" v-if="notificationsUnread"></div> -->
@@ -65,7 +65,6 @@
                 notifications: [],
                 status: '',
                 notificationsUnread: false,
-                totalNotificationsUnread: 0,
                 quotesRefused: [],
                 currentUser: this.$cookies.get('user'),
                 topBarBackground: {
@@ -132,7 +131,7 @@
                     this.notifications.map(notification => {
                         if ( !notification.read ) {
                             this.notificationsUnread = true
-                            this.totalNotificationsUnread++
+                            this.$store.commit('notifications/increment')
                         }
                     })
                 }
