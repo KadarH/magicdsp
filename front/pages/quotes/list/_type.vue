@@ -7,7 +7,7 @@
 
             <tbody>
                 <tr v-for="(quote, index) in quotes">
-                    <td><n-link :to="'/quotes/'+quote.id">Quote {{quote.id}}</n-link></td>
+                    <td><n-link :to="'/quotes/'+quote.id">Devis {{quote.id}}</n-link></td>
                     <td class="date">{{ moment(quote.created_at).format('DD/MM/YYYY') }}</td>
                 </tr>
             </tbody>
