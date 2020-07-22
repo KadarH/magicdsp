@@ -7,13 +7,19 @@
             <form @submit.prevent="newQuote" enctype="multipart/form-data">
                 <div class="input" :class="errors.brand !== undefined ? 'error' : ''">
                     <label>Marque du véhicule*</label>
-                    <multiselect selectedLabel="" selectLabel="" deselectLabel="" placeholder="" @select="getBrandModels" v-model="formNewQuote.brand" :options="carBrands" label="name" track-by="id"></multiselect>
+                    <multiselect selectedLabel="" selectLabel="" deselectLabel="" placeholder="" @select="getBrandModels" v-model="formNewQuote.brand" :options="carBrands" label="name" track-by="id">
+                        <span slot="noOptions">Chargement en cours ...</span>
+                        <span slot="noResult">Aucun résultat !</span>
+                    </multiselect>
                     <span class="error-message" v-if="errors.brand !== undefined">*Ce champ est obligatoire</span>
                 </div>
 
                 <div v-if="carModels.length" class="input" :class="errors.model !== undefined ? 'error' : ''">
                     <label>Modèle du véhicule*</label>
-                    <multiselect selectedLabel="" selectLabel="" deselectLabel="" placeholder="" v-model="formNewQuote.model" :options="carModels" label="name" track-by="id"></multiselect>
+                    <multiselect selectedLabel="" selectLabel="" deselectLabel="" placeholder="" v-model="formNewQuote.model" :options="carModels" label="name" track-by="id">
+                        <span slot="noOptions">Chargement en cours ...</span>
+                        <span slot="noResult">Aucun résultat !</span>
+                    </multiselect>
                     <span class="error-message" v-if="errors.model !== undefined">*Ce champ est obligatoire</span>
                 </div>
 

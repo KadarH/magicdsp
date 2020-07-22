@@ -12,6 +12,10 @@ use Auth;
 use Spatie\GoogleCalendar\Event;
 use Carbon\Carbon;
 use OneSignal;
+use App\Mail\Notifications\QuoteAccepted;
+use App\Mail\Notifications\QuoteRefused;
+use App\Mail\Notifications\QuoteCreated;
+use Illuminate\Support\Facades\Mail;
 
 class QuotesController extends Controller
 {
@@ -143,6 +147,7 @@ class QuotesController extends Controller
                     'included_segments' => ['All']
                 ];
 
+                Mail::to($admin->email)->send(new QuoteCreated($quote));
                 OneSignal::sendNotificationCustom($parameters);
             }
         }
@@ -216,7 +221,7 @@ class QuotesController extends Controller
 
             $notification = new Notification();
             $notification->title = "Demande refusée - ID:".$quote->id;
-            $notification->content = "La demande de devis a été refusée - ID:".$quote->id;
+            $notification->content = "La demande de devis a été acceptée - ID:".$quote->id;
             $notification->user_id = Auth::id();
             $notification->quote_id = $quote->id;
             $notification->admin = true;
@@ -227,7 +232,7 @@ class QuotesController extends Controller
                 foreach ( $admins as $admin ) {
                     $parameters = [
                         'headings' => [
-                            'en' => 'Quote created - ID:'.$quote->id,
+                            'en' => 'Quote accepted - ID:'.$quote->id,
                             'fr' => 'Demande acceptée - ID:'.$quote->id
                         ],
                         'contents' => [
@@ -251,7 +256,8 @@ class QuotesController extends Controller
                         ],
                         'included_segments' => ['All']
                     ];
-    
+                    
+                    Mail::to($admin->email)->send(new QuoteAccepted($quote));
                     OneSignal::sendNotificationCustom($parameters);
                 }
             }
@@ -308,7 +314,8 @@ class QuotesController extends Controller
                         ],
                         'included_segments' => ['All']
                     ];
-
+                    
+                    Mail::to($quote->user->email)->send(new QuoteRefused($quote));
                     OneSignal::sendNotificationCustom($parameters);
                 }
             }

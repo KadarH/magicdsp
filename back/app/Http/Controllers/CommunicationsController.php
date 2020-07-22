@@ -9,6 +9,8 @@ use App\Notification;
 use App\Communication;
 use Auth;
 use OneSignal;
+use App\Mail\Notifications\CommentAdded;
+use Illuminate\Support\Facades\Mail;
 
 class CommunicationsController extends Controller
 {
@@ -77,7 +79,8 @@ class CommunicationsController extends Controller
                             ],
                             'included_segments' => ['All']
                         ];
-        
+
+                        Mail::to(Auth::user()->email)->send(new CommentAdded($quote));
                         OneSignal::sendNotificationCustom($parameters);
                     } else {
                         $admins = User::where('admin', true)->get();
@@ -110,6 +113,7 @@ class CommunicationsController extends Controller
                                 'included_segments' => ['All']
                             ];
             
+                            Mail::to($admin->email)->send(new CommentAdded($quote));
                             OneSignal::sendNotificationCustom($parameters);
                         }
                     }
