@@ -7,13 +7,13 @@
             <form @submit.prevent="newQuote" enctype="multipart/form-data">
                 <div class="input" :class="errors.brand !== undefined ? 'error' : ''">
                     <label>Marque du véhicule*</label>
-                    <input type="text" v-model="formNewQuote.brand">
+                    <multiselect selectedLabel="" selectLabel="" deselectLabel="" placeholder="" @select="getBrandModels" v-model="formNewQuote.brand" :options="carBrands" label="name" track-by="id"></multiselect>
                     <span class="error-message" v-if="errors.brand !== undefined">*Ce champ est obligatoire</span>
                 </div>
 
-                <div class="input" :class="errors.model !== undefined ? 'error' : ''">
+                <div v-if="carModels.length" class="input" :class="errors.model !== undefined ? 'error' : ''">
                     <label>Modèle du véhicule*</label>
-                    <input type="text" v-model="formNewQuote.model">
+                    <multiselect selectedLabel="" selectLabel="" deselectLabel="" placeholder="" v-model="formNewQuote.model" :options="carModels" label="name" track-by="id"></multiselect>
                     <span class="error-message" v-if="errors.model !== undefined">*Ce champ est obligatoire</span>
                 </div>
 
@@ -100,16 +100,20 @@
 
 <script>
     import Loading from '~/components/Loading.vue'
+    import Multiselect from 'vue-multiselect'
 
     export default {
         middleware: 'authenticated',
         layout: 'app',
         components: {
-            Loading
+            Loading,
+            Multiselect
         },
         data() {
             return {
                 pageTitle: 'Nouveau devis',
+                carBrands: [],
+                carModels: [],
                 formNewQuote: {
                     brand: '',
                     model: '',
@@ -148,6 +152,18 @@
             .catch(error => {
                 console.log(error.response)
             })
+
+            this.$axios.get('api/brands')
+            .then(response => {
+                let data = response.data
+
+                if ( data.success ) {
+                    this.carBrands = data.data.brands
+                }
+            })
+            .catch(error => {
+                console.log(error.response)
+            })
         },
         head() {
             return {
@@ -155,6 +171,24 @@
             };
         },
         methods: {
+            getBrandModels(brand) {
+                this.isLoading = true
+
+                this.$axios.get('api/brands/' + brand.id)
+                .then(response => {
+                    let data = response.data
+
+                    if ( data.success ) {
+                        this.carModels = data.data.brand.models
+                    }
+
+                    this.isLoading = false
+                })
+                .catch(error => {
+                    console.log(error)
+                    this.isLoading = false
+                })
+            },
             handleFileUpload(event, index) {
                 this.formNewQuote.tasks[index].adding = true
 
@@ -205,8 +239,8 @@
                     this.isLoading = false
                 } else {
                     this.$axios.post('api/quotes', {
-                        brand: this.formNewQuote.brand,
-                        model: this.formNewQuote.model,
+                        brand: this.formNewQuote.brand.name,
+                        model: this.formNewQuote.model.name,
                         doors: this.formNewQuote.doors,
                         year: this.formNewQuote.year,
                         plate_number: this.formNewQuote.plate_number,

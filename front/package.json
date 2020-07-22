@@ -16,7 +16,8 @@
     "@nuxtjs/onesignal": "^3.0.0-beta.16",
     "cookie-universal-nuxt": "^2.1.4",
     "moment": "^2.24.0",
-    "nuxt": "^2.13.3"
+    "nuxt": "^2.13.3",
+    "vue-multiselect": "^2.1.6"
   },
   "devDependencies": {
     "@nuxtjs/pwa": "^3.0.0-beta.20",

@@ -24,6 +24,13 @@ Route::post('password/new', 'AuthController@passwordNew');
 
 Route::middleware('auth:sanctum')->group(function() {
 
+    // Brands
+    Route::get('brands', 'CarBrandsController@index');
+    Route::get('brands/{brand}', 'CarBrandsController@show');
+
+    // Models
+    Route::get('models', 'CarModelsController@index');
+
     // Quotes
     Route::get('quotes', 'QuotesController@index');
     Route::get('quotes/{quote}', 'QuotesController@show');

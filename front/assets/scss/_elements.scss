@@ -130,3 +130,40 @@
         }
     }
 }
+.multiselect__input {
+    padding: 0 !important;
+    width: 100%;
+    border: none !important;
+    color: #adadad !important;
+    font-size: 14px !important;
+    margin: 0 !important;
+}
+.multiselect__tags {
+    border: 1px solid #cbd4db !important;
+    border-radius: 4px !important;
+    padding: 0 40px 0 10px !important;
+    display: flex;
+    align-items: center;
+}
+.multiselect__single {
+    padding: 0 !important;
+    margin: 0 !important;
+    color: #607d8b !important;
+    font-size: .9em !important;
+}
+.multiselect__content {
+    .multiselect__element {
+        .multiselect__option {
+            color: #607d8b !important;
+            font-size: .9em !important;
+        }
+    }
+}
+.multiselect__option.multiselect__option--highlight, .multiselect__option--selected.multiselect__option--highlight {
+    background: #9e9e9e !important;
+    font-weight: normal !important;
+
+    span {
+        color: #fff !important;
+    }
+}
