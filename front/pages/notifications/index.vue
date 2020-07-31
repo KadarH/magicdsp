@@ -63,21 +63,20 @@
                 return moment(date)
             },
             read(notification) {
-                console.log(notification)
+                if ( !notification.read ) {
+                    this.$axios.patch('api/notifications/'+notification.id+'/read')
+                    .then(response => {
+                        let data = response.data
 
-                this.$axios.patch('api/notifications/'+notification.id+'/read')
-                .then(response => {
-                    let data = response.data
-                    console.log(response)
-
-                    if ( data.success ) {
-                        notification.read = true
-                        this.$store.commit('notifications/decrement')
-                    }
-                })
-                .catch(error => {
-                    console.log(error.response)
-                })
+                        if ( data.success ) {
+                            notification.read = true
+                            this.$store.commit('notifications/decrement')
+                        }
+                    })
+                    .catch(error => {
+                        console.log(error.response)
+                    })
+                }
             }
         },
         head() {
