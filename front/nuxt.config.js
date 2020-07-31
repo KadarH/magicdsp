@@ -2,8 +2,9 @@
 export default {
   mode: 'universal',
   server: {
-    // host: 'https://app.magic-dsp.com/'
-    host: 'localhost'
+    port: 8000,
+    host: 'https://app.magic-dsp.com/'
+    // host: 'localhost'
   },
   /*
   ** Nuxt target
@@ -56,14 +57,14 @@ export default {
     'cookie-universal-nuxt'
   ],
   axios: {
-    // baseURL: "https://api.magic-dsp.com/",
-    baseURL: "http://localhost:8000/",
+    baseURL: "https://api.magic-dsp.com/",
+    // baseURL: "http://localhost:8000/",
     credentials: true
   },
   oneSignal: {
     init: {
-      // appId: 'b5004127-4151-444a-9401-2e7030cf5f6f', MagicDSP
-      appId: '9f583a30-49a0-43b9-afa6-e697f7b42bd7',
+      appId: 'b5004127-4151-444a-9401-2e7030cf5f6f',
+      // appId: '9f583a30-49a0-43b9-afa6-e697f7b42bd7',
       allowLocalhostAsSecureOrigin: true,
       notifyButton: {
         enable: true,
