@@ -51,9 +51,9 @@
                     <span class="error-message" v-if="errors.doors !== undefined">*Ce champ est obligatoire</span>
                 </div>
 
-                <span class="error-message" v-if="errors.tasks !== undefined">*Vous devez ajouter au moins une photo</span>
-
                 <div id="tasks">
+                    <span class="error-message" v-if="errors.tasks !== undefined">*Vous devez ajouter au moins une photo</span>
+
                     <div class="task" :class='{ deleting: task.deleting, adding: task.adding }' v-for="(task, index) in formNewQuote.tasks">
                         <header>
                             <h2 class="title">Photo #{{ index + 1 }}</h2>
@@ -229,52 +229,41 @@
                 this.errors = []
 
                 let tasks = []
-
-                if ( this.formNewQuote.tasks.length > 0 ) {
-                    this.formNewQuote.tasks.map(task => {
-                        tasks.push({
-                            description: task.description,
-                            picture: task.picture,
-                            stroke_id: task.stroke
-                        })
+                this.formNewQuote.tasks.map(task => {
+                    tasks.push({
+                        description: task.description,
+                        picture: task.picture,
+                        stroke_id: task.stroke
                     })
-                }
+                })
 
-                if ( tasks.length > 0 ) {
-                    if ( tasks[0].picture == '' ) {
-                        this.errors = {
-                            tasks: true
-                        }
-
-                        this.isLoading = false
-                    } else {
-                        this.$axios.post('api/quotes', {
-                            brand: this.formNewQuote.brand.name,
-                            model: this.formNewQuote.model.name,
-                            doors: this.formNewQuote.doors,
-                            year: this.formNewQuote.year,
-                            plate_number: this.formNewQuote.plate_number,
-                            chassis_number: this.formNewQuote.chassis_number,
-                            tasks: tasks
-                        })
-                        .then(response => {
-                            let data = response.data
-
-                            if ( data.success ) {
-                                this.$router.push('/quotes/'+data.data.quote.id)
-                            }
-                        })
-                        .catch(error => {
-                            this.errors = error.response.data.errors
-                            this.isLoading = false
-                        })
-                    }
-                } else {
+                if ( tasks[0].picture == '' ) {
                     this.errors = {
                         tasks: true
                     }
-                    
-                    this.isLoading = false;
+
+                    this.isLoading = false
+                } else {
+                    this.$axios.post('api/quotes', {
+                        brand: this.formNewQuote.brand.name,
+                        model: this.formNewQuote.model.name,
+                        doors: this.formNewQuote.doors,
+                        year: this.formNewQuote.year,
+                        plate_number: this.formNewQuote.plate_number,
+                        chassis_number: this.formNewQuote.chassis_number,
+                        tasks: tasks
+                    })
+                    .then(response => {
+                        let data = response.data
+
+                        if ( data.success ) {
+                            this.$router.push('/quotes/'+data.data.quote.id)
+                        }
+                    })
+                    .catch(error => {
+                        this.errors = error.response.data.errors
+                        this.isLoading = false
+                    })
                 }
             },
             selectDoors(e) {

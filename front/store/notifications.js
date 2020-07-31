@@ -7,10 +7,6 @@ export const mutations = {
         state.unread++
     },
     decrement (state) {
-        if ( state.unread <= 0 ) {
-            state.unread = 0
-        } else {
-            state.unread--
-        }
+        state.unread--
     }
 }
