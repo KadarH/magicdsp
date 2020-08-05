@@ -160,7 +160,6 @@
                 .then(response => {
                     let data = response.data
 
-                    console.log(data)
                     if ( data.success ) {
                         if ( status == 'accept' ) {
                             this.$router.push('/quotes/'+this.$route.params.id+'/meetings')
@@ -170,8 +169,10 @@
                             this.quote.waiting = false
                             this.quote.accepted = false
                             this.quote.refused = true
+
+                            this.isLoading = false
                         }
-                        
+                    } else {
                         this.isLoading = false
                     }
                 })

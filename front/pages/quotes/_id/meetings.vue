@@ -79,6 +79,7 @@
         },
         data() {
             return {
+                debug: [],
                 pageTitle: 'Fixer un rendez-vous',
                 month: '',
                 isLoading: true,
@@ -152,12 +153,13 @@
         },
         methods: {
             getMonthDates(month, year) {
-                month = parseFloat(month) + 1
+                // month = parseFloat(month) + 1
+                month = moment().month(month).format("MM")
                 this.dates = []
                 let days = moment(year+'-'+month).daysInMonth()
 
                 while ( days != 0 ) {
-                    this.dates.push( moment(year+'-'+month+'-'+days).format('YYYY-MM-DD') )
+                    this.dates.push( moment(year+'-'+month+'-'+('0' + days).slice(-2)).format('YYYY-MM-DD') )
                     days--
                 }
 
