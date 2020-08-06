@@ -48,6 +48,7 @@ Route::middleware('auth:sanctum')->group(function() {
     // Notifications
     Route::get('notifications', 'NotificationsController@index');
     Route::patch('notifications/{notification}/read', 'NotificationsController@read');
+    Route::delete('notifications', 'NotificationsController@delete');
 
     // Status
     Route::get('status', 'StatusController@index');
@@ -79,6 +80,8 @@ Route::middleware('auth:sanctum')->group(function() {
         // Users
         Route::get('users', 'Admin\UsersController@index');
         Route::get('users/{user}', 'Admin\UsersController@show');
+        Route::patch('users/{user}', 'Admin\UsersController@update');
+        Route::delete('users/{user}', 'Admin\UsersController@delete');
         Route::get('users/status/{status}/quotes', 'Admin\UsersController@statusQuotes');
     });
 

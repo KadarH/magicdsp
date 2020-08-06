@@ -108,7 +108,7 @@
             }
         },
         mounted() {
-            this.pageTitle = 'Devis ' + this.$route.params.id
+            this.pageTitle = 'Devis #' + this.$route.params.id
             this.$store.commit('pageTitle/set', this.pageTitle)
 
             this.$axios.get('api/quotes/'+this.$route.params.id)

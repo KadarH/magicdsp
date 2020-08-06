@@ -1,4 +1,17 @@
 #pages-users-show {
+    .actions {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+    }
+    h2 {
+        font-size: 1.2em;
+        margin: 0 0 10px 0;
+    }
+    #btnEditUser {
+        width: 100%;
+        margin: 0 0 40px 0;
+    }
     #list-quotes {
         border-collapse: collapse;
         width: 100%;

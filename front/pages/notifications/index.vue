@@ -3,6 +3,10 @@
     <div id="pages-notifications-list" class="container-page" :class='{ loading: isLoading }'>
         <Loading />
 
+        <div v-if="notifications.length">
+            <button @click="deleteAllNotifications">Vider</button>
+        </div>
+
         <table id="list-notifications" v-if="notifications.length">
 
             <tbody>
@@ -59,6 +63,23 @@
             })
         },
         methods: {
+            deleteAllNotifications() {
+                this.isLoading = true
+
+                this.$axios.delete('api/notifications/')
+                .then(response => {
+                    let data = response.data
+
+                    if ( data.success ) {
+                        this.$store.commit('notifications/reset')
+                        this.notifications = []
+                        this.isLoading = false
+                    }
+                })
+                .catch(error => {
+                    console.log(error.response)
+                })
+            },
             moment(date) {
                 return moment(date)
             },

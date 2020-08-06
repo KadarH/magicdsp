@@ -27,7 +27,6 @@
                 <h2>Inscription</h2>
 
                 <form id="registerForm" @submit.prevent="register()">
-
                     <div class="status" :class="errors.status_id !== undefined ? 'error' : ''">
                         <span class="title">Vous êtes un* :</span>
 
@@ -57,35 +56,41 @@
                         <input type="text" v-model="formRegister.lastname">
                         <span class="error-message" v-if="errors.lastname !== undefined">*Ce champ est obligatoire</span>
                     </div>
+
                     <div class="input" :class="errors.firstname !== undefined ? 'error' : ''">
                         <label>Prénom*</label>
                         <input type="text" v-model="formRegister.firstname">
                         <span class="error-message" v-if="errors.firstname !== undefined">*Ce champ est obligatoire</span>
-
                     </div>
+
                     <div class="input" :class="errors.email !== undefined ? 'error' : ''">
                         <label>Adresse email*</label>
                         <input type="email" v-model="formRegister.email">
                         <span class="error-message" v-if="errors.email !== undefined">*Ce champ est obligatoire</span>
-
                     </div>
+
                     <div class="input" :class="errors.address !== undefined ? 'error' : ''">
                         <label>Adresse*</label>
                         <input type="text" v-model="formRegister.address">
                         <span class="error-message" v-if="errors.address !== undefined">*Ce champ est obligatoire</span>
-
                     </div>
+
                     <div class="input" :class="errors.phone_number !== undefined ? 'error' : ''">
                         <label>Numéro de téléphone*</label>
                         <input type="tel" v-model="formRegister.phone_number">
                         <span class="error-message" v-if="errors.phone_number !== undefined">*Ce champ est obligatoire</span>
-
                     </div>
+
+                    <div v-if="formRegister.status_id == 2 || formRegister.status_id == 3" class="input" :class="errors.vat_number !== undefined ? 'error' : ''">
+                        <label>Numéro de TVA/Siret*</label>
+                        <input type="tel" v-model="formRegister.vat_number">
+                        <span class="error-message" v-if="errors.vat_number !== undefined">*Ce champ est obligatoire</span>
+                    </div>
+
                     <div class="input" :class="errors.password !== undefined ? 'error' : ''">
                         <label>Mot de passe*</label>
                         <input type="password" v-model="formRegister.password">
                         <span class="error-message" v-if="errors.password !== undefined">*Ce champ est obligatoire</span>
-
                     </div>
 
                     <div class="actions">
@@ -160,6 +165,7 @@
                     lastname: this.formRegister.lastname,
                     address: this.formRegister.address,
                     phone_number: this.formRegister.phone_number,
+                    vat_number: this.formRegister.vat_number,
                     email: this.formRegister.email,
                     password: this.formRegister.password
                 })

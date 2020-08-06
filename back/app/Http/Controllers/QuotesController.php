@@ -16,6 +16,7 @@ use App\Mail\Notifications\QuoteAccepted;
 use App\Mail\Notifications\QuoteRefused;
 use App\Mail\Notifications\QuoteCreated;
 use Illuminate\Support\Facades\Mail;
+use App\Mail\Notifications\CustomerQuoteCreated;
 
 class QuotesController extends Controller
 {
@@ -94,9 +95,12 @@ class QuotesController extends Controller
     public function store(Request $request)
     {
         $data = $this->validateRequest();
-
+        
+        $data['plate_number'] = strtoupper($request->plate_number);
         $data['user_id'] = Auth::id();
         $quote = Quote::create($data);
+
+        Mail::to(Auth::user()->email)->send(new CustomerQuoteCreated($quote));
 
         foreach ( $request->tasks as $task ) {
             $newTask = new Task();
@@ -110,8 +114,8 @@ class QuotesController extends Controller
         $quote = Quote::where('id', $quote->id)->first();
 
         $notification = new Notification();
-        $notification->title = "Demande créée - ID:".$quote->id;
-        $notification->content = "Une demande de devis a été créée - ID:".$quote->id;
+        $notification->title = "Demande créée #".$quote->id;
+        $notification->content = "Une demande de devis a été créée #".$quote->id;
         $notification->user_id = Auth::id();
         $notification->quote_id = $quote->id;
         $notification->admin = true;
@@ -122,12 +126,12 @@ class QuotesController extends Controller
             foreach ( $admins as $admin ) {
                 $parameters = [
                     'headings' => [
-                        'en' => 'Quote created - ID:'.$quote->id,
-                        'fr' => 'Demande créée - ID:'.$quote->id
+                        'en' => 'Quote created #'.$quote->id,
+                        'fr' => 'Demande créée #'.$quote->id
                     ],
                     'contents' => [
-                        'en' => 'A quote request has been created - ID:'.$quote->id,
-                        'fr' => 'Une demande de devis a été créée - ID:'.$quote->id
+                        'en' => 'A quote request has been created #'.$quote->id,
+                        'fr' => 'Une demande de devis a été créée #'.$quote->id
                     ],
                     'big_picture' => 'https://push.tqz.be/img/logo_small.png',
                     'ios_attachments' => [
@@ -220,8 +224,8 @@ class QuotesController extends Controller
         if ( $quote->save() ) {
 
             $notification = new Notification();
-            $notification->title = "Demande refusée - ID:".$quote->id;
-            $notification->content = "La demande de devis a été acceptée - ID:".$quote->id;
+            $notification->title = "Demande refusée #".$quote->id;
+            $notification->content = "La demande de devis a été acceptée #".$quote->id;
             $notification->user_id = Auth::id();
             $notification->quote_id = $quote->id;
             $notification->admin = true;
@@ -232,12 +236,12 @@ class QuotesController extends Controller
                 foreach ( $admins as $admin ) {
                     $parameters = [
                         'headings' => [
-                            'en' => 'Quote accepted - ID:'.$quote->id,
-                            'fr' => 'Demande acceptée - ID:'.$quote->id
+                            'en' => 'Quote accepted #'.$quote->id,
+                            'fr' => 'Demande acceptée #'.$quote->id
                         ],
                         'contents' => [
-                            'en' => 'A quote request has been created - ID:'.$quote->id,
-                            'fr' => 'Une demande de devis a été acceptée - ID:'.$quote->id
+                            'en' => 'A quote request has been created #'.$quote->id,
+                            'fr' => 'Une demande de devis a été acceptée #'.$quote->id
                         ],
                         'big_picture' => 'https://push.tqz.be/img/logo_small.png',
                         'ios_attachments' => [
@@ -281,8 +285,8 @@ class QuotesController extends Controller
             if ( $quote->save() ) {
 
                 $notification = new Notification();
-                $notification->title = "Demande refusée - ID:".$quote->id;
-                $notification->content = "La demande de devis a été refusée - ID:".$quote->id;
+                $notification->title = "Demande refusée #".$quote->id;
+                $notification->content = "La demande de devis a été refusée #".$quote->id;
                 $notification->user_id = Auth::id();
                 $notification->quote_id = $quote->id;
                 $notification->admin = false;
@@ -290,12 +294,12 @@ class QuotesController extends Controller
                 if ( $notification->save() ) {
                     $parameters = [
                         'headings' => [
-                            'en' => 'Quote refused - ID:'.$quote->id,
-                            'fr' => 'Demande de devis refusée - ID:'.$quote->id
+                            'en' => 'Quote refused #'.$quote->id,
+                            'fr' => 'Demande de devis refusée #'.$quote->id
                         ],
                         'contents' => [
-                            'en' => 'A quote request has been refused - ID:'.$quote->id,
-                            'fr' => 'La demande de devis a été refusée - ID:'.$quote->id
+                            'en' => 'A quote request has been refused #'.$quote->id,
+                            'fr' => 'La demande de devis a été refusée #'.$quote->id
                         ],
                         'big_picture' => 'https://push.tqz.be/img/logo_small.png',
                         'ios_attachments' => [
@@ -400,8 +404,9 @@ class QuotesController extends Controller
             foreach ( $tasks as $key => $task ) {
                 $keyMoreOne = $key + 1;
                 $tasksDescription .= '<b>Tâche #'.$keyMoreOne.'<b><br>';
-                $tasksDescription .= '<b>Prix '.$task->price.'€<b><br>';
-                $tasksDescription .= '<b>Photo '.asset('storage/tasks/'.$task->picture).'<b><br>';
+                $tasksDescription .= '<b>Prix : '.$task->price.'€<b><br>';
+                $tasksDescription .= '<b>Photo : '.asset('storage/tasks/'.$task->picture).'<b><br>';
+                $tasksDescription .= '<b>Adresse : '.$quote->user->address.'<b><br>';
                 $totalTasksPrice = $totalTasksPrice + $task->price;
             }
 

@@ -7,32 +7,32 @@
             <form @submit.prevent="editQuote" enctype="multipart/form-data">
                 <div class="input">
                     <label>Marque du véhicule</label>
-                    <input type="text" v-model="formEditQuote.brand">
+                    <input type="text" v-model="formEditQuote.brand" disabled>
                 </div>
 
                 <div class="input">
                     <label>Modèle du véhicule</label>
-                    <input type="text" v-model="formEditQuote.model">
+                    <input type="text" v-model="formEditQuote.model" disabled>
                 </div>
 
                 <div class="input">
                     <label>Année du véhicule</label>
-                    <input type="text" v-model="formEditQuote.year">
+                    <input type="text" v-model="formEditQuote.year" disabled>
                 </div>
 
                 <div class="input">
                     <label>Immatriculation</label>
-                    <input type="text" v-model="formEditQuote.plate_number">
+                    <input type="text" v-model="formEditQuote.plate_number" disabled>
                 </div>
 
                 <div class="input">
                     <label>Numéro de chassis</label>
-                    <input type="text" v-model="formEditQuote.chassis_number">
+                    <input type="text" v-model="formEditQuote.chassis_number" disabled>
                 </div>
 
                 <div class="input">
                     <label>Nombre de portes</label>
-                    <select @change="selectDoors">
+                    <select @change="selectDoors" disabled>
                         <option value="null" selected>Sélectionner une option</option>
                         <option value="3 portes">3 portes</option>
                         <option value="5 portes">5 portes</option>
@@ -45,16 +45,10 @@
                     <div class="task" :class='{ deleting: task.deleting, adding: task.adding }' v-for="(task, index) in formEditQuote.tasks">
                         <header>
                             <h2 class="title">Photo #{{ index + 1 }}</h2>
-                            <div v-if="task.deleting">aaaaaa</div>
-                            <button class="btnDeleteTask" @click.prevent="removeTask(index)"><i class="fas fa-trash"></i></button>
                         </header>
                         
                         <div class="container">
                             <div class="input-file">
-                                <label v-if="!task.url">
-                                    <input type="file" accept="image/*" @change="handleFileUpload($event, index)">
-                                    <span>Cliquer pour ajouter une photo</span>
-                                </label>
                                 <div class="preview" v-if="task.url">
                                     <img :src="task.url" alt="Photo">
                                 </div>
@@ -62,12 +56,12 @@
 
                             <div class="input">
                                 <label>Ajouter un commentaire</label>
-                                <textarea v-model="task.description"></textarea>
+                                <textarea v-model="task.description" disabled></textarea>
                             </div>
 
                             <div class="input">
                                 <label>Emplacement</label>
-                                <select v-model="task.stroke">
+                                <select v-model="task.stroke" disabled>
                                     <option :value="stroke.id" v-for="stroke in strokes" :key="stroke.id">{{ stroke.name }}</option>
                                 </select>
                             </div>
@@ -84,17 +78,7 @@
                             </div>
 
                         </div>
-
-                        <div class="deleting">
-                            Suppression en cours ...
-                        </div>
-                        <div class="adding">
-                            Ajout en cours ...
-                        </div>
                     </div>
-
-                    <button id="btnAddTask" class="btn" @click.prevent="addTask">Ajouter une photo</button>
-
                 </div>
 
                 <ul class="actions" v-if="currentUser.admin">
@@ -140,7 +124,7 @@
             }
         },
         mounted() {
-            this.pageTitle = 'Modifier devis ' + this.$route.params.id
+            this.pageTitle = 'Modifier devis #' + this.$route.params.id
             this.$store.commit('pageTitle/set', this.pageTitle)
 
             this.$axios.get('api/quotes/'+this.$route.params.id)
@@ -228,62 +212,6 @@
             },
             selectDoors(e) {
                 this.formEditQuote.doors = e.target.value
-            },
-            addTask() {
-                let taskInput = {
-                    picture: '',
-                    description: '',
-                    duration: '',
-                    price: '',
-                    url: '',
-                    id: '',
-                    deleting: false,
-                    adding: false
-                }
-
-                this.formEditQuote.tasks.push(taskInput)
-            },
-            removeTask(index) {
-                this.formEditQuote.tasks[index].deleting = true
-                let indexToRemove = index
-                let axiosAction = ''
-
-                if ( this.formEditQuote.tasks[index].id ) {
-                    axiosAction = this.$axios.delete('api/tasks/'+this.formEditQuote.tasks[index].id)
-                } else {
-                    axiosAction = this.$axios.post('api/tasks/delete/picture', {
-                        file: this.formEditQuote.tasks[index].picture,
-                    })
-                }
-
-                axiosAction
-                .then(response => {
-                    let data = response.data
-
-                    if ( data.success ) {
-                        let tmpTasks = []
-                        this.formEditQuote.tasks.map((task, index) => {
-                            if ( index != indexToRemove ) {
-                                tmpTasks.push({
-                                    description: task.description,
-                                    picture: task.picture,
-                                    id: task.id,
-                                    url: task.url,
-                                    stroke: task.stroke,
-                                    duration: task.duration,
-                                    price: task.price,
-                                })
-                            }
-                        })
-
-                        this.formEditQuote.tasks = tmpTasks
-                    }
-
-                    this.formEditQuote.tasks[index].deleting = false
-                })
-                .catch(error => {
-                    console.log(error.response)
-                })
             },
             editQuote() {
                 this.isLoading = true

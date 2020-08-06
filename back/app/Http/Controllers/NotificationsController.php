@@ -33,4 +33,23 @@ class NotificationsController extends Controller
             'data' => ''
         ], 200); 
     }
+
+    public function delete()
+    {
+        $notifications = Notification::where('user_id', Auth::id())->delete();
+
+        if ( $notifications ) {
+            return response()->json([
+                'success' => true,
+                'message' => '',
+                'data' => ''
+            ], 200); 
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => '',
+                'data' => ''
+            ], 200); 
+        }
+    }
 }

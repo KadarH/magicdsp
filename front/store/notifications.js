@@ -3,14 +3,17 @@ export const state = () => ({
 })
 
 export const mutations = {
-    increment (state) {
+    increment(state) {
         state.unread++
     },
-    decrement (state) {
+    decrement(state) {
         if ( state.unread <= 0 ) {
             state.unread = 0
         } else {
             state.unread--
         }
+    },
+    reset(state) {
+        state.unread = 0
     }
 }

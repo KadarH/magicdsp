@@ -25,17 +25,20 @@
 
                 <div class="input" :class="errors.year !== undefined ? 'error' : ''">
                     <label>Année du véhicule*</label>
-                    <input type="text" v-model="formNewQuote.year">
+                    <select v-model="formNewQuote.year">
+                        <option value="null" selected>Sélectionner une année</option>
+                        <option v-for="year in yearsAvailable" :value="year">{{ year }}</option>
+                    </select>
                     <span class="error-message" v-if="errors.year !== undefined">*Ce champ est obligatoire</span>
                 </div>
 
                 <div class="input" :class="errors.plate_number !== undefined ? 'error' : ''">
                     <label>Immatriculation*</label>
-                    <input type="text" v-model="formNewQuote.plate_number">
+                    <input type="text" v-model="formNewQuote.plate_number" @input="formNewQuote.plate_number=$event.target.value.toUpperCase()">
                     <span class="error-message" v-if="errors.plate_number !== undefined">*Ce champ est obligatoire</span>
                 </div>
 
-                <div class="input">
+                <div class="input" v-if="currentUser.status_id != 1">
                     <label>Numéro de chassis</label>
                     <input type="text" v-model="formNewQuote.chassis_number">
                 </div>
@@ -100,6 +103,10 @@
             </form>
         </div>
 
+        <a class="fixed-bottom" href="mailto:info@magic-dsp.com?subject=Mon%20v%C3%A9hicule%20est%20grell%C3%A9">
+            Mon véhicule est grellé
+        </a>
+
     </div>
 
 </template>
@@ -107,6 +114,7 @@
 <script>
     import Loading from '~/components/Loading.vue'
     import Multiselect from 'vue-multiselect'
+    import moment from 'moment'
 
     export default {
         middleware: 'authenticated',
@@ -124,7 +132,7 @@
                     brand: '',
                     model: '',
                     doors: '',
-                    year: '',
+                    year: null,
                     plate_number: '',
                     chassis_number: '',
                     tasks: []
@@ -132,11 +140,23 @@
                 strokes: '',
                 isLoading: false,
                 currentUser: this.$cookies.get('user'),
-                errors: []
+                errors: [],
+                yearsAvailable: []
             }
         },
         mounted() {
+            moment.locale('fr')
             this.$store.commit('pageTitle/set', this.pageTitle)
+
+            let initYear = 1980
+            let maxYear = moment().year() + 2
+
+            while ( initYear != maxYear ) {
+                this.yearsAvailable.push(initYear)
+                initYear++;
+            }
+
+            this.yearsAvailable.reverse()
 
             this.formNewQuote.tasks.push({
                 description: '',

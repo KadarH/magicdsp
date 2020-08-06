@@ -44,23 +44,23 @@ class CommunicationsController extends Controller
 
                 if ( !Auth::user()->admin ) {
                     $notification->admin = true;
-                    $notification->title = "Commentaire ajouté - ID:".$quote->id;
-                    $notification->content = "Un commentaire a été ajouté dans la conversation - ID:".$quote->id;
+                    $notification->title = "Commentaire ajouté #".$quote->id;
+                    $notification->content = "Un commentaire a été ajouté dans la conversation #".$quote->id;
                 } else {
-                    $notification->title = "Commentaire ajouté - ID:".$quote->id;
-                    $notification->content = "Un commentaire a été ajouté dans la conversation - ID:".$quote->id;
+                    $notification->title = "Commentaire ajouté #".$quote->id;
+                    $notification->content = "Un commentaire a été ajouté dans la conversation #".$quote->id;
                 }
 
                 if ( $notification->save() ) {
                     if ( Auth::user()->admin ) {
                         $parameters = [
                             'headings' => [
-                                'en' => 'Communication added - ID:'.$quote->id,
-                                'fr' => 'Commentaire ajouté - ID:'.$quote->id
+                                'en' => 'Communication added #'.$quote->id,
+                                'fr' => 'Commentaire ajouté #'.$quote->id
                             ],
                             'contents' => [
-                                'en' => 'A comment has been added - ID:'.$quote->id,
-                                'fr' => 'Commentaire ajouté dans la conversation - ID:'.$quote->id
+                                'en' => 'A comment has been added #'.$quote->id,
+                                'fr' => 'Commentaire ajouté dans la conversation #'.$quote->id
                             ],
                             'big_picture' => 'https://push.tqz.be/img/logo_small.png',
                             'ios_attachments' => [
@@ -88,12 +88,12 @@ class CommunicationsController extends Controller
                         foreach ( $admins as $admin ) {
                             $parameters = [
                                 'headings' => [
-                                    'en' => 'Communication added - ID:'.$quote->id,
-                                    'fr' => 'Commentaire ajouté - ID:'.$quote->id
+                                    'en' => 'Communication added #'.$quote->id,
+                                    'fr' => 'Commentaire ajouté #'.$quote->id
                                 ],
                                 'contents' => [
-                                    'en' => 'A comment has been added - ID:'.$quote->id,
-                                    'fr' => 'Commentaire ajouté dans la conversation - ID:'.$quote->id
+                                    'en' => 'A comment has been added #'.$quote->id,
+                                    'fr' => 'Commentaire ajouté dans la conversation #'.$quote->id
                                 ],
                                 'big_picture' => 'https://push.tqz.be/img/logo_small.png',
                                 'ios_attachments' => [

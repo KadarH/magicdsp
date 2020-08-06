@@ -7,7 +7,7 @@
 
             <tbody>
                 <tr v-for="(quote, index) in quotes">
-                    <td><n-link :to="'/quotes/'+quote.id">Devis {{quote.id}}</n-link></td>
+                    <td><n-link :to="'/quotes/'+quote.id">Devis #{{quote.id}}</n-link></td>
                     <td class="date">{{ moment(quote.created_at).format('DD/MM/YYYY') }}</td>
                 </tr>
             </tbody>
@@ -35,13 +35,22 @@
         },
         data() {
             return {
-                pageTitle: 'Devis en attentes',
+                pageTitle: '',
                 quotes: [],
                 isLoading: true
             }
         },
         mounted() {
-            this.$store.commit('pageTitle/set', this.pageTitle)
+            if ( this.$route.params.type == 'accepted' ) {
+                this.$store.commit('pageTitle/set', 'Devis acceptés')
+            }
+            if ( this.$route.params.type == 'refused' ) {
+                this.$store.commit('pageTitle/set', 'Devis refusés')
+            }
+            if ( this.$route.params.type == 'waiting' ) {
+                this.$store.commit('pageTitle/set', 'Devis en attentes')
+            }
+
             moment.locale('fr')
 
             this.$axios.get('api/quotes?type='+this.$route.params.type)

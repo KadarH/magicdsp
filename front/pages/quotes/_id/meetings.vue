@@ -153,7 +153,6 @@
         },
         methods: {
             getMonthDates(month, year) {
-                // month = parseFloat(month) + 1
                 month = moment().month(month).format("MM")
                 this.dates = []
                 let days = moment(year+'-'+month).daysInMonth()

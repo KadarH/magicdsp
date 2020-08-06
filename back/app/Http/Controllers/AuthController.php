@@ -64,7 +64,7 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
-        $request->validate([
+        $dataToValidate = [
             'firstname' => 'required',
             'lastname' => 'required',
             'address' => 'required',
@@ -72,7 +72,13 @@ class AuthController extends Controller
             'email' => 'required|email|unique:users',
             'password' => 'required',
             'status_id' => 'required'
-        ]);
+        ];
+
+        if ( $request->status_id == 2 || $request->status_id == 3 ) {
+            $dataToValidate['vat_number'] = 'required';
+        }
+
+        $request->validate($dataToValidate);
 
         $user = new User();
         $user->firstname = $request->firstname;
@@ -82,6 +88,10 @@ class AuthController extends Controller
         $user->email = $request->email;
         $user->password = Hash::make($request->password);
         $user->status_id = $request->status_id;
+
+        if ( !empty($request->vat_number) ) {
+            $user->vat_number = $request->vat_number;
+        }
 
         if ( $user->save() ) {
             if ( Auth::attempt(['email' => $request->email, 'password' => $request->password]) ) {

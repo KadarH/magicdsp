@@ -23,7 +23,6 @@
 
             <div v-if="quote.refused">
                 <h1>Vous avez refusé ce devis !</h1>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Deleniti aspernatur libero distinctio sapiente! Eius repudiandae quae explicabo sit assumenda neque culpa nam maiores doloremque quibusdam deserunt iure, facilis ipsum soluta.</p>
             </div>
         </div>
 
@@ -95,7 +94,7 @@
         },
         mounted() {
             moment.locale('fr')
-            this.pageTitle = 'Devis ' + this.$route.params.id
+            this.pageTitle = 'Devis #' + this.$route.params.id
             this.$store.commit('pageTitle/set', this.pageTitle)
 
             this.$axios.get('api/quotes/'+this.$route.params.id)
@@ -110,7 +109,7 @@
                         let hours = Math.floor(totalMinutes / 60)
                         let minutes = totalMinutes % 60
 
-                        this.quote.duration = hours + 'h' + minutes
+                        this.quote.duration = hours + 'h' + ('0' + minutes).slice(-2)
                     }
 
                     if ( this.quote.waiting ) {
