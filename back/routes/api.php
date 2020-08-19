@@ -22,6 +22,8 @@ Route::post('password/forgot', 'AuthController@passwordForgot');
 Route::get('password/reset/{token}', 'AuthController@passwordReset');
 Route::post('password/new', 'AuthController@passwordNew');
 
+Route::get('reminders/meeting', 'RemindersController@meeting');
+
 Route::middleware('auth:sanctum')->group(function() {
 
     // Brands
