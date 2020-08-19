@@ -64,7 +64,7 @@
                 <ul class="actions">
                     <li><button class="btn success">Modifier</button></li>
                     <li><button class="btn danger" type="button" @click="deleteGarage">Supprimer</button></li>
-                    <li><n-link id="backToList" class="btn danger" :to="'/admin/garages'">Annuler</n-link></li>
+                    <li><n-link id="backToList" class="btn default" :to="'/admin/garages'">Retour</n-link></li>
                 </ul>
             </form>
         </div>
