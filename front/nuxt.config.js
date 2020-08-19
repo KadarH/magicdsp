@@ -2,9 +2,8 @@
 export default {
   mode: 'universal',
   server: {
-    port: 8000,
-    host: 'https://app.magic-dsp.com/'
-    // host: 'localhost'
+    port: 3000,
+    host: 'localhost'
   },
   /*
   ** Nuxt target
@@ -58,16 +57,31 @@ export default {
   ],
   axios: {
     baseURL: "https://api.magic-dsp.com/",
-    // baseURL: "http://localhost:8000/",
     credentials: true
   },
   oneSignal: {
     init: {
       appId: 'b5004127-4151-444a-9401-2e7030cf5f6f',
-      // appId: '9f583a30-49a0-43b9-afa6-e697f7b42bd7',
       allowLocalhostAsSecureOrigin: true,
       notifyButton: {
         enable: true,
+      },
+      promptOptions: {
+        customlink: {
+          enabled: true, /* Required to use the Custom Link */
+          style: "button", /* Has value of 'button' or 'link' */
+          size: "medium", /* One of 'small', 'medium', or 'large' */
+          color: {
+            button: '#E12D30', /* Color of the button background if style = "button" */
+            text: '#FFFFFF', /* Color of the prompt's text */
+          },
+          text: {
+            subscribe: "Abonnez-vous aux notifications", /* Prompt's text when not subscribed */
+            unsubscribe: "Se désabonner des notifications", /* Prompt's text when subscribed */
+            explanation: "Recevez des mises à jour sur toutes sortes de choses qui comptent pour vous", /* Optional text appearing before the prompt button */
+          },
+          unsubscribeEnabled: false, /* Controls whether the prompt is visible after subscription */
+        }
       }
     }
   },

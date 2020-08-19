@@ -1,1 +1,1 @@
-<h1>Devis ID: {{ $quote->id }} créé</h1>
+<h1>Devis #{{ $quote->id }} créé</h1>

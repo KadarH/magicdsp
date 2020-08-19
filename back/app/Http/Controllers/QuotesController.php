@@ -12,10 +12,10 @@ use Auth;
 use Spatie\GoogleCalendar\Event;
 use Carbon\Carbon;
 use OneSignal;
+use Illuminate\Support\Facades\Mail;
 use App\Mail\Notifications\QuoteAccepted;
 use App\Mail\Notifications\QuoteRefused;
 use App\Mail\Notifications\QuoteCreated;
-use Illuminate\Support\Facades\Mail;
 use App\Mail\Notifications\CustomerQuoteCreated;
 
 class QuotesController extends Controller
@@ -201,6 +201,58 @@ class QuotesController extends Controller
                     $editTask->stroke_id = $task['stroke_id'];
                     $editTask->save();
                 }
+
+                // TODO put quote in accepted
+                $quote->can_edit = false;
+                $quote->waiting = false;
+                $quote->accepted = true;
+                $quote->refused = false;
+
+                if ( $quote->save() ) {
+
+                    $notification = new Notification();
+                    $notification->title = "Demande refusée #".$quote->id;
+                    $notification->content = "La demande de devis a été acceptée #".$quote->id;
+                    $notification->user_id = Auth::id();
+                    $notification->quote_id = $quote->id;
+                    $notification->admin = true;
+        
+                    if ( $notification->save() ) {
+                        $admins = User::where('admin', true)->get();
+        
+                        foreach ( $admins as $admin ) {
+                            $parameters = [
+                                'headings' => [
+                                    'en' => 'Quote accepted #'.$quote->id,
+                                    'fr' => 'Demande acceptée #'.$quote->id
+                                ],
+                                'contents' => [
+                                    'en' => 'A quote request has been created #'.$quote->id,
+                                    'fr' => 'Une demande de devis a été acceptée #'.$quote->id
+                                ],
+                                'big_picture' => 'https://push.tqz.be/img/logo_small.png',
+                                'ios_attachments' => [
+                                    "id" => "https://push.tqz.be/img/logo_small.png"
+                                ],
+                                'chrome_web_badge' => 'https://push.tqz.be/img/badge.png',
+                                'ios_badgeType'  => 'Increase',
+                                'ios_badgeCount' => 1,
+                                'filters' => [
+                                    [
+                                        "field" => "tag", 
+                                        "key" => "user_id", 
+                                        "relation" => "=", 
+                                        "value" => $admin->id
+                                    ]
+                                ],
+                                'included_segments' => ['All']
+                            ];
+                            
+                            Mail::to($admin->email)->send(new QuoteAccepted($quote));
+                            OneSignal::sendNotificationCustom($parameters);
+                        }
+                    }
+                }
             }
 
         }
@@ -213,67 +265,7 @@ class QuotesController extends Controller
             'data' => ['quote' => $quote]
         ], 200); 
     }
-
-    public function accept(Quote $quote)
-    {
-        $quote->can_edit = false;
-        $quote->waiting = false;
-        $quote->accepted = true;
-        $quote->refused = false;
-        
-        if ( $quote->save() ) {
-
-            $notification = new Notification();
-            $notification->title = "Demande refusée #".$quote->id;
-            $notification->content = "La demande de devis a été acceptée #".$quote->id;
-            $notification->user_id = Auth::id();
-            $notification->quote_id = $quote->id;
-            $notification->admin = true;
-
-            if ( $notification->save() ) {
-                $admins = User::where('admin', true)->get();
-
-                foreach ( $admins as $admin ) {
-                    $parameters = [
-                        'headings' => [
-                            'en' => 'Quote accepted #'.$quote->id,
-                            'fr' => 'Demande acceptée #'.$quote->id
-                        ],
-                        'contents' => [
-                            'en' => 'A quote request has been created #'.$quote->id,
-                            'fr' => 'Une demande de devis a été acceptée #'.$quote->id
-                        ],
-                        'big_picture' => 'https://push.tqz.be/img/logo_small.png',
-                        'ios_attachments' => [
-                            "id" => "https://push.tqz.be/img/logo_small.png"
-                        ],
-                        'chrome_web_badge' => 'https://push.tqz.be/img/badge.png',
-                        'ios_badgeType'  => 'Increase',
-                        'ios_badgeCount' => 1,
-                        'filters' => [
-                            [
-                                "field" => "tag", 
-                                "key" => "user_id", 
-                                "relation" => "=", 
-                                "value" => $admin->id
-                            ]
-                        ],
-                        'included_segments' => ['All']
-                    ];
-                    
-                    Mail::to($admin->email)->send(new QuoteAccepted($quote));
-                    OneSignal::sendNotificationCustom($parameters);
-                }
-            }
-        }
-
-        return response()->json([
-            'success' => true,
-            'message' => '',
-            'data' => ''
-        ], 200);
-    }
-
+    
     public function refuse(Quote $quote) 
     {
         if ( Auth::user()->admin ) {

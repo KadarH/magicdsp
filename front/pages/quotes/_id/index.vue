@@ -9,8 +9,7 @@
                 <p>Nouveau devis en attente d'actions.</p>
             </div>
 
-            <div v-if="quote.waiting && quote.price && quote.duration">
-                <h1>Vous avez déjà fait une estimation !</h1>
+            <div v-if="quote.accepted && quote.price && quote.duration && quote.meeting_date == null && quote.garage_id == null">
                 <p>Estimation de {{ quote.price }}€ pour une durée de {{ quote.duration }}.</p>
             </div>
 
@@ -32,8 +31,8 @@
                 <p>Devis envoyé et en attente de vérification par un admin.</p>
             </div>
 
-            <div v-if="quote.waiting && quote.price && quote.duration">
-                <h1>Une estimation a été établie !</h1>
+            <div v-if="quote.accepted && quote.price && quote.duration && quote.meeting_date == null && quote.garage_id == null">
+                <h1>Vous avez reçu un tarif pour votre devis #{{ quote.id }}</h1>
                 <p>Une estimation de {{ quote.price }}€ pour une durée de {{ quote.duration }} a été établie.</p>
             </div>
 
@@ -55,7 +54,6 @@
             <li v-if="quote.waiting && communications.length > 0"><n-link class="btn default" :to="'/quotes/'+this.$route.params.id+'/communications'">Accéder aux commentaires</n-link></li>
             <li v-if="quote.waiting && !currentUser.admin && communications.length > 0"><n-link class="btn default" :to="'/quotes/'+this.$route.params.id+'/edit'">Modifier</n-link></li>
             <li v-if="quote.waiting && currentUser.admin"><n-link class="btn success" :to="'/quotes/'+this.$route.params.id+'/edit'">Faire une estimation</n-link></li>
-            <li v-if="quote.waiting && !currentUser.admin && quote.price && quote.duration"><button class="btn success" @click.prevent='toggle("accept")'>Accepter l'estimation et fixer une date</button></li>
             <li v-if="quote.waiting && currentUser.admin"><button class="btn danger" @click.prevent='toggle("refuse")'>Refuser le devis</button></li>
             <li><n-link id="backToList" class="btn primary" :to="'/quotes/'+this.$route.params.id+'/show'">Voir le devis</n-link></li>
             <li v-if="!currentUser.admin && quote.accepted && !quote.meeting_date"><n-link id="backToList" class="btn primary" :to="'/quotes/'+this.$route.params.id+'/meetings'">Fixer un rendez-vous</n-link></li>

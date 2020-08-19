@@ -1,1 +1,1 @@
-<h1>Devis ID: {{ $quote->id }} refusé</h1>
+<h1>Devis #{{ $quote->id }} refusé</h1>

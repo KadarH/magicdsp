@@ -38,7 +38,6 @@ Route::middleware('auth:sanctum')->group(function() {
     Route::patch('quotes/{quote}', 'QuotesController@update');
     Route::patch('quotes/{quote}/meetings', 'QuotesController@meetings');
     Route::delete('quotes/{quote}', 'QuotesController@destroy');
-    Route::patch('quotes/{quote}/accept', 'QuotesController@accept');
     Route::patch('quotes/{quote}/refuse', 'QuotesController@refuse');
 
     // Communications

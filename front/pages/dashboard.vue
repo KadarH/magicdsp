@@ -79,8 +79,8 @@
                                 <textarea v-model="task.description"></textarea>
                             </div>
 
-                            <div class="input">
-                                <label>Emplacement</label>
+                            <div class="input" :class="task.error !== undefined ? 'error' : ''">
+                                <label>Emplacement*</label>
                                 <select v-model="task.stroke">
                                     <option value="null" selected>Sélectionner un emplacement</option>
                                     <option v-for="stroke in strokes" :value="stroke.id">{{ stroke.name }}</option>
@@ -249,9 +249,15 @@
                 this.errors = []
 
                 let tasks = []
+                let taskError = false
 
                 if ( this.formNewQuote.tasks.length > 0 ) {
                     this.formNewQuote.tasks.map(task => {
+                        if ( !task.stroke ) {
+                            task.error = true
+                            taskError = true
+                        }
+
                         tasks.push({
                             description: task.description,
                             picture: task.picture,
@@ -260,7 +266,7 @@
                     })
                 }
 
-                if ( tasks.length > 0 ) {
+                if ( tasks.length > 0 && !taskError ) {
                     if ( tasks[0].picture == '' ) {
                         this.errors = {
                             tasks: true
