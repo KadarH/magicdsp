@@ -99,13 +99,10 @@
                     <button id="btnAddTask" class="btn" @click.prevent="addTask">Ajouter une photo</button>
                 </div>
 
+                <button id="vehicleStorm" class="btn success" type="button" @click="vehicleStorm">Mon véhicule est grêle</button>
                 <button type="submit" id="btnSubmit" class="btn primary">Envoyer le devis</button> 
             </form>
         </div>
-
-        <a class="fixed-bottom" href="mailto:info@magic-dsp.com?subject=Mon%20v%C3%A9hicule%20est%20grell%C3%A9">
-            Mon véhicule est grellé
-        </a>
 
     </div>
 
@@ -348,6 +345,21 @@
                 })
                 .catch(error => {
                     console.log(error.response)
+                })
+            },
+            vehicleStorm() {
+                this.isLoading = true
+                
+                this.$axios.post('api/quotes/storm')
+                .then(response => {
+                    let data = response.data
+
+                    if ( data.success ) {
+                        this.$router.push('/quotes/'+data.data.quote.id+'/meetings')
+                    }
+                })
+                .catch(error => {
+                    this.isLoading = false
                 })
             }
         }

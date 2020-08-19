@@ -35,6 +35,7 @@ Route::middleware('auth:sanctum')->group(function() {
     Route::get('quotes', 'QuotesController@index');
     Route::get('quotes/{quote}', 'QuotesController@show');
     Route::post('quotes', 'QuotesController@store');
+    Route::post('quotes/storm', 'QuotesController@storm');
     Route::patch('quotes/{quote}', 'QuotesController@update');
     Route::patch('quotes/{quote}/meetings', 'QuotesController@meetings');
     Route::delete('quotes/{quote}', 'QuotesController@destroy');

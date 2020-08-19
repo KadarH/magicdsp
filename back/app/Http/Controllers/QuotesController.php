@@ -163,6 +163,75 @@ class QuotesController extends Controller
         ], 200);
     }
 
+    public function storm()
+    {
+        $quote = new Quote();
+        $quote->storm = true;
+        $quote->user_id = Auth::id();
+        $quote->can_edit = false;
+        $quote->waiting = false;
+        $quote->accepted = true;
+        $quote->refused = false;
+
+        if ( $quote->save() ) {
+            $task = new Task();
+            $task->quote_id = $quote->id;
+            $task->duration = 30;
+            $task->price = 0;
+
+            if ( $task->save() ) {
+                $notification = new Notification();
+                $notification->title = "Demande créée #".$quote->id;
+                $notification->content = "Une demande de devis a été créée #".$quote->id;
+                $notification->user_id = Auth::id();
+                $notification->quote_id = $quote->id;
+                $notification->admin = true;
+                
+                if ( $notification->save() ) {
+                    $admins = User::where('admin', true)->get();
+
+                    foreach ( $admins as $admin ) {
+                        $parameters = [
+                            'headings' => [
+                                'en' => 'Quote created #'.$quote->id,
+                                'fr' => 'Demande créée #'.$quote->id
+                            ],
+                            'contents' => [
+                                'en' => 'A quote request has been created #'.$quote->id,
+                                'fr' => 'Une demande de devis a été créée #'.$quote->id
+                            ],
+                            'big_picture' => 'https://push.tqz.be/img/logo_small.png',
+                            'ios_attachments' => [
+                                "id" => "https://push.tqz.be/img/logo_small.png"
+                            ],
+                            'chrome_web_badge' => 'https://push.tqz.be/img/badge.png',
+                            'ios_badgeType'  => 'Increase',
+                            'ios_badgeCount' => 1,
+                            'filters' => [
+                                [
+                                    "field" => "tag", 
+                                    "key" => "user_id", 
+                                    "relation" => "=", 
+                                    "value" => $admin->id
+                                ]
+                            ],
+                            'included_segments' => ['All']
+                        ];
+
+                        Mail::to($admin->email)->send(new QuoteCreated($quote));
+                        OneSignal::sendNotificationCustom($parameters);
+                    }
+                }
+
+                return response()->json([
+                    'success' => true,
+                    'message' => '',
+                    'data' => ['quote' => $quote]
+                ], 200);
+            }
+        }
+    }
+
     public function update(Request $request, Quote $quote)
     {
         $data = $this->validateRequest();
@@ -202,7 +271,6 @@ class QuotesController extends Controller
                     $editTask->save();
                 }
 
-                // TODO put quote in accepted
                 $quote->can_edit = false;
                 $quote->waiting = false;
                 $quote->accepted = true;

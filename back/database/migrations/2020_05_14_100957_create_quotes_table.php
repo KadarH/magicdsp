@@ -23,6 +23,7 @@ class CreateQuotesTable extends Migration
             $table->boolean('waiting')->default(true);
             $table->boolean('accepted')->default(false);
             $table->boolean('refused')->default(false);
+            $table->boolean('storm')->default(false);
             $table->timestamps();
         });
     }
