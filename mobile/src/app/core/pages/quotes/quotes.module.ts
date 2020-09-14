@@ -8,18 +8,8 @@ import { Routes, RouterModule } from '@angular/router';
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'home',
-    pathMatch: 'full',
-  },
-  {
-    path: 'home',
     loadChildren: () =>
-      import('./pages/home/home.module').then((m) => m.HomePageModule),
-  },
-  {
-    path: 'quotes/all',
-    loadChildren: () =>
-      import('./pages/quotes/quotes.module').then((m) => m.QuotesModule),
+      import('./add/add.module').then((m) => m.AddPageModule),
   },
 ];
 
@@ -32,4 +22,4 @@ const routes: Routes = [
   ],
   declarations: [],
 })
-export class CoreModule {}
+export class QuotesModule {}
