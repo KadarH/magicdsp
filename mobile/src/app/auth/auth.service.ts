@@ -1,55 +1,57 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { tap } from 'rxjs/operators';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { map, switchMap, tap } from 'rxjs/operators';
+import { Observable, BehaviorSubject, from } from 'rxjs';
+import { Plugins } from '@capacitor/core';
+const { Storage } = Plugins;
 
-import { Storage } from '@ionic/Storage';
 import { User } from './user';
 import { AuthResponse } from './auth-response';
+
+const TOKEN_KEY = 'token';
+
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
   AUTH_SERVER_ADDRESS = 'https://api.magic-dsp.com/api/';
-  authSubject = new BehaviorSubject(false);
+  authSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(null);
 
-  constructor(private httpClient: HttpClient, private storage: Storage) {}
+  token = '';
 
-  register(user: User): Observable<AuthResponse> {
+  constructor(private httpClient: HttpClient) {
+    this.loadToken();
+  }
+
+  register(user: User): Observable<void | AuthResponse> {
     return this.httpClient
       .post<AuthResponse>(`${this.AUTH_SERVER_ADDRESS}register`, user)
       .pipe(
-        tap(async (res: AuthResponse) => {
-          console.log(res.data);
-          if (res.data.user) {
-            await this.storage.set('ACCESS_TOKEN', res.data.user.access_token);
-            await this.storage.set('EXPIRES_IN', res.data.user.expires_in);
-            this.authSubject.next(true);
-          }
+        map((res: AuthResponse) => res.data.user.access_token),
+        switchMap((token) => {
+          return from(Storage.set({ key: TOKEN_KEY, value: token }));
+        }),
+        tap((_) => {
+          this.authSubject.next(true);
         })
       );
   }
 
-  login(user: User): Observable<AuthResponse> {
+  login(user: User): Observable<void | AuthResponse> {
     return this.httpClient.post(`${this.AUTH_SERVER_ADDRESS}login`, user).pipe(
-      tap(async (res: AuthResponse) => {
-        console.log(res.data);
-        if (res.data.user) {
-          console.log(res.data.user);
-
-          await this.storage.set('ACCESS_TOKEN', res.data.token);
-
-          console.log(res.data.token);
-          this.authSubject.next(true);
-        }
+      map((res: AuthResponse) => res.data.user.access_token),
+      switchMap((token) => {
+        return from(Storage.set({ key: TOKEN_KEY, value: token }));
+      }),
+      tap((_) => {
+        this.authSubject.next(true);
       })
     );
   }
 
   async logout() {
-    await this.storage.remove('ACCESS_TOKEN');
-    await this.storage.remove('EXPIRES_IN');
     this.authSubject.next(false);
+    return Storage.remove({ key: TOKEN_KEY });
   }
 
   isLoggedIn() {
@@ -59,5 +61,16 @@ export class AuthService {
   isAuthenticated() {
     console.log(this.authSubject);
     return this.authSubject.value;
+  }
+
+  async loadToken() {
+    const token = await Storage.get({ key: TOKEN_KEY });
+    if (token && token.value) {
+      console.log('set token: ', token.value);
+      this.token = token.value;
+      this.authSubject.next(true);
+    } else {
+      this.authSubject.next(false);
+    }
   }
 }
