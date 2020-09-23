@@ -1,10 +1,12 @@
 <ion-app>
   <ion-split-pane contentId="main-content">
-    <ion-menu contentId="main-content" type="overlay">
+    <ion-menu contentId="main-content" persistent="true" side="start">
       <ion-content>
         <ion-list id="inbox-list">
-          <ion-list-header>Inbox</ion-list-header>
-          <ion-note>hi@ionicframework.com</ion-note>
+          <ion-list-header>
+            <ion-img src="assets/img/logo.png" style="width: 70px"></ion-img>
+          </ion-list-header>
+          <hr style="background-color: antiquewhite" />
 
           <ion-menu-toggle
             auto-hide="false"

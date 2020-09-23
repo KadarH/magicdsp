@@ -18,11 +18,42 @@ export class AppComponent implements OnInit {
       icon: 'home',
     },
     {
-      title: 'Devis',
-      url: '/quotes/all',
-      icon: 'paper-plane',
+      title: 'Ajouter un devis',
+      url: '/quotes/add',
+      icon: 'add',
+    },
+    {
+      title: 'Tous les Devis',
+      url: '/quotes/list',
+      icon: 'list',
+    },
+    {
+      title: 'Devis en attentes',
+      url: '/quotes/list/waiting',
+      icon: 'list-circle',
+    },
+    {
+      title: 'Devis acceptés',
+      url: '/quotes/list/accepted',
+      icon: 'checkmark-done-circle',
+    },
+    {
+      title: 'Devis refusés',
+      url: '/quotes/list/refused',
+      icon: 'close-circle',
+    },
+    {
+      title: 'Notifications',
+      url: '/notifications',
+      icon: 'notifications',
+    },
+    {
+      title: 'Administration',
+      url: '/admin',
+      icon: 'settings',
     },
   ];
+
   constructor(
     private platform: Platform,
     private splashScreen: SplashScreen,

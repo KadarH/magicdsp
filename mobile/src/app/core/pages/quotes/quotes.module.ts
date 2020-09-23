@@ -7,9 +7,13 @@ import { Routes, RouterModule } from '@angular/router';
 
 const routes: Routes = [
   {
-    path: '',
+    path: 'add',
+    loadChildren: () => import('./add/add.module').then((m) => m.AddPageModule),
+  },
+  {
+    path: 'list',
     loadChildren: () =>
-      import('./add/add.module').then((m) => m.AddPageModule),
+      import('./list/list.module').then((m) => m.ListPageModule),
   },
 ];
 
