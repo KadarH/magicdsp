@@ -23,18 +23,14 @@ export class AuthService {
     this.loadToken();
   }
 
-  register(user: User): Observable<void | AuthResponse> {
-    return this.httpClient
-      .post<AuthResponse>(`${this.AUTH_SERVER_ADDRESS}register`, user)
-      .pipe(
-        map((res: AuthResponse) => res.data.user.access_token),
-        switchMap((token) => {
-          return from(Storage.set({ key: TOKEN_KEY, value: token }));
-        }),
-        tap((_) => {
-          this.authSubject.next(true);
-        })
-      );
+  async loadToken() {
+    const token = await Storage.get({ key: TOKEN_KEY });
+    if (token && token.value) {
+      this.token = token.value;
+      this.authSubject.next(true);
+    } else {
+      this.authSubject.next(false);
+    }
   }
 
   login(user: User): Observable<void | AuthResponse> {
@@ -49,9 +45,18 @@ export class AuthService {
     );
   }
 
-  async logout() {
-    this.authSubject.next(false);
-    return Storage.remove({ key: TOKEN_KEY });
+  register(user: User): Observable<void | AuthResponse> {
+    return this.httpClient
+      .post<AuthResponse>(`${this.AUTH_SERVER_ADDRESS}register`, user)
+      .pipe(
+        map((res: AuthResponse) => res.data.user.access_token),
+        switchMap((token) => {
+          return from(Storage.set({ key: TOKEN_KEY, value: token }));
+        }),
+        tap((_) => {
+          this.authSubject.next(true);
+        })
+      );
   }
 
   isLoggedIn() {
@@ -59,18 +64,11 @@ export class AuthService {
   }
 
   isAuthenticated() {
-    console.log(this.authSubject);
     return this.authSubject.value;
   }
 
-  async loadToken() {
-    const token = await Storage.get({ key: TOKEN_KEY });
-    if (token && token.value) {
-      console.log('set token: ', token.value);
-      this.token = token.value;
-      this.authSubject.next(true);
-    } else {
-      this.authSubject.next(false);
-    }
+  logout(): Promise<void> {
+    this.authSubject.next(false);
+    return Storage.remove({ key: TOKEN_KEY });
   }
 }

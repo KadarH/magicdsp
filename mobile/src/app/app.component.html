@@ -1,6 +1,6 @@
 <ion-app>
   <ion-split-pane contentId="main-content">
-    <ion-menu contentId="main-content" persistent="true" side="start">
+    <ion-menu #menu contentId="main-content" persistent="true" side="start">
       <ion-content>
         <ion-list id="inbox-list">
           <ion-list-header>
@@ -28,6 +28,14 @@
               <ion-label>{{ p.title }}</ion-label>
             </ion-item>
           </ion-menu-toggle>
+          <ion-item (click)="logout()" lines="none" detail="false">
+            <ion-icon
+              slot="start"
+              [ios]="'logout-outline'"
+              [md]="'logout-sharp'"
+            ></ion-icon>
+            <ion-label>Deconnexion</ion-label>
+          </ion-item>
         </ion-list>
       </ion-content>
     </ion-menu>

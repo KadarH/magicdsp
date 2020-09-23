@@ -24,7 +24,7 @@
       <ion-item>
         <ion-input
           type="password"
-          placeholder="Password"
+          placeholder="Mot de passe"
           formControlName="password"
         ></ion-input>
       </ion-item>
@@ -40,19 +40,10 @@
     </div>
 
     <ion-button type="submit" expand="block" [disabled]="!credentials.valid"
-      >Log in</ion-button
+      >se connecter</ion-button
     >
-    <ion-button type="button" expand="block" color="light" fill="clear"
-      >Not yet a member? Sign up!
-    </ion-button>
-
-    <ion-button type="button" expand="block" color="tertiary">
-      <ion-icon name="logo-google" slot="start"></ion-icon>
-      Sign in with Google
-    </ion-button>
-    <ion-button type="button" expand="block" color="tertiary">
-      <ion-icon name="logo-apple" slot="start"></ion-icon>
-      Sign in with Apple
+    <ion-button type="button" expand="block" color="white" fill="clear"
+      >Créer un compte
     </ion-button>
   </form>
 </ion-content>
