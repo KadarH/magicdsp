@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 
-import { MenuController, Platform } from '@ionic/angular';
+import { AlertController, MenuController, Platform } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { AuthService } from './auth/auth.service';
 import { Router } from '@angular/router';
+import { OneSignal } from '@ionic-native/onesignal/ngx';
 
 @Component({
   selector: 'app-root',
@@ -12,6 +13,8 @@ import { Router } from '@angular/router';
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent implements OnInit {
+  isAuth: boolean;
+
   public selectedIndex = 0;
   public appPages = [
     {
@@ -28,21 +31,6 @@ export class AppComponent implements OnInit {
       title: 'Tous les Devis',
       url: '/quotes/list',
       icon: 'list',
-    },
-    {
-      title: 'Devis en attentes',
-      url: '/quotes/list/waiting',
-      icon: 'list-circle',
-    },
-    {
-      title: 'Devis acceptés',
-      url: '/quotes/list/accepted',
-      icon: 'checkmark-done-circle',
-    },
-    {
-      title: 'Devis refusés',
-      url: '/quotes/list/refused',
-      icon: 'close-circle',
     },
     {
       title: 'Notifications',
@@ -62,7 +50,9 @@ export class AppComponent implements OnInit {
     private statusBar: StatusBar,
     private authService: AuthService,
     private router: Router,
-    private menuCtrl: MenuController
+    private menuCtrl: MenuController,
+    private oneSignal: OneSignal,
+    private alertCtrl: AlertController
   ) {
     this.initializeApp();
   }
@@ -71,6 +61,8 @@ export class AppComponent implements OnInit {
     this.platform.ready().then(() => {
       this.statusBar.styleDefault();
       this.splashScreen.hide();
+
+      this.setupPush();
     });
   }
 
@@ -81,11 +73,79 @@ export class AppComponent implements OnInit {
         (page) => page.title.toLowerCase() === path.toLowerCase()
       );
     }
+    this.isAuthenticated();
+  }
+
+  isAuthenticated() {
+    return this.authService.isLoggedIn().subscribe((data) => {
+      console.log(data);
+      this.isAuth = !!data;
+    });
   }
 
   async logout() {
     await this.authService.logout();
     this.menuCtrl.enable(false, 'menu');
-    this.router.navigateByUrl('/auth/login', { replaceUrl: true });
+    this.router.navigateByUrl('/login', { replaceUrl: true });
+  }
+
+  setupPush() {
+    // I recommend to put these into your environment.ts
+    this.oneSignal.startInit(
+      'b5004127-4151-444a-9401-2e7030cf5f6f',
+      '624794357236'
+    );
+
+    this.oneSignal.inFocusDisplaying(
+      this.oneSignal.OSInFocusDisplayOption.None
+    );
+
+    // Notifcation was received in general
+    this.oneSignal.handleNotificationReceived().subscribe((data) => {
+      const msg = data.payload.body;
+      const title = data.payload.title;
+      const additionalData = data.payload.additionalData;
+      this.showAlert(title, msg, additionalData.task);
+    });
+
+    // Notification was really clicked/opened
+    this.oneSignal.handleNotificationOpened().subscribe((data) => {
+      // Just a note that the data is a different place here!
+      const additionalData = data.notification.payload.additionalData;
+
+      this.showAlert(
+        'Notification opened',
+        'You already read this before',
+        additionalData.task
+      );
+    });
+    this.oneSignal.addSubscriptionObserver().subscribe((state) => {
+      if (state) {
+        this.oneSignal.sendTag('user_id', '10');
+        this.showAlert(
+          'Notification opened',
+          'You already read this before',
+          'additionalData.task'
+        );
+      }
+    });
+    this.oneSignal.endInit();
+    this.oneSignal.sendTag('user_id', '28');
+  }
+
+  async showAlert(title, msg, task) {
+    const alert = await this.alertCtrl.create({
+      header: title,
+      subHeader: msg,
+      buttons: [
+        {
+          text: `Action: ${task}`,
+          handler: () => {
+            // E.g: Navigate to a specific screen
+          },
+        },
+      ],
+    });
+    alert.present();
   }
 }

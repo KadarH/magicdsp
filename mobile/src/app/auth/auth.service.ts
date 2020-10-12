@@ -35,7 +35,7 @@ export class AuthService {
 
   login(user: User): Observable<void | AuthResponse> {
     return this.httpClient.post(`${this.AUTH_SERVER_ADDRESS}login`, user).pipe(
-      map((res: AuthResponse) => res.data.user.access_token),
+      map((res: AuthResponse) => res.data.token),
       switchMap((token) => {
         return from(Storage.set({ key: TOKEN_KEY, value: token }));
       }),
@@ -49,7 +49,7 @@ export class AuthService {
     return this.httpClient
       .post<AuthResponse>(`${this.AUTH_SERVER_ADDRESS}register`, user)
       .pipe(
-        map((res: AuthResponse) => res.data.user.access_token),
+        map((res: AuthResponse) => res.data.token),
         switchMap((token) => {
           return from(Storage.set({ key: TOKEN_KEY, value: token }));
         }),

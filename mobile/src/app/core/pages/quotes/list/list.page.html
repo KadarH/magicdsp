@@ -3,8 +3,55 @@
     <ion-buttons slot="start">
       <ion-menu-button autoHide="false"></ion-menu-button>
     </ion-buttons>
-    <ion-title>list</ion-title>
+    <ion-title>Liste des devis</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content> </ion-content>
+<ion-content>
+  <ion-segment [(ngModel)]="type" (ionChange)="segmentChanged($event)">
+    <ion-segment-button value="waiting" checked active>
+      <ion-label>En attente</ion-label>
+      <ion-icon ios="cog-outline" md="cog-sharp"></ion-icon>
+    </ion-segment-button>
+    <ion-segment-button value="accepted">
+      <ion-label>Acceptés</ion-label>
+      <ion-icon
+        ios="checkmark-circle-outline"
+        md="checkmark-circle-sharp"
+      ></ion-icon>
+    </ion-segment-button>
+    <ion-segment-button value="refused">
+      <ion-label>Refusés</ion-label>
+      <ion-icon ios="close-circle-outline" md="close-circle-sharp"></ion-icon>
+    </ion-segment-button>
+  </ion-segment>
+
+  <!-- list of quotes  -->
+  <ion-list>
+    <ion-list-header>
+      Liste des devis &nbsp;
+      <span *ngIf="this.type === 'waiting'">en attentes</span>
+      <span *ngIf="this.type === 'accepted'">acceptés</span>
+      <span *ngIf="this.type === 'refused'">refusés</span>
+      :</ion-list-header
+    >
+
+    <ng-container *ngFor="let quote of quotes">
+      <ion-item *ngIf="quote.brand">
+        <ion-avatar slot="start">
+          <img
+            src="https://i2.wp.com/www.verizo.fr/wp-content/uploads/2017/03/icon-devis.png?ssl=1"
+          />
+        </ion-avatar>
+        <ion-label>
+          <h2>{{quote.brand}} {{quote.model}}</h2>
+          <p>Model {{quote.year}}</p>
+        </ion-label>
+        <p>
+          {{quote.created_at | date: 'dd/MM/yyyy'}} {{quote.created_at | date:
+          'hh:mm'}}
+        </p>
+      </ion-item>
+    </ng-container>
+  </ion-list>
+</ion-content>

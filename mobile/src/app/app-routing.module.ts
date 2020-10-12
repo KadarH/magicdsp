@@ -1,19 +1,20 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { AuthGuard } from './auth/guards/auth-guard.service';
 
 const routes: Routes = [
   {
-    path: '',
-    redirectTo: '',
-    pathMatch: 'full',
+    path: 'login',
+    loadChildren: () => import('./auth/auth.module').then((m) => m.AuthModule),
+  },
+  {
+    path: 'register',
+    loadChildren: () => import('./auth/auth.module').then((m) => m.AuthModule),
   },
   {
     path: '',
     loadChildren: () => import('./core/core.module').then((m) => m.CoreModule),
-  },
-  {
-    path: 'auth',
-    loadChildren: () => import('./auth/auth.module').then((m) => m.AuthModule),
+    canActivate: [AuthGuard],
   },
 ];
 

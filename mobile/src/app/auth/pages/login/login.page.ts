@@ -32,6 +32,7 @@ export class LoginPage implements OnInit {
 
   login() {
     this.authService.login(this.credentials.value).subscribe((res) => {
+      console.log(res);
       this.router.navigateByUrl('home');
     });
   }

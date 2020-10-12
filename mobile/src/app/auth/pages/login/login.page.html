@@ -16,6 +16,7 @@
       </ion-item>
       <div
         *ngIf="(email.dirty || email.touched) && email.errors"
+        
         class="errors"
       >
         <span *ngIf="email.errors?.required">Email is required</span>

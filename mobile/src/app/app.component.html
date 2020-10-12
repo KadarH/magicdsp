@@ -1,6 +1,12 @@
 <ion-app>
   <ion-split-pane contentId="main-content">
-    <ion-menu #menu contentId="main-content" persistent="true" side="start">
+    <ion-menu
+      *ngIf="isAuth"
+      #menu
+      contentId="main-content"
+      persistent="true"
+      side="start"
+    >
       <ion-content>
         <ion-list id="inbox-list">
           <ion-list-header>
@@ -31,8 +37,8 @@
           <ion-item (click)="logout()" lines="none" detail="false">
             <ion-icon
               slot="start"
-              [ios]="'logout-outline'"
-              [md]="'logout-sharp'"
+              [ios]="'log-out-outline'"
+              [md]="'log-out-sharp'"
             ></ion-icon>
             <ion-label>Deconnexion</ion-label>
           </ion-item>
