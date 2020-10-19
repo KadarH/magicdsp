@@ -1,1 +1,0 @@
-<h1>Devis #{{ $quote->id }} accepté</h1>

@@ -1,1 +1,0 @@
-<h1>Cher client votre devis est disponible</h1>
