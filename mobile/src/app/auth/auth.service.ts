@@ -7,6 +7,9 @@ const { Storage } = Plugins;
 
 import { User } from './user';
 import { AuthResponse } from './auth-response';
+import { NavigationExtras, Router } from '@angular/router';
+import { LoginPage } from './pages/login/login.page';
+import { NavController } from '@ionic/angular';
 
 const TOKEN_KEY = 'token';
 
@@ -19,7 +22,11 @@ export class AuthService {
 
   token = '';
 
-  constructor(private httpClient: HttpClient) {
+  constructor(
+    private httpClient: HttpClient,
+    private router: Router,
+    private navCtrl: NavController
+  ) {
     this.loadToken();
   }
 
@@ -67,8 +74,8 @@ export class AuthService {
     return this.authSubject.value;
   }
 
-  logout(): Promise<void> {
+  async logout(): Promise<void> {
     this.authSubject.next(false);
-    return Storage.remove({ key: TOKEN_KEY });
+    return await Storage.remove({ key: TOKEN_KEY });
   }
 }

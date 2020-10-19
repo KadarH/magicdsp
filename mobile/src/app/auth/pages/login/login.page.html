@@ -5,46 +5,167 @@
 </ion-header>
 
 <ion-content>
-  <form (ngSubmit)="login()" [formGroup]="credentials">
-    <div class="input-group">
-      <ion-item>
-        <ion-input
-          type="email"
-          placeholder="Email"
-          formControlName="email"
-        ></ion-input>
-      </ion-item>
-      <div
-        *ngIf="(email.dirty || email.touched) && email.errors"
-        
-        class="errors"
-      >
-        <span *ngIf="email.errors?.required">Email is required</span>
-        <span *ngIf="email.errors?.email">Email is invalid</span>
-      </div>
-      <ion-item>
-        <ion-input
-          type="password"
-          placeholder="Mot de passe"
-          formControlName="password"
-        ></ion-input>
-      </ion-item>
-      <div
-        *ngIf="(password.dirty || password.touched) && password.errors"
-        class="errors"
-      >
-        <span *ngIf="password.errors?.required">Password is required</span>
-        <span *ngIf="password.errors?.minlength"
-          >Password needs to be 6 characters</span
-        >
-      </div>
-    </div>
-
-    <ion-button type="submit" expand="block" [disabled]="!credentials.valid"
-      >se connecter</ion-button
+  <div class="choices">
+    <ion-segment [(ngModel)]="mode" (ionChange)="segmentChanged($event)">
+      <ion-segment-button value="login" checked active>
+        <ion-label>Connexion</ion-label>
+        <ion-icon ios="log-in-outline" md="log-in-sharp"></ion-icon>
+      </ion-segment-button>
+      <ion-segment-button value="register">
+        <ion-label>Inscription</ion-label>
+        <ion-icon ios="add-circle-outline" md="add-circle-sharp"></ion-icon>
+      </ion-segment-button>
+    </ion-segment>
+  </div>
+  <div class="content">
+    <form
+      *ngIf="mode !== 'register'"
+      (ngSubmit)="login()"
+      [formGroup]="credentials"
     >
-    <ion-button type="button" expand="block" color="white" fill="clear"
-      >Créer un compte
-    </ion-button>
-  </form>
+      <div class="input-group">
+        <ion-item>
+          <ion-input
+            type="email"
+            placeholder="Email"
+            formControlName="email"
+          ></ion-input>
+        </ion-item>
+        <div
+          *ngIf="(email.dirty || email.touched) && email.errors"
+          class="errors"
+        >
+          <span *ngIf="email.errors?.required">Email is required</span>
+          <span *ngIf="email.errors?.email">Email is invalid</span>
+        </div>
+        <ion-item>
+          <ion-input
+            type="password"
+            placeholder="Mot de passe"
+            formControlName="password"
+          ></ion-input>
+        </ion-item>
+        <div
+          *ngIf="(password.dirty || password.touched) && password.errors"
+          class="errors"
+        >
+          <span *ngIf="password.errors?.required">Password is required</span>
+          <span *ngIf="password.errors?.minlength"
+            >Password needs to be 6 characters</span
+          >
+        </div>
+      </div>
+
+      <ion-button type="submit" expand="block" [disabled]="!credentials.valid"
+        >se connecter</ion-button
+      >
+      <ion-button
+        type="button"
+        expand="block"
+        color="white"
+        fill="clear"
+        (click)="mode = 'register'"
+        >Créer un compte
+      </ion-button>
+    </form>
+    <form
+      *ngIf="mode === 'register'"
+      (ngSubmit)="register()"
+      [formGroup]="registerForm"
+    >
+      <div class="input-group">
+        <ion-radio-group formControlName="status_id">
+          <ion-item>
+            <ion-label>Particulier</ion-label>
+            <ion-radio value="1"></ion-radio>
+          </ion-item>
+
+          <ion-item>
+            <ion-label>Professionnel de l'automobile</ion-label>
+            <ion-radio value="2"></ion-radio>
+          </ion-item>
+          <ion-item>
+            <ion-label>Cabinet d'expertise</ion-label>
+            <ion-radio value="3"></ion-radio>
+          </ion-item>
+        </ion-radio-group>
+
+        <ion-item>
+          <ion-input
+            name="lastname"
+            type="text"
+            placeholder="Nom"
+            formControlName="lastname"
+            required
+          ></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-input
+            name="firstname"
+            type="text"
+            placeholder="Prénom"
+            formControlName="firstname"
+            required
+          ></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-input
+            name="email"
+            type="email"
+            placeholder="Adresse email"
+            formControlName="email"
+            required
+          ></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-input
+            name="address"
+            type="text"
+            placeholder="Adresse"
+            formControlName="address"
+            required
+          ></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-input
+            name="phone_number"
+            type="text"
+            placeholder="Numéro de télephone"
+            formControlName="phone_number"
+            required
+          ></ion-input>
+        </ion-item>
+        <ion-item
+          *ngIf="registerForm.get('status_id').value === '2' ||registerForm.get('status_id').value === '3'"
+        >
+          <ion-input
+            name="vat_number"
+            type="text"
+            placeholder="Numéro de TVA/Siret"
+            formControlName="vat_number"
+            required
+          ></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-input
+            type="password"
+            placeholder="Mot de passe"
+            formControlName="password"
+          ></ion-input>
+        </ion-item>
+      </div>
+
+      <ion-button type="submit" expand="block" [disabled]="!registerForm.valid"
+        >S'inscrire</ion-button
+      >
+      <ion-button
+        type="button"
+        expand="block"
+        color="white"
+        fill="clear"
+        (click)="mode = 'register'"
+        >Se connecter
+      </ion-button>
+    </form>
+  </div>
 </ion-content>

@@ -10,6 +10,9 @@ import { AuthService } from '../../auth.service';
 })
 export class LoginPage implements OnInit {
   credentials: FormGroup;
+  registerForm: FormGroup;
+  mode = 'login';
+  userType = '1';
 
   constructor(
     private authService: AuthService,
@@ -22,10 +25,22 @@ export class LoginPage implements OnInit {
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
     });
+
+    this.registerForm = this.fb.group({
+      status_id: ['1', [Validators.required]],
+      firstname: ['', [Validators.required]],
+      lastname: ['', [Validators.required]],
+      email: ['', [Validators.required]],
+      address: ['', [Validators.required]],
+      phone_number: ['', [Validators.required]],
+      vat_number: [''],
+      password: ['', [Validators.required, Validators.minLength(6)]],
+    });
   }
 
-  register(form) {
-    this.authService.register(form.value).subscribe((res) => {
+  register() {
+    console.log(this.registerForm.value);
+    this.authService.register(this.registerForm.value).subscribe((res) => {
       this.router.navigateByUrl('quotes/add');
     });
   }
@@ -45,4 +60,5 @@ export class LoginPage implements OnInit {
   get password() {
     return this.credentials.get('password');
   }
+  segmentChanged(event: any) {}
 }

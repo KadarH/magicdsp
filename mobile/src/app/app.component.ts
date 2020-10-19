@@ -1,11 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 
-import { AlertController, MenuController, Platform } from '@ionic/angular';
+import {
+  AlertController,
+  MenuController,
+  NavController,
+  Platform,
+} from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { AuthService } from './auth/auth.service';
 import { Router } from '@angular/router';
 import { OneSignal } from '@ionic-native/onesignal/ngx';
+import { take } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -14,6 +21,7 @@ import { OneSignal } from '@ionic-native/onesignal/ngx';
 })
 export class AppComponent implements OnInit {
   isAuth: boolean;
+  sub: Subscription;
 
   public selectedIndex = 0;
   public appPages = [
@@ -52,7 +60,8 @@ export class AppComponent implements OnInit {
     private router: Router,
     private menuCtrl: MenuController,
     private oneSignal: OneSignal,
-    private alertCtrl: AlertController
+    private alertCtrl: AlertController,
+    private navController: NavController
   ) {
     this.initializeApp();
   }
@@ -77,16 +86,15 @@ export class AppComponent implements OnInit {
   }
 
   isAuthenticated() {
-    return this.authService.isLoggedIn().subscribe((data) => {
-      console.log(data);
+    this.authService.isLoggedIn().subscribe((data) => {
       this.isAuth = !!data;
     });
   }
 
-  async logout() {
-    await this.authService.logout();
+  logout() {
+    this.authService.logout();
     this.menuCtrl.enable(false, 'menu');
-    this.router.navigateByUrl('/login', { replaceUrl: true });
+    document.location.href = 'index.html';
   }
 
   setupPush() {
@@ -101,34 +109,43 @@ export class AppComponent implements OnInit {
     );
 
     // Notifcation was received in general
-    this.oneSignal.handleNotificationReceived().subscribe((data) => {
-      const msg = data.payload.body;
-      const title = data.payload.title;
-      const additionalData = data.payload.additionalData;
-      this.showAlert(title, msg, additionalData.task);
-    });
+    this.oneSignal
+      .handleNotificationReceived()
+      .pipe(take(1))
+      .subscribe((data) => {
+        const msg = data.payload.body;
+        const title = data.payload.title;
+        const additionalData = data.payload.additionalData;
+        this.showAlert(title, msg, additionalData.task);
+      });
 
     // Notification was really clicked/opened
-    this.oneSignal.handleNotificationOpened().subscribe((data) => {
-      // Just a note that the data is a different place here!
-      const additionalData = data.notification.payload.additionalData;
+    this.oneSignal
+      .handleNotificationOpened()
+      .pipe(take(1))
+      .subscribe((data) => {
+        // Just a note that the data is a different place here!
+        const additionalData = data.notification.payload.additionalData;
 
-      this.showAlert(
-        'Notification opened',
-        'You already read this before',
-        additionalData.task
-      );
-    });
-    this.oneSignal.addSubscriptionObserver().subscribe((state) => {
-      if (state) {
-        this.oneSignal.sendTag('user_id', '10');
         this.showAlert(
           'Notification opened',
           'You already read this before',
-          'additionalData.task'
+          additionalData.task
         );
-      }
-    });
+      });
+    this.oneSignal
+      .addSubscriptionObserver()
+      .pipe(take(1))
+      .subscribe((state) => {
+        if (state) {
+          this.oneSignal.sendTag('user_id', '10');
+          this.showAlert(
+            'Notification opened',
+            'You already read this before',
+            'additionalData.task'
+          );
+        }
+      });
     this.oneSignal.endInit();
     this.oneSignal.sendTag('user_id', '28');
   }

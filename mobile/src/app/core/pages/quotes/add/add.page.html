@@ -61,19 +61,14 @@
             <ion-select-option value="dog">autre</ion-select-option>
           </ion-select>
         </ion-item>
+
         <div
+          class="ion-margin-top"
           formArrayName="tasks"
           *ngFor="let item of devisForm.get('tasks')['controls']; let i = index;"
         >
+          <ion-item color="light"> Degat {{i+1}} </ion-item>
           <div [formGroupName]="i">
-            <ion-item >
-              <ion-label class="ion-padding"> Degat {{i+1}}</ion-label>
-            </ion-item>
-            <ion-item>
-              <ion-label position="floating">Description</ion-label>
-              <ion-textarea formControlName="description"></ion-textarea>
-            </ion-item>
-
             <ion-item>
               <ion-label position="floating">Stroke</ion-label>
               <ion-select formControlName="stroke" required value="">
@@ -90,7 +85,7 @@
               </ion-button>
               <ion-button size="small" (click)="getPicture('gallery')">
                 <ion-icon name="image" slot="start"></ion-icon>
-                <ion-label>Gallery</ion-label>
+                <ion-label>Gallerie</ion-label>
               </ion-button>
               <input
                 type="file"
@@ -98,6 +93,11 @@
                 #filePicker
                 (change)="onFileChoose($event)"
               />
+            </ion-item>
+
+            <ion-item>
+              <ion-label position="floating">Description</ion-label>
+              <ion-textarea formControlName="description"></ion-textarea>
             </ion-item>
           </div>
         </div>

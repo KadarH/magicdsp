@@ -35,23 +35,68 @@
       <span *ngIf="this.type === 'refused'">refusés</span>
       :</ion-list-header
     >
+    <div *ngIf="quotes">
+      <ng-container *ngFor="let quote of quotes">
+        <ion-item-sliding>
+          <ion-item-options side="start">
+            <ion-item-option color="danger">Refuser</ion-item-option>
+          </ion-item-options>
+          <ion-item *ngIf="quote.brand" (click)="onClickItem(quote.id)">
+            <ion-avatar slot="start">
+              <img
+                src="https://i2.wp.com/www.verizo.fr/wp-content/uploads/2017/03/icon-devis.png?ssl=1"
+              />
+            </ion-avatar>
+            <ion-label>
+              <h2>{{quote.brand}} {{quote.model}}</h2>
+              <p>Model {{quote.year}}</p>
+            </ion-label>
+            <p>
+              {{quote.created_at | date: 'dd/MM/yyyy'}} {{quote.created_at |
+              date: 'hh:mm'}}
+            </p>
+          </ion-item>
+          <ion-item-options side="end">
+            <ion-item-option>
+              <ion-icon ios="eye-outline" md="eye-sharp"></ion-icon>
+              Détail
+            </ion-item-option>
 
-    <ng-container *ngFor="let quote of quotes">
-      <ion-item *ngIf="quote.brand">
+            <ion-item-option color="meduim">
+              <ion-icon
+                ios="chatbox-ellipses-outline"
+                md="chatbox-ellipses-sharp"
+              ></ion-icon>
+              Discussion
+            </ion-item-option>
+            <ion-item-option color="success">
+              <ion-icon ios="checkmark-outline" md="checkmark-sharp"></ion-icon>
+              Accepter
+            </ion-item-option>
+          </ion-item-options>
+        </ion-item-sliding>
+      </ng-container>
+    </div>
+  </ion-list>
+
+  <div *ngIf="!quotes">
+    <ion-list>
+      <ion-item *ngFor="let item of [].constructor(10)">
         <ion-avatar slot="start">
-          <img
-            src="https://i2.wp.com/www.verizo.fr/wp-content/uploads/2017/03/icon-devis.png?ssl=1"
-          />
+          <ion-skeleton-text animated></ion-skeleton-text>
         </ion-avatar>
         <ion-label>
-          <h2>{{quote.brand}} {{quote.model}}</h2>
-          <p>Model {{quote.year}}</p>
+          <h3>
+            <ion-skeleton-text animated style="width: 50%"></ion-skeleton-text>
+          </h3>
+          <p>
+            <ion-skeleton-text animated style="width: 80%"></ion-skeleton-text>
+          </p>
+          <p>
+            <ion-skeleton-text animated style="width: 60%"></ion-skeleton-text>
+          </p>
         </ion-label>
-        <p>
-          {{quote.created_at | date: 'dd/MM/yyyy'}} {{quote.created_at | date:
-          'hh:mm'}}
-        </p>
       </ion-item>
-    </ng-container>
-  </ion-list>
+    </ion-list>
+  </div>
 </ion-content>

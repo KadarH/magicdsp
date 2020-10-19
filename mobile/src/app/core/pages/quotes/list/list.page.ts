@@ -11,7 +11,7 @@ import { QuotesService } from '../services/quotes.service';
 export class ListPage implements OnInit {
   type: string;
 
-  quotes: Quote[] = [];
+  quotes: Quote[];
 
   constructor(private quotesService: QuotesService) {}
 
@@ -21,6 +21,7 @@ export class ListPage implements OnInit {
   }
 
   segmentChanged(ev: any) {
+    this.quotes = null;
     this.quotesService
       .getQuotesByType(this.type)
       .pipe(take(1))
@@ -28,6 +29,10 @@ export class ListPage implements OnInit {
         console.log(res);
         this.quotes = res.data.quotes;
       });
+  }
+
+  onClickItem(id: number) {
+    console.log('hakak', id);
   }
 
   fetchBookings() {}
