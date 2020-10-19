@@ -61,7 +61,6 @@
               <ion-icon ios="eye-outline" md="eye-sharp"></ion-icon>
               Détail
             </ion-item-option>
-
             <ion-item-option color="meduim">
               <ion-icon
                 ios="chatbox-ellipses-outline"
@@ -71,14 +70,13 @@
             </ion-item-option>
             <ion-item-option color="success">
               <ion-icon ios="checkmark-outline" md="checkmark-sharp"></ion-icon>
-              Accepter
+              Estimer
             </ion-item-option>
           </ion-item-options>
         </ion-item-sliding>
       </ng-container>
     </div>
   </ion-list>
-
   <div *ngIf="!quotes">
     <ion-list>
       <ion-item *ngFor="let item of [].constructor(10)">
