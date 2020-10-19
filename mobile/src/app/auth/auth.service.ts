@@ -7,9 +7,7 @@ const { Storage } = Plugins;
 
 import { User } from './user';
 import { AuthResponse } from './auth-response';
-import { NavigationExtras, Router } from '@angular/router';
-import { LoginPage } from './pages/login/login.page';
-import { NavController } from '@ionic/angular';
+import { OneSignalService } from '../shared/one-signal.service';
 
 const TOKEN_KEY = 'token';
 
@@ -20,12 +18,12 @@ export class AuthService {
   AUTH_SERVER_ADDRESS = 'https://api.magic-dsp.com/api/';
   authSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(null);
 
+  private user: User;
   token = '';
 
   constructor(
     private httpClient: HttpClient,
-    private router: Router,
-    private navCtrl: NavController
+    private oneSignalService: OneSignalService
   ) {
     this.loadToken();
   }
@@ -42,7 +40,11 @@ export class AuthService {
 
   login(user: User): Observable<void | AuthResponse> {
     return this.httpClient.post(`${this.AUTH_SERVER_ADDRESS}login`, user).pipe(
-      map((res: AuthResponse) => res.data.token),
+      map((res: AuthResponse) => {
+        this.user = res && res.data ? res.data.user : null;
+        this.oneSignalService.setupPush(this.user.id);
+        return res.data.token;
+      }),
       switchMap((token) => {
         return from(Storage.set({ key: TOKEN_KEY, value: token }));
       }),
@@ -77,5 +79,9 @@ export class AuthService {
   async logout(): Promise<void> {
     this.authSubject.next(false);
     return await Storage.remove({ key: TOKEN_KEY });
+  }
+
+  getUser() {
+    return this.user;
   }
 }
