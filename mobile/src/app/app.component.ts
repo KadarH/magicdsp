@@ -61,7 +61,9 @@ export class AppComponent implements OnInit {
     this.platform.ready().then(() => {
       this.statusBar.styleDefault();
       this.splashScreen.hide();
-      this.oneSignalService.setupPush();
+      this.oneSignalService.setupPush(
+        this.authService.getUser() ? this.authService.getUser().id : null
+      );
     });
   }
 

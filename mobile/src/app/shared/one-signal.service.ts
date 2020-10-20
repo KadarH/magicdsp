@@ -21,15 +21,12 @@ export class OneSignalService {
     );
 
     // Notifcation was received in general
-    this.oneSignal
-      .handleNotificationReceived()
-      .pipe(take(1))
-      .subscribe((data) => {
-        const msg = data.payload.body;
-        const title = data.payload.title;
-        const additionalData = data.payload.additionalData;
-        this.showAlert(title, msg, additionalData.task);
-      });
+    this.oneSignal.handleNotificationReceived().subscribe((data) => {
+      const msg = data.payload.body;
+      const title = data.payload.title;
+      const additionalData = data.payload.additionalData;
+      this.showAlert(title, msg, additionalData.task);
+    });
 
     // Notification was really clicked/opened
     this.oneSignal.handleNotificationOpened().subscribe((data) => {
