@@ -7,14 +7,10 @@ import { IonicModule } from '@ionic/angular';
 import { ShowPageRoutingModule } from './show-routing.module';
 
 import { ShowPage } from './show.page';
+import { ModalShowComponent } from './modal-show/modal-show.component';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    IonicModule,
-    ShowPageRoutingModule
-  ],
-  declarations: [ShowPage]
+  imports: [CommonModule, FormsModule, IonicModule, ShowPageRoutingModule],
+  declarations: [ShowPage, ModalShowComponent],
 })
 export class ShowPageModule {}
