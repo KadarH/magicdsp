@@ -26,6 +26,7 @@ export class AuthService {
     private oneSignalService: OneSignalService
   ) {
     this.loadToken();
+    this.loadUser();
   }
 
   async loadToken() {
@@ -38,11 +39,17 @@ export class AuthService {
     }
   }
 
+  async loadUser() {
+    const user = await Storage.get({ key: 'user' });
+    this.user = user && user.value ? JSON.parse(user.value) : null;
+  }
+
   login(user: User): Observable<void | AuthResponse> {
     return this.httpClient.post(`${this.AUTH_SERVER_ADDRESS}login`, user).pipe(
       map((res: AuthResponse) => {
         this.user = res && res.data ? res.data.user : null;
         this.oneSignalService.setupPush(this.user.id);
+        Storage.set({ key: 'user', value: JSON.stringify(res.data.user) });
         return res.data.token;
       }),
       switchMap((token) => {
@@ -58,9 +65,10 @@ export class AuthService {
     return this.httpClient
       .post<AuthResponse>(`${this.AUTH_SERVER_ADDRESS}register`, user)
       .pipe(
-        map((res: AuthResponse) => res.data.token),
-        switchMap((token) => {
-          return from(Storage.set({ key: TOKEN_KEY, value: token }));
+        map((res: AuthResponse) => res.data),
+        switchMap((data) => {
+          Storage.set({ key: 'user', value: JSON.stringify(data.user) });
+          return from(Storage.set({ key: TOKEN_KEY, value: data.token }));
         }),
         tap((_) => {
           this.authSubject.next(true);
