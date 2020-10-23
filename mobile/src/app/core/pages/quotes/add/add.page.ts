@@ -1,5 +1,5 @@
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
-import { MenuController, NavController } from '@ionic/angular';
+import { MenuController, NavController, ToastController } from '@ionic/angular';
 import * as moment from 'moment';
 import { Component, ElementRef, ViewChild, OnInit } from '@angular/core';
 import {
@@ -7,51 +7,67 @@ import {
   CameraResultType,
   CameraSource,
   Capacitor,
+  Storage,
 } from '@capacitor/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { Platform } from '@ionic/angular';
 import { Observable } from 'rxjs';
 import { MarquesService } from '../services/marques.service';
 import { map, take } from 'rxjs/operators';
 import { ModelsService } from '../services/models.service';
+import { User } from 'src/app/auth/user';
+import { StrokesService } from '../services/strokes.service';
+import { QuotesService } from '../services/quotes.service';
+import { Router } from '@angular/router';
 const { Camera } = Plugins;
+
 @Component({
   selector: 'app-add',
   templateUrl: './add.page.html',
   styleUrls: ['./add.page.scss'],
 })
 export class AddPage implements OnInit {
+  user: User;
+
   devisForm: FormGroup;
 
   tasks: FormArray;
   brands$: Observable<any[]>;
   models$: Observable<any[]>;
   years: number[] = [];
+  strokes$: Observable<any[]>;
 
+  img = '';
   @ViewChild('filePicker', { static: false }) filePickerRef: ElementRef<
     HTMLInputElement
   >;
   photo: SafeResourceUrl;
   isDesktop: boolean;
 
+  toast: HTMLIonToastElement;
   constructor(
-    private platform: Platform,
-    private sanitizer: DomSanitizer,
+    public toastController: ToastController,
     public navCtrl: NavController,
     private menu: MenuController,
     private formBuilder: FormBuilder,
     private marquesService: MarquesService,
-    private modelsService: ModelsService
+    private modelsService: ModelsService,
+    private strokesService: StrokesService,
+    private quotesService: QuotesService,
+    private router: Router
   ) {}
 
   ngOnInit() {
+    /** get user from resolver */
+    this.loadUser();
+
+    /** init Form */
     this.devisForm = this.formBuilder.group({
-      brand: [],
-      model: [],
-      doors: [],
+      brand: [''],
+      model: [''],
+      doors: [''],
       year: [null],
-      plateNumber: [],
-      chassisNumber: [],
+      plate_number: [''],
+      chassis_number: [''],
 
       tasks: this.formBuilder.array([this.patchValues()]),
     });
@@ -63,6 +79,12 @@ export class AddPage implements OnInit {
         return res.data.brands;
       })
     );
+    this.strokes$ = this.strokesService.getStrokes().pipe(
+      map((res) => {
+        console.log(res);
+        return res.data.strokes;
+      })
+    );
 
     this.devisForm.get('brand').valueChanges.subscribe((value) => {
       this.models$ = this.modelsService
@@ -71,9 +93,9 @@ export class AddPage implements OnInit {
     });
   }
 
-  pushQuoteTask() {
-    const control: FormArray = this.devisForm.get('tasks') as FormArray;
-    control.push(this.patchValues());
+  async loadUser() {
+    const user = await Storage.get({ key: 'user' });
+    this.user = user && user.value ? JSON.parse(user.value) : null;
   }
 
   patchValues(): FormGroup {
@@ -81,28 +103,34 @@ export class AddPage implements OnInit {
       description: [],
       picture: [],
       url: [],
-      stroke: [],
+      stroke_id: [],
     });
   }
 
-  loadImageFromDevice(event) {
-    const file = event.target.files[0];
-
-    const reader = new FileReader();
-
-    reader.readAsDataURL(file);
-
-    reader.onload = () => {
-      // note using fat arrow function here if we intend to point at current Class context.
-      // this.yourImageDataURL = dataReader.result;
-    };
-
-    reader.onerror = (error) => {
-      // handle errors
-    };
+  submitForm(devisForm: FormGroup) {
+    console.log(devisForm.value);
+    this.quotesService
+      .saveQuote(devisForm.value)
+      .pipe(take(1))
+      .subscribe(
+        (data: any) => {
+          console.log(data);
+          this.presentToast('Le devis a été ajouté avec success');
+          this.router.navigateByUrl('/quotes/show/' + data.id);
+        },
+        (err) => {
+          console.log(err);
+        }
+      );
   }
-  submitForm() {
+
+  addNewTask() {
     this.pushQuoteTask();
+  }
+
+  pushQuoteTask() {
+    const control: FormArray = this.devisForm.get('tasks') as FormArray;
+    control.push(this.patchValues());
   }
 
   showMenu() {
@@ -121,29 +149,12 @@ export class AddPage implements OnInit {
 
     this.years.reverse();
   }
-  async getPicture(type: string) {
-    if (
-      !Capacitor.isPluginAvailable('Camera') ||
-      (this.isDesktop && type === 'gallery')
-    ) {
-      this.filePickerRef.nativeElement.click();
-      return;
-    }
 
-    const image = await Camera.getPhoto({
-      quality: 100,
-      width: 400,
-      allowEditing: false,
-      resultType: CameraResultType.DataUrl,
-      source: CameraSource.Prompt,
-    });
-
-    this.photo = this.sanitizer.bypassSecurityTrustResourceUrl(
-      image && image.dataUrl
-    );
+  getPicture(type: string) {
+    this.filePickerRef.nativeElement.click();
   }
 
-  onFileChoose(event: Event) {
+  onFileChoose(event: any, index: number) {
     const file = (event.target as HTMLInputElement).files[0];
     const pattern = /image-*/;
     const reader = new FileReader();
@@ -152,10 +163,33 @@ export class AddPage implements OnInit {
       console.log('File format not supported');
       return;
     }
-
     reader.onload = () => {
       this.photo = reader.result.toString();
+      this.quotesService
+        .uploadPhoto(file)
+        .pipe(take(1))
+        .subscribe((data) => {
+          if (data.success) {
+            const arr = this.devisForm.get('tasks') as FormArray;
+            arr.controls[index].patchValue({ picture: data.data.file });
+          }
+        });
     };
     reader.readAsDataURL(file);
+  }
+
+  async presentToast(msg: string) {
+    this.toast = await this.toastController.create({
+      message: msg,
+      duration: 3000,
+      color: 'dark',
+      buttons: [
+        {
+          text: 'Ok',
+          role: 'cancel',
+        },
+      ],
+    });
+    this.toast.present();
   }
 }

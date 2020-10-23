@@ -14,7 +14,11 @@
       <ion-card-subtitle>Remplir le formulaire du devis :</ion-card-subtitle>
     </ion-card-header>
     <ion-card-content>
-      <form [formGroup]="devisForm" (ngSubmit)="submitForm()">
+      <form
+        [formGroup]="devisForm"
+        enctype="multipart/form-data"
+        (ngSubmit)="submitForm(devisForm)"
+      >
         <ion-item>
           <ion-label position="floating">Marque du véhicule</ion-label>
           <ion-select formControlName="brand" required value="">
@@ -46,9 +50,19 @@
         <ion-item>
           <ion-label position="floating">Immatriculation</ion-label>
           <ion-input
-            formControlName="plateNumber"
+            type="text"
+            formControlName="plate_number"
             required
-            value=""
+            class="ion-text-uppercase"
+          >
+          </ion-input>
+        </ion-item>
+        <ion-item *ngIf="user && user.status_id !== 1">
+          <ion-label position="floating">Numéro de chassis</ion-label>
+          <ion-input
+            type="text"
+            formControlName="chassis_number"
+            required
             class="ion-text-uppercase"
           >
           </ion-input>
@@ -56,9 +70,9 @@
         <ion-item>
           <ion-label position="floating">Nombre de portes</ion-label>
           <ion-select formControlName="doors" required value="">
-            <ion-select-option value="cat">3 porte</ion-select-option>
-            <ion-select-option value="dog">5 porte</ion-select-option>
-            <ion-select-option value="dog">autre</ion-select-option>
+            <ion-select-option value="3 portes">3 portes</ion-select-option>
+            <ion-select-option value="5 portes">5 portes</ion-select-option>
+            <ion-select-option value="Autres">autre</ion-select-option>
           </ion-select>
         </ion-item>
 
@@ -71,10 +85,12 @@
           <div [formGroupName]="i">
             <ion-item>
               <ion-label position="floating">Stroke</ion-label>
-              <ion-select formControlName="stroke" required value="">
-                <ion-select-option value="cat">3 porte</ion-select-option>
-                <ion-select-option value="dog">5 porte</ion-select-option>
-                <ion-select-option value="dog">autre</ion-select-option>
+              <ion-select formControlName="stroke_id" required value="">
+                <ion-select-option
+                  *ngFor="let item of strokes$ | async,let i= index;"
+                  [value]="item.id"
+                  >{{item.name}}
+                </ion-select-option>
               </ion-select>
             </ion-item>
             <ion-item>
@@ -83,15 +99,10 @@
                 <ion-icon name="camera" slot="start"></ion-icon>
                 <ion-label>Camera</ion-label>
               </ion-button>
-              <ion-button size="small" (click)="getPicture('gallery')">
-                <ion-icon name="image" slot="start"></ion-icon>
-                <ion-label>Gallerie</ion-label>
-              </ion-button>
               <input
                 type="file"
-                *ngIf="isDesktop"
                 #filePicker
-                (change)="onFileChoose($event)"
+                (change)="onFileChoose($event,i)"
               />
             </ion-item>
 
@@ -103,9 +114,16 @@
         </div>
         <ion-row>
           <ion-col>
-            <ion-button type="submit" color="danger" expand="block"
-              >Submit</ion-button
+            <ion-button (click)="addNewTask()" color="medium" expand="block"
+              >Ajouter une photo du dégat</ion-button
             >
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-button type="submit" color="success" expand="block"
+              >Envoyer le devis
+            </ion-button>
           </ion-col>
         </ion-row>
       </form>

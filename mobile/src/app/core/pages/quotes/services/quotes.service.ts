@@ -11,11 +11,29 @@ export class QuotesService {
 
   constructor(private http: HttpClient) {}
 
+  saveQuote(quote: any) {
+    return this.http.post<any>(`${this.AUTH_SERVER_ADDRESS}quotes`, quote);
+  }
+
   getQuotes() {
     return this.http.get<any>(`${this.AUTH_SERVER_ADDRESS}quotes?type=waiting`);
   }
 
   getQuotesByType(type: string) {
     return this.http.get<any>(`${this.AUTH_SERVER_ADDRESS}quotes?type=` + type);
+  }
+
+  getQuote(id: number) {
+    return this.http.get<any>(`${this.AUTH_SERVER_ADDRESS}quotes/` + id);
+  }
+  uploadPhoto(file: any) {
+    const formData: FormData = new FormData();
+    formData.append('file', file);
+
+    return this.http.post<any>(
+      `${this.AUTH_SERVER_ADDRESS}tasks/upload/picture`,
+      formData,
+      { headers: { 'Content-Type': 'multipart' } }
+    );
   }
 }
