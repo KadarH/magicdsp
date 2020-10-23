@@ -32,7 +32,6 @@ export class HttpConfigInterceptor implements HttpInterceptor {
   ): Observable<HttpEvent<any>> {
     return from(Storage.get({ key: TOKEN_KEY })).pipe(
       switchMap((token) => {
-        console.log(token);
         if (token.value) {
           request = request.clone({
             headers: request.headers.set(
@@ -46,6 +45,10 @@ export class HttpConfigInterceptor implements HttpInterceptor {
           request = request.clone({
             headers: request.headers.set('Content-Type', 'application/json'),
           });
+        } else if (request.headers.get('Content-Type') === 'multipart') {
+          request = request.clone({
+            headers: request.headers.delete('Content-Type'),
+          });
         }
 
         return next.handle(request).pipe(
@@ -58,7 +61,9 @@ export class HttpConfigInterceptor implements HttpInterceptor {
           catchError((error: HttpErrorResponse) => {
             const status = error.status;
             const reason =
-              error && error.error.reason ? error.error.reason : '';
+              error && error.error && error.error.reason
+                ? error.error.reason
+                : '';
 
             this.presentAlert(status, reason);
             return throwError(error);
