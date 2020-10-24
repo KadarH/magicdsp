@@ -24,7 +24,7 @@
           <ion-select formControlName="brand" required value="">
             <ion-select-option
               *ngFor="let item of brands$ | async"
-              [value]="item.id"
+              [value]="item"
               >{{item.name}}
             </ion-select-option>
           </ion-select>
@@ -34,7 +34,7 @@
           <ion-select formControlName="model" required value="">
             <ion-select-option
               *ngFor="let item of models$ | async"
-              [value]="item.id"
+              [value]="item.name"
               >{{item.name}}
             </ion-select-option>
           </ion-select>
@@ -81,7 +81,16 @@
           formArrayName="tasks"
           *ngFor="let item of devisForm.get('tasks')['controls']; let i = index;"
         >
-          <ion-item color="light"> Degat {{i+1}} </ion-item>
+          <ion-item color="light">
+            Degat {{i+1}}
+            <ion-icon
+              *ngIf="i !== 0"
+              ios="close-circle-outline"
+              md="close-circle-sharp"
+              slot="end"
+              (click)="deleteTask(i)"
+            ></ion-icon>
+          </ion-item>
           <div [formGroupName]="i">
             <ion-item>
               <ion-label position="floating">Stroke</ion-label>
@@ -115,7 +124,7 @@
         <ion-row>
           <ion-col>
             <ion-button (click)="addNewTask()" color="medium" expand="block"
-              >Ajouter une photo du dégat</ion-button
+              >Ajouter un dégat</ion-button
             >
           </ion-col>
         </ion-row>

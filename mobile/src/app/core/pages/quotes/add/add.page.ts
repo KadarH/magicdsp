@@ -4,12 +4,9 @@ import * as moment from 'moment';
 import { Component, ElementRef, ViewChild, OnInit } from '@angular/core';
 import {
   Plugins,
-  CameraResultType,
-  CameraSource,
-  Capacitor,
   Storage,
 } from '@capacitor/core';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { SafeResourceUrl } from '@angular/platform-browser';
 import { Observable } from 'rxjs';
 import { MarquesService } from '../services/marques.service';
 import { map, take } from 'rxjs/operators';
@@ -18,6 +15,7 @@ import { User } from 'src/app/auth/user';
 import { StrokesService } from '../services/strokes.service';
 import { QuotesService } from '../services/quotes.service';
 import { Router } from '@angular/router';
+import { Quote } from 'src/app/core/models/quote';
 const { Camera } = Plugins;
 
 @Component({
@@ -29,7 +27,7 @@ export class AddPage implements OnInit {
   user: User;
 
   devisForm: FormGroup;
-
+  quote: Quote;
   tasks: FormArray;
   brands$: Observable<any[]>;
   models$: Observable<any[]>;
@@ -81,14 +79,13 @@ export class AddPage implements OnInit {
     );
     this.strokes$ = this.strokesService.getStrokes().pipe(
       map((res) => {
-        console.log(res);
         return res.data.strokes;
       })
     );
 
     this.devisForm.get('brand').valueChanges.subscribe((value) => {
       this.models$ = this.modelsService
-        .getModels(value)
+        .getModels(value.id)
         .pipe(map((res) => res.data.brand.models));
     });
   }
@@ -109,14 +106,17 @@ export class AddPage implements OnInit {
 
   submitForm(devisForm: FormGroup) {
     console.log(devisForm.value);
+
+    this.quote = { ...devisForm.value };
+
+    this.quote.brand = devisForm.get('brand').value.name;
     this.quotesService
-      .saveQuote(devisForm.value)
+      .saveQuote(this.quote)
       .pipe(take(1))
       .subscribe(
-        (data: any) => {
-          console.log(data);
+        (res: any) => {
           this.presentToast('Le devis a été ajouté avec success');
-          this.router.navigateByUrl('/quotes/show/' + data.id);
+          this.router.navigateByUrl('/quotes/show/' + res.data.quote.id);
         },
         (err) => {
           console.log(err);
@@ -126,6 +126,11 @@ export class AddPage implements OnInit {
 
   addNewTask() {
     this.pushQuoteTask();
+  }
+
+  deleteTask(i: number) {
+    const control: FormArray = this.devisForm.get('tasks') as FormArray;
+    control.removeAt(i);
   }
 
   pushQuoteTask() {
