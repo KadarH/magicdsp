@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Storage } from '@capacitor/core';
 import { ModalController } from '@ionic/angular';
 import { take } from 'rxjs/operators';
+import { User } from 'src/app/auth/user';
 import { Quote } from 'src/app/core/models/quote';
-import { Task } from 'src/app/core/models/task';
 import { QuotesService } from '../services/quotes.service';
 import { StrokesService } from '../services/strokes.service';
 import { ModalShowComponent } from './modal-show/modal-show.component';
@@ -16,6 +17,8 @@ import { ModalShowComponent } from './modal-show/modal-show.component';
 export class ShowPage implements OnInit {
   quote: Quote;
   strokes = [];
+  communications = [];
+  user: User;
 
   totalDurationString: string;
   totalDuration: number;
@@ -29,6 +32,9 @@ export class ShowPage implements OnInit {
   ) {}
 
   ngOnInit() {
+    /** get user from resolver */
+    this.loadUser();
+
     this.strokesService.getStrokes().subscribe((rst: any) => {
       this.strokes = rst && rst.data ? rst.data.strokes : [];
     });
@@ -58,6 +64,11 @@ export class ShowPage implements OnInit {
           .reduce((sum, current) => sum + current, 0);
       }
     });
+  }
+
+  async loadUser() {
+    const user = await Storage.get({ key: 'user' });
+    this.user = user && user.value ? JSON.parse(user.value) : null;
   }
 
   estimate() {

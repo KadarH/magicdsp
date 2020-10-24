@@ -9,8 +9,95 @@
 
 <ion-content>
   <ion-card *ngIf="quote">
-    <ion-item>
-      <ion-button color="medium" fill="outline" slot="start">
+    <ion-item style="text-align: center">
+      <div *ngIf="user.admin">
+        <div *ngIf="quote.waiting && !quote.price && !quote.duration">
+          <p>Nouveau devis en attente d'actions.</p>
+        </div>
+
+        <div
+          *ngIf="quote.storm && quote.meeting_date == null && quote.garage_id == null"
+        >
+          <h5>Devis véhicule grêlé</h5>
+          <p>Estimation gratuite pour une durée de 30 minutes.</p>
+        </div>
+
+        <div
+          *ngIf="quote.accepted && quote.price && quote.duration && quote.meeting_date == null && quote.garage_id == null"
+        >
+          <p>
+            Estimation de {{ quote.price }}€ pour une durée de {{
+            quote.duration}}.
+          </p>
+        </div>
+
+        <div *ngIf="quote.accepted && quote.meeting_date && quote.garage_id">
+          <h5>L'utilisateur a accepté le devis et fixé un rendez-vous !</h5>
+          <p>
+            <span class="title">Rendez-vous :</span>
+            {{ quote.meeting_date | date :'dd/MM/yyyy' }}
+          </p>
+          <p><span class="title">Montant :</span> {{ quote.price }}€</p>
+          <p><span class="title">Durée :</span> {{ quote.duration }}</p>
+        </div>
+
+        <div *ngIf="quote.refused">
+          <h5>Vous avez refusé ce devis !</h5>
+        </div>
+      </div>
+
+      <div *ngIf="!user.admin">
+        <div *ngIf="quote.waiting && !quote.price && !quote.duration">
+          <p>Devis envoyé et en attente de vérification par un admin.</p>
+        </div>
+
+        <div
+          *ngIf="quote.storm && quote.meeting_date == null && quote.garage_id == null"
+        >
+          <h5>Devis véhicule grêlé</h5>
+          <p>Estimation gratuite pour une durée de 30 minutes.</p>
+        </div>
+
+        <div
+          *ngIf="quote.accepted && quote.price && quote.duration && quote.meeting_date == null && quote.garage_id == null"
+        >
+          <h5>Devis accépté :</h5>
+          <p>
+            Une estimation de {{ quote.price }}€ pour une durée de {{
+            quote.duration }} a été établie.
+          </p>
+        </div>
+
+        <div *ngIf="quote.accepted && quote.meeting_date && quote.garage_id">
+          <p>
+            <span class="title">Rendez-vous :</span>
+            {{ quote.meeting_date | date :'dd/MM/yyyy' }}
+          </p>
+          <p><span class="title">Montant :</span> {{ quote.price }}€</p>
+          <p><span class="title">Durée :</span> {{ quote.duration }}</p>
+        </div>
+
+        <div *ngIf="quote.refused">
+          <p>Votre devis a été refusé par l'administrateur.</p>
+        </div>
+      </div>
+    </ion-item>
+
+    <ion-item
+      *ngIf="(quote.waiting && user.admin) ||
+     (quote.waiting && user.admin && communications.length == 0)||
+      (quote.waiting && communications.length > 0) ||
+     (!user.admin && quote.accepted && !quote.meeting_date) ||
+     (quote.waiting && !user.admin && communications.length > 0)"
+    >
+      <ion-button
+        *ngIf="(quote.waiting && user.admin && communications.length == 0)
+          || (quote.waiting && communications.length > 0)"
+        [routerLink]="['/quotes/'+quote.id+'/communications']"
+        color="medium"
+        fill="outline"
+        slot="start"
+      >
         <ion-icon
           slot="icon-only"
           ios="chatbox-ellipses-outline"
@@ -18,21 +105,40 @@
         >
         </ion-icon>
       </ion-button>
-      <ion-button color="success" fill="outline" style="width: 100%"
-        >Estimation</ion-button
+
+      <ion-button
+        *ngIf="quote.waiting && user.admin"
+        color="success"
+        fill="outline"
+        style="width: 100%"
+        >Estimer</ion-button
       >
       <ion-button
+        *ngIf="!user.admin && quote.accepted && !quote.meeting_date"
+        color="primary"
+        fill="outline"
+        style="width: 100%"
+        >Fixer un Rendez-vous</ion-button
+      >
+      <ion-button
+        *ngIf="quote.waiting && user.admin"
         color="danger"
         fill="outline"
-        slot="end"
         (click)="refuseQuote()"
         >Refuser</ion-button
+      >
+      <ion-button
+        *ngIf="quote.waiting && !user.admin && communications.length > 0"
+        color="danger"
+        fill="outline"
+        [routerLink]="['/quotes/'+quote.id+'/edit']"
+        >Editer</ion-button
       >
     </ion-item>
     <ion-item>
       <ion-icon color="success" name="car" slot="start"></ion-icon>
       <ion-label class="brandTitle"
-        >{{quote.brand}} - {{quote.model}}</ion-label
+        >Devis #{{quote.id}} [ {{quote.brand}} - {{quote.model}} ]</ion-label
       >
     </ion-item>
 
