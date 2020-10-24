@@ -16,6 +16,7 @@ import { OneSignalService } from './shared/one-signal.service';
 export class AppComponent implements OnInit {
   isAuth: boolean;
   sub: Subscription;
+  subscription: Subscription;
 
   public selectedIndex = 0;
   public appPages = [
@@ -87,5 +88,15 @@ export class AppComponent implements OnInit {
     this.authService.logout();
     this.menuCtrl.enable(false, 'menu');
     document.location.href = 'index.html';
+  }
+
+  ionViewDidEnter() {
+    this.subscription = this.platform.backButton.subscribe(() => {
+      navigator['app'].exitApp();
+    });
+  }
+
+  ionViewWillLeave() {
+    this.subscription.unsubscribe();
   }
 }
