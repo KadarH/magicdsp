@@ -41,7 +41,10 @@
           <ion-item-options side="start">
             <ion-item-option color="danger">Refuser</ion-item-option>
           </ion-item-options>
-          <ion-item *ngIf="quote.brand" (click)="onClickItem(quote.id)">
+          <ion-item
+            *ngIf="quote.brand"
+            [routerLink]="['/quotes/show/'+ quote.id ]"
+          >
             <ion-avatar slot="start">
               <img
                 src="https://i2.wp.com/www.verizo.fr/wp-content/uploads/2017/03/icon-devis.png?ssl=1"
