@@ -8,64 +8,136 @@
 </ion-header>
 
 <ion-content>
-  <ion-card>
+  <ion-card *ngIf="quote">
     <ion-item>
       <ion-button color="medium" fill="outline" slot="start">
-        Communucations
+        <ion-icon
+          slot="icon-only"
+          ios="chatbox-ellipses-outline"
+          md="chatbox-ellipses-sharp"
+        >
+        </ion-icon>
       </ion-button>
-      <ion-button color="success" fill="outline">Estimation</ion-button>
-      <ion-button color="warning" fill="outline" slot="end">Refuser</ion-button>
+      <ion-button color="success" fill="outline" style="width: 100%"
+        >Estimation</ion-button
+      >
+      <ion-button
+        color="danger"
+        fill="outline"
+        slot="end"
+        (click)="refuseQuote()"
+        >Refuser</ion-button
+      >
     </ion-item>
     <ion-item>
       <ion-icon color="success" name="car" slot="start"></ion-icon>
-      <ion-label class="brandTitle">Audi - RX</ion-label>
+      <ion-label class="brandTitle"
+        >{{quote.brand}} - {{quote.model}}</ion-label
+      >
     </ion-item>
 
     <ion-card-content>
       <ion-item>
         <ion-label class="label-title">Année : </ion-label>
-        <ion-badge color="medium" slot="end">2012</ion-badge>
+        <ion-badge color="medium" slot="end">{{quote.year}}</ion-badge>
       </ion-item>
       <ion-item>
         <ion-label class="label-title">Immatriculation : </ion-label>
-        <ion-badge color="medium" slot="end">WW-067-RT</ion-badge>
+        <ion-badge color="medium" slot="end">{{quote.plate_number}}</ion-badge>
       </ion-item>
-      <ion-item>
+      <ion-item *ngIf="quote.chassis_number && quote.chassis_number !== ''">
         <ion-label class="label-title">Numéro de chassis : </ion-label>
-        <ion-badge color="medium" slot="end">6738700005</ion-badge>
+        <ion-badge color="medium" slot="end"
+          >{{quote.chassis_number}}</ion-badge
+        >
       </ion-item>
       <ion-item>
         <ion-label class="label-title">Nombre de portes : </ion-label>
-        <ion-badge color="medium" slot="end">3</ion-badge>
+        <ion-badge color="medium" slot="end">{{quote.doors}}</ion-badge>
       </ion-item>
       <hr />
-      <div>
-        <ion-item>
-          <ion-label>Dégat 1 :</ion-label>
-        </ion-item>
-        <ion-item>
-          <ion-label class="label-title">Emplacement : </ion-label>
-          <ion-badge color="success" slot="end">Capot</ion-badge>
-        </ion-item>
-        <ion-item>
-          <ion-img
-            class="ion-padding"
-            src="./assets/img/logo.png"
-            (click)="showPicture()"
-            width="150px"
-          ></ion-img>
-          <span class="description-stroke"
-            >Le capot est cassé totalement il y avait un feu dans la
-            voiture</span
-          >
-        </ion-item>
-        <ion-item>
-          <ion-input type="text" placeholder="Estimation €"></ion-input>
-        </ion-item>
-        <ion-item>
-          <ion-input type="text" placeholder="Estimation / min"></ion-input>
-        </ion-item>
+      <ion-item>
+        <ion-label class="label-title">Estimation totale du temps : </ion-label>
+        <ion-badge color="success" slot="end"
+          >{{totalDurationString}}</ion-badge
+        >
+      </ion-item>
+      <ion-item>
+        <ion-label class="label-title"
+          >Estimation totale du prix (€) :
+        </ion-label>
+        <ion-badge color="success" slot="end">{{totalPrice}} €</ion-badge>
+      </ion-item>
+      <div *ngIf="quote && quote.tasks">
+        <div *ngFor="let task of quote.tasks;let k= index;">
+          <ion-item>
+            <ion-label>Dégat 1 :</ion-label>
+          </ion-item>
+          <ion-item>
+            <ion-select
+              required
+              [value]="task.stroke_id"
+              disabled
+              style="display: contents; color: lightgreen"
+            >
+              <ion-select-option
+                *ngFor="let item of strokes;let i= index;"
+                [value]="item.id"
+                >{{item.name}}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+          <ion-item>
+            <ion-img
+              class="ion-padding"
+              [src]="task.picture"
+              (click)="showPicture(task.picture)"
+              width="150px"
+            ></ion-img>
+            <span class="description-stroke" *ngIf="!task.description">
+              Aucune description</span
+            >
+            <span class="description-stroke" *ngIf="task.description"
+              >{{task.description}}
+            </span>
+          </ion-item>
+          <div>
+            <ion-item>
+              <ion-input
+                [(ngModel)]="task.price"
+                type="text"
+                placeholder="Estimation du prix"
+              ></ion-input>
+              <ion-icon
+                class="suffix-icon"
+                color="secondary"
+                name="logo-euro"
+                slot="end"
+              ></ion-icon>
+            </ion-item>
+            <ion-item>
+              <ion-input
+                [(ngModel)]="task.duration"
+                type="text"
+                placeholder="Estimation du temps / min"
+              ></ion-input>
+              <ion-icon
+                class="suffix-icon"
+                color="secondary"
+                name="alarm"
+                slot="end"
+              ></ion-icon>
+            </ion-item>
+          </div>
+        </div>
       </div>
+      <ion-row>
+        <ion-col>
+          <ion-button (click)="estimate()" color="success" expand="block"
+            >Envoyer le devis
+          </ion-button>
+        </ion-col>
+      </ion-row>
     </ion-card-content>
   </ion-card>
 </ion-content>

@@ -5,9 +5,9 @@ import { ShowPage } from './show.page';
 
 const routes: Routes = [
   {
-    path: '',
-    component: ShowPage
-  }
+    path: ':id',
+    component: ShowPage,
+  },
 ];
 
 @NgModule({
