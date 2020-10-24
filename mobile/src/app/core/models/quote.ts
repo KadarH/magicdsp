@@ -1,22 +1,23 @@
-
+// tslint:disable variable-name
 export class Quote {
-  accepted: 0;
-  brand: 'Fiat';
-  can_edit: 0;
-  chassis_number: null;
-  created_at: '2020-09-11T10:19:29.000000Z';
-  doors: '5 portes';
+  accepted: number;
+  brand: string;
+  can_edit: number;
+  chassis_number: string;
+  created_at: string;
+  doors: string;
   garage_id: null;
-  id: 115;
-  meeting_date: null;
-  model: '238';
-  plate_number: 'GGGG';
-  refused: 0;
-  storm: 0;
-  updated_at: '2020-09-11T10:19:29.000000Z';
-  user_id: 10;
-  waiting: 1;
-  year: '2018';
+  id: number;
+  meeting_date: any;
+  model: string;
+  plate_number: string;
+  refused: number;
+  storm: number;
+  tasks: any[];
+  updated_at: string;
+  user_id: number;
+  waiting: number;
+  year: string;
 }
 
 export enum Places {
