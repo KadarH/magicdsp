@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Plugins } from '@capacitor/core';
+import { Quote } from 'src/app/core/models/quote';
 const { Storage } = Plugins;
 
 @Injectable({
@@ -25,6 +26,13 @@ export class QuotesService {
 
   getQuote(id: number) {
     return this.http.get<any>(`${this.AUTH_SERVER_ADDRESS}quotes/` + id);
+  }
+
+  refuseQuote(quote: Quote) {
+    return this.http.patch(
+      `${this.AUTH_SERVER_ADDRESS}quotes/` + quote.id + '/refuse',
+      quote
+    );
   }
   uploadPhoto(file: any) {
     const formData: FormData = new FormData();
