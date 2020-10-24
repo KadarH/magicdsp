@@ -18,6 +18,8 @@ export class Quote {
   user_id: number;
   waiting: number;
   year: string;
+  price: number;
+  duration: number;
 }
 
 export enum Places {
