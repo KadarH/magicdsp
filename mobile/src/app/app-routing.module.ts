@@ -18,6 +18,13 @@ const routes: Routes = [
     resolve: { user: UserResolver },
     loadChildren: () => import('./core/core.module').then((m) => m.CoreModule),
   },
+  {
+    path: 'admin',
+    canActivate: [AuthGuard],
+    resolve: { user: UserResolver },
+    loadChildren: () =>
+      import('./core/pages/admin/admin.module').then((m) => m.AdminPageModule),
+  },
 ];
 
 @NgModule({
