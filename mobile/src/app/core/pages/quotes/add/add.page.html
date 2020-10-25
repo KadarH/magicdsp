@@ -96,9 +96,9 @@
               <ion-label position="floating">Stroke</ion-label>
               <ion-select formControlName="stroke_id" required value="">
                 <ion-select-option
-                  *ngFor="let item of strokes$ | async,let i= index;"
-                  [value]="item.id"
-                  >{{item.name}}
+                  *ngFor="let st of strokes$ | async,let i= index;"
+                  [value]="st.id"
+                  >{{st.name}}
                 </ion-select-option>
               </ion-select>
             </ion-item>
@@ -107,6 +107,16 @@
               <ion-button size="small" (click)="getPicture('camera')">
                 <ion-icon name="camera" slot="start"></ion-icon>
                 <ion-label>Camera</ion-label>
+              </ion-button>
+              <ion-button
+                *ngIf="devisForm.get('tasks')['controls'] &&
+                devisForm.get('tasks').value[i].picture"
+                (click)="showPicture(devisForm.get('tasks').value[i].picture)"
+                slot="end"
+                size="small"
+              >
+                <ion-icon name="camera" slot="start"></ion-icon>
+                <ion-label>Voir</ion-label>
               </ion-button>
               <input
                 type="file"

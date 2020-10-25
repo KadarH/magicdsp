@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 import { Routes, RouterModule } from '@angular/router';
+import { ModalShowComponent } from './modal-show/modal-show.component';
 
 const routes: Routes = [
   {
@@ -29,6 +30,6 @@ const routes: Routes = [
     IonicModule,
     RouterModule.forChild(routes),
   ],
-  declarations: [],
+  declarations: [ModalShowComponent],
 })
 export class QuotesModule {}

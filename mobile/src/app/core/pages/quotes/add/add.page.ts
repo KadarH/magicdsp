@@ -1,11 +1,13 @@
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
-import { MenuController, NavController, ToastController } from '@ionic/angular';
+import {
+  MenuController,
+  ModalController,
+  NavController,
+  ToastController,
+} from '@ionic/angular';
 import * as moment from 'moment';
 import { Component, ElementRef, ViewChild, OnInit } from '@angular/core';
-import {
-  Plugins,
-  Storage,
-} from '@capacitor/core';
+import { Plugins, Storage } from '@capacitor/core';
 import { SafeResourceUrl } from '@angular/platform-browser';
 import { Observable } from 'rxjs';
 import { MarquesService } from '../services/marques.service';
@@ -16,6 +18,8 @@ import { StrokesService } from '../services/strokes.service';
 import { QuotesService } from '../services/quotes.service';
 import { Router } from '@angular/router';
 import { Quote } from 'src/app/core/models/quote';
+import { ModalShowComponent } from '../modal-show/modal-show.component';
+import { environment } from 'src/environments/environment';
 const { Camera } = Plugins;
 
 @Component({
@@ -46,6 +50,7 @@ export class AddPage implements OnInit {
     public toastController: ToastController,
     public navCtrl: NavController,
     private menu: MenuController,
+    public modalController: ModalController,
     private formBuilder: FormBuilder,
     private marquesService: MarquesService,
     private modelsService: ModelsService,
@@ -105,8 +110,6 @@ export class AddPage implements OnInit {
   }
 
   submitForm(devisForm: FormGroup) {
-    console.log(devisForm.value);
-
     this.quote = { ...devisForm.value };
 
     this.quote.brand = devisForm.get('brand').value.name;
@@ -183,6 +186,21 @@ export class AddPage implements OnInit {
     reader.readAsDataURL(file);
   }
 
+  showPicture(pic: string) {
+    const pictureStorageURL = environment.urls.pictureStorage + pic;
+    this.presentModal(pictureStorageURL);
+  }
+
+  async presentModal(pic: string) {
+    const modal = await this.modalController.create({
+      component: ModalShowComponent,
+      cssClass: 'my-custom-class',
+      componentProps: {
+        src: pic,
+      },
+    });
+    return await modal.present();
+  }
   async presentToast(msg: string) {
     this.toast = await this.toastController.create({
       message: msg,
