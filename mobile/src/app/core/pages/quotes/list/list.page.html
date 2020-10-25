@@ -51,13 +51,10 @@
               />
             </ion-avatar>
             <ion-label>
-              <h2>{{quote.brand}} {{quote.model}}</h2>
-              <p>Model {{quote.year}}</p>
-            </ion-label>
-            <p>
-              {{quote.created_at | date: 'dd/MM/yyyy'}} {{quote.created_at |
-              date: 'hh:mm'}}
-            </p>
+              <h2>{{quote.plate_number}}</h2>
+              <p>{{quote.brand}} {{quote.model}} - Model {{quote.year}}</p>
+             </ion-label>
+            <p>{{quote.created_at | date: 'dd/MM/yyyy'}}</p>
           </ion-item>
           <ion-item-options side="end">
             <ion-item-option [routerLink]="['/quotes/show/'+ quote.id ]">
