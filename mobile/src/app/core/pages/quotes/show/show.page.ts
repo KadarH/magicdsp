@@ -7,7 +7,7 @@ import { User } from 'src/app/auth/user';
 import { Quote } from 'src/app/core/models/quote';
 import { QuotesService } from '../services/quotes.service';
 import { StrokesService } from '../services/strokes.service';
-import { ModalShowComponent } from './modal-show/modal-show.component';
+import { ModalShowComponent } from '../modal-show/modal-show.component';
 
 @Component({
   selector: 'app-show',
@@ -38,8 +38,9 @@ export class ShowPage implements OnInit {
     this.strokesService.getStrokes().subscribe((rst: any) => {
       this.strokes = rst && rst.data ? rst.data.strokes : [];
     });
+
     const quoteId = this.route.snapshot.params.id;
-    console.log(quoteId);
+
     this.quotesService.getQuote(quoteId).subscribe((res: any) => {
       if (res && res.data) {
         this.quote = res.data.quote;
@@ -79,14 +80,6 @@ export class ShowPage implements OnInit {
     this.presentModal(pic);
   }
 
-  refuseQuote() {
-    this.quotesService
-      .refuseQuote(this.quote)
-      .pipe(take(1))
-      .subscribe((data) => {
-        console.log(data);
-      });
-  }
   async presentModal(pic: string) {
     const modal = await this.modalController.create({
       component: ModalShowComponent,
@@ -96,5 +89,14 @@ export class ShowPage implements OnInit {
       },
     });
     return await modal.present();
+  }
+
+  refuseQuote() {
+    this.quotesService
+      .refuseQuote(this.quote)
+      .pipe(take(1))
+      .subscribe((data) => {
+        console.log(data);
+      });
   }
 }
