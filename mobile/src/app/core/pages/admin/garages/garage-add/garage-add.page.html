@@ -1,0 +1,100 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="closePop()">
+        <ion-icon name="close-circle-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title *ngIf="mode==='add'">Ajouter un Garage</ion-title>
+    <ion-title *ngIf="mode==='edit'">Modifier le Garage</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card *ngIf="garageForm">
+    <form [formGroup]="garageForm" (ngSubmit)="addGarage(garageForm.value)">
+      <ion-item>
+        <ion-label position="floating">Nom du garage</ion-label>
+        <ion-input formControlName="name" required value="item.name">
+        </ion-input>
+      </ion-item>
+      <div class="validation-errors">
+        <ng-container *ngFor="let validation of validation_messages">
+          <div
+            class="error-message"
+            *ngIf="garageForm.get('name').hasError(validation.type) &&
+            (garageForm.get('name').dirty ||
+            garageForm.get('name').touched)"
+          >
+            {{ validation.message }}
+          </div>
+        </ng-container>
+      </div>
+      <ion-item>
+        <ion-label position="floating">Status du garage</ion-label>
+        <ion-select formControlName="status_id" required value="">
+          <ion-select-option
+            *ngFor="let item of status$ | async"
+            [value]="item.id"
+            >{{item.name}}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <div *ngIf="garage && garageForm" id="openings">
+        <div
+          class="day"
+          formArrayName="opening"
+          *ngFor="let day of garage.opening; let i = index;"
+        >
+          <span class="day_name" (click)="showDay($event)"
+            >{{ momentParse(i)}}</span
+          >
+          <table class="hours" [formGroupName]="i">
+            <tbody>
+              <tr *ngFor="let hour of day | keyvalue; let j = index">
+                <div>
+                  <td class="hour">{{hour.key}}</td>
+                  <td class="status">
+                    <ion-select
+                      [formControlName]="hour.key+'.status'"
+                      [class]="hour.value.status"
+                    >
+                      <ion-select-option value="opened"
+                        >Ouvert</ion-select-option
+                      >
+                      <ion-select-option value="closed"
+                        >Fermé</ion-select-option
+                      >
+                    </ion-select>
+                  </td>
+                  <td class="display">
+                    <ion-select
+                      [formControlName]="'display'"
+                      [class]="hour.value.display ? 'display' : ''"
+                    >
+                      <ion-select-option value="true"
+                        >Afficher</ion-select-option
+                      >
+                      <ion-select-option value="false"
+                        >Masquer</ion-select-option
+                      >
+                    </ion-select>
+                  </td>
+                </div>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <ion-row class="ion-margin">
+        <ion-col>
+          <ion-button type="submit" color="success" expand="block">
+            Ajouter le garage
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </form>
+  </ion-card>
+</ion-content>

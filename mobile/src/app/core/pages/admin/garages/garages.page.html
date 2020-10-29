@@ -1,0 +1,54 @@
+<ion-content>
+  <div class="garage-list">
+    <div>
+      <ion-list>
+        <div>
+          <ion-item>
+            <ion-label>
+              <h2>Gérer les garages</h2>
+            </ion-label>
+            <ion-icon
+              color="primary"
+              fill="outline"
+              ios="add-circle-outline"
+              md="add-circle-sharp"
+              slot="end"
+              (click)="addNewGarage('add')"
+            ></ion-icon>
+          </ion-item>
+          <ng-container *ngIf="garages">
+            <ion-item-sliding *ngFor="let garage of garages">
+              <ion-item *ngIf="garage.name">
+                <ion-avatar slot="start">
+                  <img
+                    src="https://www.freepngimg.com/thumb/vehicle/55690-7-garage-photos-hq-image-free-png.png"
+                  />
+                </ion-avatar>
+                <ion-label>
+                  <h2>{{garage.name}}</h2>
+                  <p>
+                    {{garage.status_id === 1 ? 'Particulier': (
+                    garage.status_id=== 2) ?'Professionnel automobile': 'Cabinet
+                    expertise'}}
+                  </p>
+                </ion-label>
+                <ion-button
+                  color="secondary"
+                  fill="outline"
+                  (click)="addNewGarage('edit',garage.id)"
+                  >Modifier</ion-button
+                >
+              </ion-item>
+              <ion-item-options side="end">
+                <ion-item-option color="danger">Supprimer</ion-item-option>
+              </ion-item-options>
+            </ion-item-sliding>
+          </ng-container>
+        </div>
+      </ion-list>
+    </div>
+    <div *ngIf="!garages">
+      <app-list-loading></app-list-loading>
+    </div>
+  </div>
+</ion-content>
