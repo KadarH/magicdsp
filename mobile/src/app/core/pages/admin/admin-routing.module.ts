@@ -6,12 +6,42 @@ import { AdminPage } from './admin.page';
 const routes: Routes = [
   {
     path: '',
-    component: AdminPage
+    component: AdminPage,
+    children: [
+      {
+        path: 'users',
+        children: [
+          {
+            path: '',
+            loadChildren: () =>
+              import('./users/users.module').then((m) => m.UsersPageModule),
+          },
+        ],
+      },
+      {
+        path: 'garages',
+        children: [
+          {
+            path: '',
+            loadChildren: () =>
+              import('./garages/garages.module').then(
+                (m) => m.GaragesPageModule
+              ),
+          },
+        ],
+      },
+      {
+        path: 'devis',
+        children: [
+          {
+            path: '',
+            loadChildren: () =>
+              import('./devis/devis.module').then((m) => m.DevisPageModule),
+          },
+        ],
+      },
+    ],
   },
-  {
-    path: 'users',
-    loadChildren: () => import('./users/users.module').then( m => m.UsersPageModule)
-  }
 ];
 
 @NgModule({

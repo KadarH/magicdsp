@@ -25,6 +25,7 @@ const routes: Routes = [
     SharedModule,
     RouterModule.forChild(routes),
     IonicStorageModule.forRoot(),
+    SharedModule,
   ],
   declarations: [],
 })
