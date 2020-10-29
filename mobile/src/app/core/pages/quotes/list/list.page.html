@@ -53,7 +53,7 @@
             <ion-label>
               <h2>{{quote.plate_number}}</h2>
               <p>{{quote.brand}} {{quote.model}} - Model {{quote.year}}</p>
-             </ion-label>
+            </ion-label>
             <p>{{quote.created_at | date: 'dd/MM/yyyy'}}</p>
           </ion-item>
           <ion-item-options side="end">
@@ -78,23 +78,6 @@
     </div>
   </ion-list>
   <div *ngIf="!quotes">
-    <ion-list>
-      <ion-item *ngFor="let item of [].constructor(10)">
-        <ion-avatar slot="start">
-          <ion-skeleton-text animated></ion-skeleton-text>
-        </ion-avatar>
-        <ion-label>
-          <h3>
-            <ion-skeleton-text animated style="width: 50%"></ion-skeleton-text>
-          </h3>
-          <p>
-            <ion-skeleton-text animated style="width: 80%"></ion-skeleton-text>
-          </p>
-          <p>
-            <ion-skeleton-text animated style="width: 60%"></ion-skeleton-text>
-          </p>
-        </ion-label>
-      </ion-item>
-    </ion-list>
+    <app-list-loading></app-list-loading>
   </div>
 </ion-content>
