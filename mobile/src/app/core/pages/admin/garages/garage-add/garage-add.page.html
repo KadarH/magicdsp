@@ -11,28 +11,16 @@
 </ion-header>
 
 <ion-content>
-  <ion-card *ngIf="garageForm">
-    <form [formGroup]="garageForm" (ngSubmit)="addGarage(garageForm.value)">
+  <ion-card *ngIf="garage">
+    <form (ngSubmit)="addGarage(garageForm.value)">
       <ion-item>
         <ion-label position="floating">Nom du garage</ion-label>
-        <ion-input formControlName="name" required value="item.name">
-        </ion-input>
+        <ion-input required [(ngModel)]="garage.name" name="name"> </ion-input>
       </ion-item>
-      <div class="validation-errors">
-        <ng-container *ngFor="let validation of validation_messages">
-          <div
-            class="error-message"
-            *ngIf="garageForm.get('name').hasError(validation.type) &&
-            (garageForm.get('name').dirty ||
-            garageForm.get('name').touched)"
-          >
-            {{ validation.message }}
-          </div>
-        </ng-container>
-      </div>
+
       <ion-item>
         <ion-label position="floating">Status du garage</ion-label>
-        <ion-select formControlName="status_id" required value="">
+        <ion-select required [(ngModel)]="garage.status_id" name="status_id">
           <ion-select-option
             *ngFor="let item of status$ | async"
             [value]="item.id"
@@ -41,24 +29,20 @@
         </ion-select>
       </ion-item>
 
-      <div *ngIf="garage && garageForm" id="openings">
-        <div
-          class="day"
-          formArrayName="opening"
-          *ngFor="let day of garage.opening; let i = index;"
-        >
+      <div id="openings">
+        <div class="day" *ngFor="let day of garage.opening; let i = index;">
           <span class="day_name" (click)="showDay($event)"
             >{{ momentParse(i)}}</span
           >
-          <table class="hours" [formGroupName]="i">
+          <table class="hours" *ngIf="day">
             <tbody>
               <tr *ngFor="let hour of day | keyvalue; let j = index">
                 <div>
-                  <td class="hour">{{hour.key}}</td>
+                  <td class="hour">{{ hour.key }}</td>
                   <td class="status">
                     <ion-select
-                      [formControlName]="hour.key+'.status'"
                       [class]="hour.value.status"
+                      placeholder="Status"
                     >
                       <ion-select-option value="opened"
                         >Ouvert</ion-select-option
@@ -70,8 +54,11 @@
                   </td>
                   <td class="display">
                     <ion-select
-                      [formControlName]="'display'"
+                      *ngIf="hour"
+                      name="i+''+j"
+                      [(ngModel)]="hour.value.display"
                       [class]="hour.value.display ? 'display' : ''"
+                      placeholder="Affichage"
                     >
                       <ion-select-option value="true"
                         >Afficher</ion-select-option

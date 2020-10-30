@@ -61,43 +61,19 @@ export class GarageAddPage implements OnInit {
         .pipe(take(1))
         .subscribe((res) => {
           this.garage = res && res.data ? res.data.garage : null;
-
-          this.initForm(this.garage);
         });
     } else {
-      this.initForm(null);
     }
-  }
-
-  initForm(garage: any) {
-    this.garageForm = this.fb.group({
-      name: [
-        '',
-        Validators.compose([
-          Validators.maxLength(25),
-          Validators.minLength(5),
-          Validators.pattern('^(?=.*[a-zA-Z])(?=.*[0-9])[a-zA-Z0-9]+$'),
-          Validators.required,
-        ]),
-      ],
-      status_id: ['', [Validators.required]],
-      opening: this.fb.array(garage ? garage.opening : []),
-    });
-  }
-
-  patchValues(garage: any) {
-    console.log(garage);
-    return this.fb.group({
-        
-    });
   }
 
   showDay(event) {
     event.srcElement.parentElement.classList.toggle('show');
   }
+
   addGarage(garage: any) {
     console.log(garage);
   }
+
   closePop() {
     this.modalCtrl.dismiss();
   }
