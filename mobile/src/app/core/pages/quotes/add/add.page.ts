@@ -1,5 +1,6 @@
-import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
+  LoadingController,
   MenuController,
   ModalController,
   NavController,
@@ -46,8 +47,11 @@ export class AddPage implements OnInit {
   isDesktop: boolean;
 
   toast: HTMLIonToastElement;
+
+  loading: any;
   constructor(
     public toastController: ToastController,
+    public loadingController: LoadingController,
     public navCtrl: NavController,
     private menu: MenuController,
     public modalController: ModalController,
@@ -65,12 +69,12 @@ export class AddPage implements OnInit {
 
     /** init Form */
     this.devisForm = this.formBuilder.group({
-      brand: [''],
-      model: [''],
-      doors: [''],
-      year: [null],
-      plate_number: [''],
-      chassis_number: [''],
+      brand: ['', [Validators.required]],
+      model: ['', [Validators.required]],
+      doors: ['', [Validators.required]],
+      year: [null, [Validators.required]],
+      plate_number: ['', [Validators.required]],
+      chassis_number: ['', [Validators.required]],
 
       tasks: this.formBuilder.array([this.patchValues()]),
     });
@@ -103,14 +107,16 @@ export class AddPage implements OnInit {
   patchValues(): FormGroup {
     return this.formBuilder.group({
       description: [],
-      picture: [],
+      picture: [null, [Validators.required]],
       url: [],
-      stroke_id: [],
+      stroke_id: [null, [Validators.required]],
     });
   }
 
   submitForm(devisForm: FormGroup) {
     this.quote = { ...devisForm.value };
+
+    this.presentLoading();
 
     this.quote.brand = devisForm.get('brand').value.name;
     this.quotesService
@@ -120,9 +126,11 @@ export class AddPage implements OnInit {
         (res: any) => {
           this.presentToast('Le devis a été ajouté avec success');
           this.router.navigateByUrl('/quotes/show/' + res.data.quote.id);
+          this.loading.dismiss();
         },
         (err) => {
-          console.log(err);
+          this.presentToast('Ajout echoué, problème du serveur.');
+          this.loading.dismiss();
         }
       );
   }
@@ -134,6 +142,7 @@ export class AddPage implements OnInit {
   deleteTask(i: number) {
     const control: FormArray = this.devisForm.get('tasks') as FormArray;
     control.removeAt(i);
+    this.presentToast('Degat supprimé avec succès.');
   }
 
   pushQuoteTask() {
@@ -168,20 +177,28 @@ export class AddPage implements OnInit {
     const reader = new FileReader();
 
     if (!file.type.match(pattern)) {
-      console.log('File format not supported');
+      this.presentToast('Format du fichier non supportée.');
       return;
     }
     reader.onload = () => {
       this.photo = reader.result.toString();
+
+      this.presentLoading();
       this.quotesService
         .uploadPhoto(file)
         .pipe(take(1))
-        .subscribe((data) => {
-          if (data.success) {
-            const arr = this.devisForm.get('tasks') as FormArray;
-            arr.controls[index].patchValue({ picture: data.data.file });
+        .subscribe(
+          (data) => {
+            if (data.success) {
+              const arr = this.devisForm.get('tasks') as FormArray;
+              arr.controls[index].patchValue({ picture: data.data.file });
+              this.loading.dismiss();
+            }
+          },
+          (err) => {
+            this.loading.dismiss();
           }
-        });
+        );
     };
     reader.readAsDataURL(file);
   }
@@ -214,5 +231,11 @@ export class AddPage implements OnInit {
       ],
     });
     this.toast.present();
+  }
+  async presentLoading() {
+    this.loading = await this.loadingController.create({
+      message: 'Veuillez patientez...',
+    });
+    await this.loading.present();
   }
 }
