@@ -9,7 +9,6 @@ import { GaragesPageRoutingModule } from './garages-routing.module';
 import { GaragesPage } from './garages.page';
 import { GarageAddPage } from './garage-add/garage-add.page';
 import { SharedModule } from 'src/app/shared/shared.module';
-import { ListLoadingComponent } from 'src/app/shared/components/list-loading/list-loading.component';
 
 @NgModule({
   imports: [
@@ -20,6 +19,6 @@ import { ListLoadingComponent } from 'src/app/shared/components/list-loading/lis
     GaragesPageRoutingModule,
     SharedModule,
   ],
-  declarations: [GaragesPage, GarageAddPage, ListLoadingComponent],
+  declarations: [GaragesPage, GarageAddPage],
 })
 export class GaragesPageModule {}

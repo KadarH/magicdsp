@@ -8,7 +8,6 @@ import { ListPageRoutingModule } from './list-routing.module';
 
 import { ListPage } from './list.page';
 import { SharedModule } from 'src/app/shared/shared.module';
-import { ListLoadingComponent } from 'src/app/shared/components/list-loading/list-loading.component';
 
 @NgModule({
   imports: [
@@ -18,6 +17,6 @@ import { ListLoadingComponent } from 'src/app/shared/components/list-loading/lis
     ListPageRoutingModule,
     SharedModule
   ],
-  declarations: [ListPage, ListLoadingComponent]
+  declarations: [ListPage]
 })
 export class ListPageModule {}
