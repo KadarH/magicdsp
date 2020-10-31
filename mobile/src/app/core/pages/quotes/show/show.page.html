@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-menu-button autoHide="false"></ion-menu-button>
+        <app-back-button></app-back-button>
     </ion-buttons>
     <ion-title>Détail du devis</ion-title>
   </ion-toolbar>
@@ -93,7 +93,7 @@
       <ion-button
         *ngIf="(quote.waiting && user.admin && communications.length == 0)
           || (quote.waiting && communications.length > 0)"
-        [routerLink]="['/quotes/'+quote.id+'/communications']"
+        [routerLink]="['communications']"
         color="medium"
         fill="outline"
         slot="start"

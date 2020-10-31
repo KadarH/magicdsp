@@ -8,6 +8,13 @@ const routes: Routes = [
     path: ':id',
     component: ShowPage,
   },
+  {
+    path: ':id/communications',
+    loadChildren: () =>
+      import('./communications/communications.module').then(
+        (m) => m.CommunicationsPageModule
+      ),
+  },
 ];
 
 @NgModule({
