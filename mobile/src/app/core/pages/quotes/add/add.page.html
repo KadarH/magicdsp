@@ -2,6 +2,7 @@
   <ion-toolbar>
     <!-- Side menu button -->
     <ion-buttons slot="start">
+      <app-back-button></app-back-button>
       <ion-menu-button autoHide="false"></ion-menu-button>
     </ion-buttons>
     <ion-title>Nouveau devis</ion-title>
@@ -150,9 +151,8 @@
                 <ion-label>Camera</ion-label>
               </ion-button>
               <ion-button
-                *ngIf="devisForm.get('tasks')['controls'] &&
-                devisForm.get('tasks').value.picture"
-                (click)="showPicture(devisForm.get('tasks').value.picture)"
+                *ngIf="item.get('picture').value"
+                (click)="showPicture(item.get('picture').value)"
                 slot="end"
                 size="small"
               >

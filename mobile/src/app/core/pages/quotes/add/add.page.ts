@@ -1,11 +1,5 @@
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import {
-  LoadingController,
-  MenuController,
-  ModalController,
-  NavController,
-  ToastController,
-} from '@ionic/angular';
+import { MenuController, ModalController, NavController } from '@ionic/angular';
 import * as moment from 'moment';
 import { Component, ElementRef, ViewChild, OnInit } from '@angular/core';
 import { Plugins, Storage } from '@capacitor/core';
@@ -21,6 +15,8 @@ import { Router } from '@angular/router';
 import { Quote } from 'src/app/core/models/quote';
 import { ModalShowComponent } from '../modal-show/modal-show.component';
 import { environment } from 'src/environments/environment';
+import { LoaderService } from 'src/app/shared/services/loader.service';
+import { ToastService } from 'src/app/shared/services/toast.service';
 const { Camera } = Plugins;
 
 @Component({
@@ -36,8 +32,8 @@ export class AddPage implements OnInit {
   tasks: FormArray;
   brands$: Observable<any[]>;
   models$: Observable<any[]>;
-  years: number[] = [];
   strokes$: Observable<any[]>;
+  years: number[] = [];
 
   img = '';
   @ViewChild('filePicker', { static: false }) filePickerRef: ElementRef<
@@ -48,10 +44,9 @@ export class AddPage implements OnInit {
 
   toast: HTMLIonToastElement;
 
-  loading: any;
   constructor(
-    public toastController: ToastController,
-    public loadingController: LoadingController,
+    private loaderService: LoaderService,
+    private toastService: ToastService,
     public navCtrl: NavController,
     private menu: MenuController,
     public modalController: ModalController,
@@ -116,7 +111,7 @@ export class AddPage implements OnInit {
   submitForm(devisForm: FormGroup) {
     this.quote = { ...devisForm.value };
 
-    this.presentLoading();
+    this.loaderService.presentLoading();
 
     this.quote.brand = devisForm.get('brand').value.name;
     this.quotesService
@@ -124,13 +119,13 @@ export class AddPage implements OnInit {
       .pipe(take(1))
       .subscribe(
         (res: any) => {
-          this.presentToast('Le devis a été ajouté avec success');
+          this.toastService.presentToast('Le devis a été ajouté avec success');
           this.router.navigateByUrl('/quotes/show/' + res.data.quote.id);
-          this.loading.dismiss();
+          this.loaderService.dismiss();
         },
         (err) => {
-          this.presentToast('Ajout echoué, problème du serveur.');
-          this.loading.dismiss();
+          this.toastService.presentToast('Ajout echoué, problème du serveur.');
+          this.loaderService.dismiss();
         }
       );
   }
@@ -142,7 +137,7 @@ export class AddPage implements OnInit {
   deleteTask(i: number) {
     const control: FormArray = this.devisForm.get('tasks') as FormArray;
     control.removeAt(i);
-    this.presentToast('Degat supprimé avec succès.');
+    this.toastService.presentToast('Degat supprimé avec succès.');
   }
 
   pushQuoteTask() {
@@ -177,13 +172,13 @@ export class AddPage implements OnInit {
     const reader = new FileReader();
 
     if (!file.type.match(pattern)) {
-      this.presentToast('Format du fichier non supportée.');
+      this.toastService.presentToast('Format du fichier non supportée.');
       return;
     }
     reader.onload = () => {
       this.photo = reader.result.toString();
 
-      this.presentLoading();
+      this.loaderService.presentLoading();
       this.quotesService
         .uploadPhoto(file)
         .pipe(take(1))
@@ -192,11 +187,11 @@ export class AddPage implements OnInit {
             if (data.success) {
               const arr = this.devisForm.get('tasks') as FormArray;
               arr.controls[index].patchValue({ picture: data.data.file });
-              this.loading.dismiss();
+              this.loaderService.dismiss();
             }
           },
           (err) => {
-            this.loading.dismiss();
+            this.loaderService.dismiss();
           }
         );
     };
@@ -217,25 +212,5 @@ export class AddPage implements OnInit {
       },
     });
     return await modal.present();
-  }
-  async presentToast(msg: string) {
-    this.toast = await this.toastController.create({
-      message: msg,
-      duration: 3000,
-      color: 'dark',
-      buttons: [
-        {
-          text: 'Ok',
-          role: 'cancel',
-        },
-      ],
-    });
-    this.toast.present();
-  }
-  async presentLoading() {
-    this.loading = await this.loadingController.create({
-      message: 'Veuillez patientez...',
-    });
-    await this.loading.present();
   }
 }
