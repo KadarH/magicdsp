@@ -1,0 +1,42 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <app-back-button></app-back-button>
+    </ion-buttons>
+    <ion-title>Devis N°{{id}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div id="pages-quotes-communications" class="container-page">
+    <ul class="communications" *ngIf="communications">
+      <ng-container
+        *ngFor="let communication of communications; let i = index ;"
+      >
+        <li
+          [ngClass]="communication.user_id === currentUser.id ? 'me' : 'him' "
+        >
+          <span class="body">{{ communication.body }}</span>
+          <span class="date"
+            >{{ communication.created_at | date : 'dd/MM/yyyy - hh:mm:ss'
+            }}</span
+          >
+        </li>
+      </ng-container>
+    </ul>
+
+    <div class="add-communication">
+      <form (ngSubmit)="addCommunication()">
+        <ion-textarea
+          [(ngModel)]="body"
+          name="body"
+          color="primary"
+          placeholder="Ecrire ..."
+        ></ion-textarea>
+        <ion-button (click)="addCommunication()"
+          ><ion-icon name="send"></ion-icon
+        ></ion-button>
+      </form>
+    </div>
+  </div>
+</ion-content>
