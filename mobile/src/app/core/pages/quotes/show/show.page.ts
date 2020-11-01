@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Storage } from '@capacitor/core';
 import { ModalController } from '@ionic/angular';
 import { take } from 'rxjs/operators';
 import { User } from 'src/app/auth/user';
@@ -9,6 +8,7 @@ import { QuotesService } from '../services/quotes.service';
 import { StrokesService } from '../services/strokes.service';
 import { ModalShowComponent } from '../modal-show/modal-show.component';
 import { CommunicationsService } from '../services/communications.service';
+import { AuthService } from 'src/app/auth/auth.service';
 
 @Component({
   selector: 'app-show',
@@ -30,7 +30,8 @@ export class ShowPage implements OnInit {
     private route: ActivatedRoute,
     private quotesService: QuotesService,
     private strokesService: StrokesService,
-    private communicationsService: CommunicationsService
+    private communicationsService: CommunicationsService,
+    private authService: AuthService
   ) {}
 
   ngOnInit() {
@@ -45,8 +46,7 @@ export class ShowPage implements OnInit {
         }
       });
 
-    /** get user from resolver */
-    this.loadUser();
+    this.user = this.authService.getUser();
 
     this.strokesService.getStrokes().subscribe((rst: any) => {
       this.strokes = rst && rst.data ? rst.data.strokes : [];
@@ -79,11 +79,6 @@ export class ShowPage implements OnInit {
             .reduce((sum, current) => sum + current, 0);
         }
       });
-  }
-
-  async loadUser() {
-    const user = await Storage.get({ key: 'user' });
-    this.user = user && user.value ? JSON.parse(user.value) : null;
   }
 
   estimate() {

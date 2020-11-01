@@ -1,5 +1,5 @@
 {
-  "appId": "com.magic-dsp.app",
+  "appId": "com.magicDsp.app",
   "appName": "mobile",
   "bundledWebRuntime": false,
   "npmClient": "npm",
