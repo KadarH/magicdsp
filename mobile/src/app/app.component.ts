@@ -1,12 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, QueryList, ViewChildren } from '@angular/core';
 
-import { MenuController, Platform } from '@ionic/angular';
+import {
+  AlertController,
+  IonRouterOutlet,
+  MenuController,
+  Platform,
+} from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { AuthService } from './auth/auth.service';
 
 import { Subscription } from 'rxjs';
 import { OneSignalService } from './shared/one-signal.service';
+import { Router } from '@angular/router';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-root',
@@ -17,6 +24,7 @@ export class AppComponent implements OnInit {
   isAuth: boolean;
   sub: Subscription;
   subscription: Subscription;
+  @ViewChildren(IonRouterOutlet) routerOutlets: QueryList<IonRouterOutlet>;
 
   public selectedIndex = 0;
   public appPages = [
@@ -47,15 +55,22 @@ export class AppComponent implements OnInit {
     },
   ];
 
+  lastTimeBackPress = 0;
+  timePeriodToExit = 2000;
+
   constructor(
     private platform: Platform,
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
     private authService: AuthService,
     private menuCtrl: MenuController,
-    private oneSignalService: OneSignalService
+    private oneSignalService: OneSignalService,
+    private alertController: AlertController,
+    private router: Router,
+    private location: Location
   ) {
     this.initializeApp();
+    this.backButtonEvent();
   }
 
   initializeApp() {
@@ -90,12 +105,52 @@ export class AppComponent implements OnInit {
     document.location.href = 'index.html';
   }
 
-  ionViewDidEnter() {
-    this.subscription = this.platform.backButton.subscribe(() => {
-      navigator['app'].exitApp();
+  backButtonEvent() {
+    this.platform.backButton.subscribeWithPriority(0, () => {
+      this.routerOutlets.forEach(async (outlet: IonRouterOutlet) => {
+        if (this.router.url !== '/home') {
+          // await this.router.navigate(['/']);
+          await this.location.back();
+        } else if (this.router.url === '/home') {
+          if (
+            new Date().getTime() - this.lastTimeBackPress >=
+            this.timePeriodToExit
+          ) {
+            this.lastTimeBackPress = new Date().getTime();
+            this.presentAlertConfirm();
+          } else {
+            (navigator as any).app.exitApp();
+          }
+        }
+      });
     });
   }
-
+  presentAlertConfirm() {
+    this.alertController
+      .create({
+        header: 'Confirm Alert',
+        subHeader: 'Beware lets confirm',
+        message: 'Are you sure? you want to leave without safty mask?',
+        buttons: [
+          {
+            text: 'Confirmer',
+            handler: () => {
+              (navigator as any).app.exitApp();
+              console.log('Exit');
+            },
+          },
+          {
+            text: 'Rester',
+            handler: () => {
+              console.log('Let me think');
+            },
+          },
+        ],
+      })
+      .then((res) => {
+        res.present();
+      });
+  }
   ionViewWillLeave() {
     this.subscription.unsubscribe();
   }
