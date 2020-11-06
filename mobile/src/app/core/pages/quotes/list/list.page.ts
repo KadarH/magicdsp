@@ -32,16 +32,9 @@ export class ListPage implements OnInit {
       .getQuotesByType(this.type)
       .pipe(take(1))
       .subscribe((res: any) => {
-        console.log(res);
         this.quotes = res.data.quotes;
       });
   }
-
-  onClickItem(id: number) {
-    console.log('hakak', id);
-  }
-
-  fetchBookings() {}
 
   refuseQuote(quote: any) {
     this.loaderService.presentLoading();
@@ -52,11 +45,14 @@ export class ListPage implements OnInit {
         (res: any) => {
           if (res.success) {
             this.quotes = this.quotes.filter((obj) => obj.id !== quote.id);
+            this.loaderService.dismiss();
+            this.toastService.presentToast(
+              'Le devis ' + quote.id + 'a été refusé.'
+            );
+          } else {
+            this.loaderService.dismiss();
+            this.toastService.presentToast('Erreur: opération échouée');
           }
-          this.loaderService.dismiss();
-          this.toastService.presentToast(
-            'Le devis ' + quote.id + 'a été refusé.'
-          );
         },
         (err) => {
           this.loaderService.dismiss();
