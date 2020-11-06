@@ -25,13 +25,6 @@ const routes: Routes = [
     loadChildren: () =>
       import('./core/pages/admin/admin.module').then((m) => m.AdminPageModule),
   },
-  {
-    path: 'communications',
-    loadChildren: () =>
-      import(
-        './core/pages/quotes/show/communications/communications.module'
-      ).then((m) => m.CommunicationsPageModule),
-  },
 ];
 
 @NgModule({
