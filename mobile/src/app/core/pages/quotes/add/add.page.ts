@@ -28,6 +28,7 @@ export class AddPage implements OnInit {
   user: User;
 
   devisForm: FormGroup;
+  stormForm: FormGroup;
   quote: Quote;
   tasks: FormArray;
   brands$: Observable<any[]>;
@@ -69,9 +70,12 @@ export class AddPage implements OnInit {
       doors: ['', [Validators.required]],
       year: [null, [Validators.required]],
       plate_number: ['', [Validators.required]],
-      chassis_number: ['', [Validators.required]],
-
+      chassis_number: ['', []],
       tasks: this.formBuilder.array([this.patchValues()]),
+    });
+
+    this.stormForm = this.formBuilder.group({
+      isStorm: [false, [Validators.required]],
     });
 
     this.initYearsArray();
@@ -109,25 +113,69 @@ export class AddPage implements OnInit {
   }
 
   submitForm(devisForm: FormGroup) {
-    this.quote = { ...devisForm.value };
-
     this.loaderService.presentLoading();
 
-    this.quote.brand = devisForm.get('brand').value.name;
-    this.quotesService
-      .saveQuote(this.quote)
-      .pipe(take(1))
-      .subscribe(
-        (res: any) => {
-          this.toastService.presentToast('Le devis a été ajouté avec success');
-          this.router.navigateByUrl('/quotes/show/' + res.data.quote.id);
-          this.loaderService.dismiss();
-        },
-        (err) => {
-          this.toastService.presentToast('Ajout echoué, problème du serveur.');
-          this.loaderService.dismiss();
-        }
-      );
+    if (this.stormForm.get('isStorm').value === true) {
+      // vehicule storm
+      this.quotesService
+        .saveStorm()
+        .pipe(take(1))
+        .subscribe(
+          (res: any) => {
+            console.log(res);
+            if (res.success) {
+              this.router.navigateByUrl(
+                '/quotes/show/' + res.data.quote.id + '/meeting',
+                { replaceUrl: true }
+              );
+
+              this.toastService.presentToast(
+                'La demande a été ajoutée avec success'
+              );
+              this.loaderService.dismiss();
+            } else {
+              this.toastService.presentToast(
+                'Ajout echoué, problème du serveur.'
+              );
+              this.loaderService.dismiss();
+            }
+          },
+          (err) => {
+            this.toastService.presentToast(
+              'Ajout echoué, problème du serveur.'
+            );
+            this.loaderService.dismiss();
+          }
+        );
+    } else {
+      this.quote = { ...devisForm.value };
+      this.quote.brand = devisForm.get('brand').value.name;
+      this.quotesService
+        .saveQuote(this.quote)
+        .pipe(take(1))
+        .subscribe(
+          (res: any) => {
+            if (res.success) {
+              this.router.navigateByUrl('/quotes/show/' + res.data.quote.id);
+              this.toastService.presentToast(
+                'Le devis a été ajouté avec success'
+              );
+              this.loaderService.dismiss();
+            } else {
+              this.toastService.presentToast(
+                'Ajout echoué, problème du serveur.'
+              );
+              this.loaderService.dismiss();
+            }
+          },
+          (err) => {
+            this.toastService.presentToast(
+              'Ajout echoué, problème du serveur.'
+            );
+            this.loaderService.dismiss();
+          }
+        );
+    }
   }
 
   addNewTask() {
@@ -206,7 +254,6 @@ export class AddPage implements OnInit {
   async presentModal(pic: string) {
     const modal = await this.modalController.create({
       component: ModalShowComponent,
-      cssClass: 'my-custom-class',
       componentProps: {
         src: pic,
       },
