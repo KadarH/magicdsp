@@ -169,7 +169,7 @@
       <div *ngIf="quote && quote.tasks">
         <div *ngFor="let task of quote.tasks;let k= index;">
           <ion-item>
-            <ion-label>Dégat 1 :</ion-label>
+            <ion-label>Dégat {{k+1}} :</ion-label>
           </ion-item>
           <ion-item>
             <ion-select
@@ -199,13 +199,13 @@
               >{{task.description}}
             </span>
           </ion-item>
-          <ion-item *ngIf="quote.accepted ===1">
+          <ion-item *ngIf="quote.accepted === 1 && user.admin">
             <ion-label class="label-title">Estimation de temps : </ion-label>
             <ion-badge color="medium" slot="end"
               >{{formatDuration(task.duration)}}
             </ion-badge>
           </ion-item>
-          <ion-item *ngIf="quote.accepted ===1">
+          <ion-item *ngIf="quote.accepted === 1 && user.admin">
             <ion-label class="label-title">Estimation de prix : </ion-label>
             <ion-badge color="medium" slot="end">{{task.price}}€</ion-badge>
           </ion-item>
@@ -241,7 +241,7 @@
           </div>
         </div>
       </div>
-      <ion-row *ngIf="user.admin">
+      <ion-row *ngIf="user.admin && quote.waiting === 1">
         <ion-col>
           <ion-button (click)="estimate()" color="success" expand="block"
             >Estimer le devis

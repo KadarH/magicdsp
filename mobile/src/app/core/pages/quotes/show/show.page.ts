@@ -66,9 +66,7 @@ export class ShowPage implements OnInit {
             this.quote.tasks.map((task) => {
               task.stroke = task.stroke_id;
             });
-            this.totalDuration = this.quote.tasks
-              .map((x) => x.duration)
-              .reduce((sum, current) => sum + current, 0);
+            this.totalDuration = this.quote.duration;
             if (this.totalDuration >= 0) {
               const totalMinutes = this.totalDuration;
               const hours = Math.floor(totalMinutes / 60);
@@ -78,9 +76,7 @@ export class ShowPage implements OnInit {
                 hours + 'h' + ('0' + minutes).slice(-2) + 'min';
             }
 
-            this.totalPrice = this.quote.tasks
-              .map((x) => x.price)
-              .reduce((sum, current) => sum + current, 0);
+            this.totalPrice = this.quote.price;
           }
         }
       });
