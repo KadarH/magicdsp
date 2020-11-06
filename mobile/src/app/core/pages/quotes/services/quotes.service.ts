@@ -16,6 +16,17 @@ export class QuotesService {
     return this.http.post<any>(`${this.AUTH_SERVER_ADDRESS}quotes`, quote);
   }
 
+  saveStorm() {
+    return this.http.post<any>(`${this.AUTH_SERVER_ADDRESS}quotes/storm`, {});
+  }
+
+  editQuote(quote: any) {
+    return this.http.patch<any>(
+      `${this.AUTH_SERVER_ADDRESS}quotes/` + quote.id,
+      quote
+    );
+  }
+
   getQuotes() {
     return this.http.get<any>(`${this.AUTH_SERVER_ADDRESS}quotes?type=waiting`);
   }

@@ -9,6 +9,8 @@ import { StrokesService } from '../services/strokes.service';
 import { ModalShowComponent } from '../modal-show/modal-show.component';
 import { CommunicationsService } from '../services/communications.service';
 import { AuthService } from 'src/app/auth/auth.service';
+import { ToastService } from 'src/app/shared/services/toast.service';
+import { LoaderService } from 'src/app/shared/services/loader.service';
 
 @Component({
   selector: 'app-show',
@@ -31,7 +33,9 @@ export class ShowPage implements OnInit {
     private quotesService: QuotesService,
     private strokesService: StrokesService,
     private communicationsService: CommunicationsService,
-    private authService: AuthService
+    private authService: AuthService,
+    private loaderService: LoaderService,
+    private toastService: ToastService
   ) {}
 
   ngOnInit() {
@@ -56,46 +60,92 @@ export class ShowPage implements OnInit {
       .getQuote(quoteId)
       .pipe(take(1))
       .subscribe((res: any) => {
-        if (res && res.data) {
+        if (res.success) {
           this.quote = res.data.quote;
+          if (this.quote.storm === 0) {
+            this.quote.tasks.map((task) => {
+              task.stroke = task.stroke_id;
+            });
+            this.totalDuration = this.quote.tasks
+              .map((x) => x.duration)
+              .reduce((sum, current) => sum + current, 0);
+            if (this.totalDuration >= 0) {
+              const totalMinutes = this.totalDuration;
+              const hours = Math.floor(totalMinutes / 60);
+              const minutes = totalMinutes % 60;
 
-          this.quote.tasks.map((task) => {
-            task.stroke = task.stroke_id;
-          });
-          this.totalDuration = this.quote.tasks
-            .map((x) => x.duration)
-            .reduce((sum, current) => sum + current, 0);
-          if (this.totalDuration >= 0) {
-            const totalMinutes = this.totalDuration;
-            const hours = Math.floor(totalMinutes / 60);
-            const minutes = totalMinutes % 60;
+              this.totalDurationString =
+                hours + 'h' + ('0' + minutes).slice(-2) + 'min';
+            }
 
-            this.totalDurationString =
-              hours + 'h' + ('0' + minutes).slice(-2) + 'min';
+            this.totalPrice = this.quote.tasks
+              .map((x) => x.price)
+              .reduce((sum, current) => sum + current, 0);
           }
-
-          this.totalPrice = this.quote.tasks
-            .map((x) => x.price)
-            .reduce((sum, current) => sum + current, 0);
         }
       });
   }
 
+  formatDuration(duration: number) {
+    const hours = Math.floor(duration / 60);
+    const minutes = duration % 60;
+    return hours + 'h' + ('0' + minutes).slice(-2) + 'min';
+  }
+
   estimate() {
     console.log(this.quote);
+    const tasksArray = [];
+    this.quote.tasks.map((task) => {
+      tasksArray.push({
+        description: task.description,
+        picture: task.picture,
+        id: task.id,
+        duration: task.duration,
+        stroke_id: task.stroke,
+        price: task.price,
+      });
+    });
+    const obj = {
+      id: this.quote.id,
+      brand: this.quote.brand,
+      model: this.quote.model,
+      doors: this.quote.doors,
+      year: this.quote.year,
+      plate_number: this.quote.plate_number,
+      chassis_number: this.quote.chassis_number,
+      tasks: tasksArray,
+    };
+    this.quotesService.editQuote(obj).subscribe((res) => {
+      console.log(res);
+    });
   }
 
   showPicture(pic: string) {
     this.presentModal(pic);
   }
 
-  refuseQuote() {
+  refuseQuote(quote: any) {
+    this.loaderService.presentLoading();
     this.quotesService
-      .refuseQuote(this.quote)
+      .refuseQuote(quote)
       .pipe(take(1))
-      .subscribe((data) => {
-        console.log(data);
-      });
+      .subscribe(
+        (res: any) => {
+          if (res.success) {
+            this.loaderService.dismiss();
+            this.toastService.presentToast(
+              'Le devis ' + quote.id + 'a été refusé.'
+            );
+          } else {
+            this.loaderService.dismiss();
+            this.toastService.presentToast('Erreur: opération échouée');
+          }
+        },
+        (err) => {
+          this.loaderService.dismiss();
+          this.toastService.presentToast('Erreur: opération échouée');
+        }
+      );
   }
 
   async presentModal(pic: string) {

@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-        <app-back-button></app-back-button>
+      <app-back-button></app-back-button>
     </ion-buttons>
     <ion-title>Détail du devis</ion-title>
   </ion-toolbar>
@@ -27,7 +27,7 @@
         >
           <p>
             Estimation de {{ quote.price }}€ pour une durée de {{
-            quote.duration}}.
+            totalDurationString}}.
           </p>
         </div>
 
@@ -38,7 +38,7 @@
             {{ quote.meeting_date | date :'dd/MM/yyyy' }}
           </p>
           <p><span class="title">Montant :</span> {{ quote.price }}€</p>
-          <p><span class="title">Durée :</span> {{ quote.duration }}</p>
+          <p><span class="title">Durée :</span> {{ totalDurationString }}</p>
         </div>
 
         <div *ngIf="quote.refused">
@@ -64,7 +64,7 @@
           <h5>Devis accépté :</h5>
           <p>
             Une estimation de {{ quote.price }}€ pour une durée de {{
-            quote.duration }} a été établie.
+            totalDurationString }} a été établie.
           </p>
         </div>
 
@@ -74,7 +74,7 @@
             {{ quote.meeting_date | date :'dd/MM/yyyy' }}
           </p>
           <p><span class="title">Montant :</span> {{ quote.price }}€</p>
-          <p><span class="title">Durée :</span> {{ quote.duration }}</p>
+          <p><span class="title">Durée :</span> {{ totalDurationString }}</p>
         </div>
 
         <div *ngIf="quote.refused">
@@ -95,14 +95,9 @@
           || (quote.waiting && communications.length > 0)"
         [routerLink]="['communications']"
         color="medium"
-        fill="outline"
         slot="start"
       >
-        <ion-icon
-          slot="icon-only"
-          ios="chatbox-ellipses-outline"
-          md="chatbox-ellipses-sharp"
-        >
+        <ion-icon ios="chatbox-ellipses-outline" md="chatbox-ellipses-sharp">
         </ion-icon>
       </ion-button>
 
@@ -115,6 +110,7 @@
       >
       <ion-button
         *ngIf="!user.admin && quote.accepted && !quote.meeting_date"
+        [routerLink]="['meeting']"
         color="primary"
         fill="outline"
         style="width: 100%"
@@ -127,22 +123,18 @@
         (click)="refuseQuote()"
         >Refuser</ion-button
       >
-      <ion-button
-        *ngIf="quote.waiting && !user.admin && communications.length > 0"
-        color="danger"
-        fill="outline"
-        [routerLink]="['/quotes/'+quote.id+'/edit']"
-        >Editer</ion-button
-      >
     </ion-item>
     <ion-item>
       <ion-icon color="success" name="car" slot="start"></ion-icon>
       <ion-label class="brandTitle"
-        >Devis #{{quote.id}} [ {{quote.brand}} - {{quote.model}} ]</ion-label
+        >Devis #{{quote.id}}
+        <span *ngIf="quote.storm === 0"
+          >[ {{quote.brand}} - {{quote.model}} ]</span
+        ></ion-label
       >
     </ion-item>
 
-    <ion-card-content>
+    <ion-card-content *ngIf="quote.storm === 0">
       <ion-item>
         <ion-label class="label-title">Année : </ion-label>
         <ion-badge color="medium" slot="end">{{quote.year}}</ion-badge>
@@ -162,13 +154,13 @@
         <ion-badge color="medium" slot="end">{{quote.doors}}</ion-badge>
       </ion-item>
       <hr />
-      <ion-item>
+      <ion-item *ngIf="quote.accepted === 1">
         <ion-label class="label-title">Estimation totale du temps : </ion-label>
         <ion-badge color="success" slot="end"
           >{{totalDurationString}}</ion-badge
         >
       </ion-item>
-      <ion-item>
+      <ion-item *ngIf="quote.accepted === 1">
         <ion-label class="label-title"
           >Estimation totale du prix (€) :
         </ion-label>
@@ -207,7 +199,19 @@
               >{{task.description}}
             </span>
           </ion-item>
-          <div>
+          <ion-item *ngIf="quote.accepted ===1">
+            <ion-label class="label-title">Estimation de temps : </ion-label>
+            <ion-badge color="medium" slot="end"
+              >{{formatDuration(task.duration)}}
+            </ion-badge>
+          </ion-item>
+          <ion-item *ngIf="quote.accepted ===1">
+            <ion-label class="label-title">Estimation de prix : </ion-label>
+            <ion-badge color="medium" slot="end">{{task.price}}€</ion-badge>
+          </ion-item>
+          <div
+            *ngIf="user.admin && quote.waiting === 1 && quote.refused === 0 && quote.accepted === 0"
+          >
             <ion-item>
               <ion-input
                 [(ngModel)]="task.price"
@@ -237,10 +241,10 @@
           </div>
         </div>
       </div>
-      <ion-row>
+      <ion-row *ngIf="user.admin">
         <ion-col>
           <ion-button (click)="estimate()" color="success" expand="block"
-            >Envoyer le devis
+            >Estimer le devis
           </ion-button>
         </ion-col>
       </ion-row>
