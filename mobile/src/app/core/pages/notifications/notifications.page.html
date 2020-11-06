@@ -5,5 +5,23 @@
 </ion-header>
 
 <ion-content>
-
+  <ng-container *ngFor="let notification of notifications$ | async">
+    <ion-item
+      *ngIf="notification.title"
+      [color]="notification.read? 'medium':'light'"
+      (click)="readNotification(notification)"
+    >
+      <ion-icon
+        class="ion-margin-end"
+        name="notifications"
+        color="warning"
+      ></ion-icon>
+      <p style="font-size: x-small; width: 65%; margin-right: 2%">
+        {{notification.content}}
+      </p>
+      <p style="font-size: x-small">
+        {{notification.created_at | date: 'dd/MM/yyyy'}}
+      </p>
+    </ion-item>
+  </ng-container>
 </ion-content>

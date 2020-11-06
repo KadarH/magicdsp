@@ -24,6 +24,14 @@ const routes: Routes = [
       import('./pages/quotes/quotes.module').then((m) => m.QuotesModule),
     canActivate: [AuthGuard],
   },
+  {
+    path: 'notifications',
+    loadChildren: () =>
+      import('./pages/notifications/notifications.module').then(
+        (m) => m.NotificationsPageModule
+      ),
+    canActivate: [AuthGuard],
+  },
 ];
 
 @NgModule({
