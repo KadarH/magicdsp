@@ -1,12 +1,30 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-menu-button autoHide="false"></ion-menu-button>
+      <app-back-button></app-back-button>
     </ion-buttons>
-    <ion-title>Acceuil</ion-title>
+    <ion-title>Tableau de bord</ion-title>
   </ion-toolbar>
 </ion-header>
 
+<!-- https://enappd.com/blog/charts-in-ionic-4-apps-and-pwa-part-1/52/ -->
+
 <ion-content>
-  <!-- https://enappd.com/blog/charts-in-ionic-4-apps-and-pwa-part-1/52/ -->
+  <ion-card class="welcome-card">
+    <ion-card-header>
+      <ion-card-subtitle>Statistique des devis</ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content>
+      <canvas #pieChart></canvas>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card *ngIf="user.admin">
+    <ion-card-header>
+      <ion-card-subtitle>Devis / type d'utilisateur</ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content>
+      <canvas #barChart></canvas>
+    </ion-card-content>
+  </ion-card>
 </ion-content>

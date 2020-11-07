@@ -35,6 +35,12 @@ export class QuotesService {
     return this.http.get<any>(`${this.AUTH_SERVER_ADDRESS}quotes?type=` + type);
   }
 
+  getQuotesByTypeOfUser(userId: number) {
+    return this.http.get<any>(
+      `${this.AUTH_SERVER_ADDRESS}admin/users/status/` + userId + '/quotes'
+    );
+  }
+
   getQuote(id: number) {
     return this.http.get<any>(`${this.AUTH_SERVER_ADDRESS}quotes/` + id);
   }

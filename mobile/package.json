@@ -29,6 +29,9 @@
     "@ionic/angular": "^5.0.0",
     "@ionic/pwa-elements": "^3.0.1",
     "@ionic/storage": "^2.3.1",
+    "@types/chart.js": "^2.9.27",
+    "chart.js": "^2.9.4",
+    "chartjs-plugin-datalabels": "^0.7.0",
     "moment": "^2.29.1",
     "onesignal-cordova-plugin": "^2.11.1",
     "rxjs": "~6.5.5",
@@ -36,7 +39,7 @@
     "zone.js": "~0.10.3"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^0.1000.8",
+    "@angular-devkit/build-angular": "^0.1002.0",
     "@angular/cli": "~10.0.5",
     "@angular/compiler": "~10.0.0",
     "@angular/compiler-cli": "~10.0.0",
