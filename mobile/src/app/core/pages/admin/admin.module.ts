@@ -8,6 +8,7 @@ import { AdminPageRoutingModule } from './admin-routing.module';
 
 import { AdminPage } from './admin.page';
 import { Routes } from '@angular/router';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 const routes: Routes = [
   {
@@ -22,7 +23,13 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [CommonModule, FormsModule, IonicModule, AdminPageRoutingModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    IonicModule,
+    SharedModule,
+    AdminPageRoutingModule,
+  ],
   declarations: [AdminPage],
 })
 export class AdminPageModule {}
