@@ -17,12 +17,14 @@
   <!-- list of quotes  -->
   <ion-list>
     <ion-list-header>
-      Liste des devis des &nbsp;
-      <span *ngIf="this.status === '1'">particuliers</span>
-      <span *ngIf="this.status === '2'">professionels de l'automobile</span>
-      <span *ngIf="this.status === '3'">cabinets d'expertise</span>
-      :</ion-list-header
-    >
+      <p class="text-small text-center">
+        Liste des devis des
+        <span *ngIf="this.status === '1'"> particuliers</span>
+        <span *ngIf="this.status === '2'"> professionels de l'automobile</span>
+        <span *ngIf="this.status === '3'"> cabinets d'expertise</span>
+        :
+      </p>
+    </ion-list-header>
     <div *ngIf="quotes">
       <ng-container *ngFor="let quote of quotes">
         <ion-item-sliding>

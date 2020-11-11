@@ -31,7 +31,7 @@ const routes: Routes = [
         ],
       },
       {
-        path: 'devis',
+        path: 'quotes',
         children: [
           {
             path: '',
