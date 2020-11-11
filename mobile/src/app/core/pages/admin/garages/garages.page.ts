@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { take } from 'rxjs/operators';
+import { LoaderService } from 'src/app/shared/services/loader.service';
+import { ToastService } from 'src/app/shared/services/toast.service';
 import { GaragesService } from '../../quotes/services/garages.service';
 import { GarageAddPage } from './garage-add/garage-add.page';
 
@@ -16,18 +18,27 @@ export class GaragesPage implements OnInit {
 
   constructor(
     private garagesService: GaragesService,
-    private modalController: ModalController
+    private modalController: ModalController,
+    private loaderService: LoaderService,
+    private toastService: ToastService
   ) {}
 
   ngOnInit() {
     this.garagesService
       .getGarages()
       .pipe(take(1))
-      .subscribe((res) => {
-        this.garages = res.data.garages;
-        console.log(res);
-        console.log(this.garages);
-      });
+      .subscribe(
+        (res) => {
+          if (res.success) {
+            this.garages = res.data.garages;
+          } else {
+            this.toastService.presentToast('Erreur: opération échouée');
+          }
+        },
+        (err) => {
+          this.toastService.presentToast('Erreur: opération échouée');
+        }
+      );
   }
 
   addNewGarage(mode: string, garageId?: any) {
@@ -48,5 +59,30 @@ export class GaragesPage implements OnInit {
       },
     });
     return await modal.present();
+  }
+
+  deleteGarage(garage: any) {
+    this.loaderService.presentLoading();
+    this.garagesService
+      .deleteGarage(garage)
+      .pipe(take(1))
+      .subscribe(
+        (res) => {
+          if (res.success) {
+            this.garages = this.garages.filter((obj) => obj.id !== garage.id);
+            this.loaderService.dismiss();
+            this.toastService.presentToast(
+              'Le devis ' + garage.name + ' a été supprimé.'
+            );
+          } else {
+            this.loaderService.dismiss();
+            this.toastService.presentToast('Erreur: opération échouée');
+          }
+        },
+        (err) => {
+          this.loaderService.dismiss();
+          this.toastService.presentToast('Erreur: opération échouée');
+        }
+      );
   }
 }
