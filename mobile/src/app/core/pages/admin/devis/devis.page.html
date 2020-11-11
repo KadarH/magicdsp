@@ -1,9 +1,66 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>devis</ion-title>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content>
+  <ion-segment [(ngModel)]="status" (ionChange)="segmentChanged($event)">
+    <ion-segment-button value="1" checked active>
+      <ion-label>Particuliers</ion-label>
+      <ion-icon name="people"></ion-icon>
+    </ion-segment-button>
+    <ion-segment-button value="2">
+      <ion-label>Professionels</ion-label>
+      <ion-icon name="car-sport"></ion-icon>
+    </ion-segment-button>
+    <ion-segment-button value="3">
+      <ion-label>Cabinets</ion-label>
+      <ion-icon name="briefcase"></ion-icon>
+    </ion-segment-button>
+  </ion-segment>
 
+  <!-- list of quotes  -->
+  <ion-list>
+    <ion-list-header>
+      Liste des devis des &nbsp;
+      <span *ngIf="this.status === '1'">particuliers</span>
+      <span *ngIf="this.status === '2'">professionels de l'automobile</span>
+      <span *ngIf="this.status === '3'">cabinets d'expertise</span>
+      :</ion-list-header
+    >
+    <div *ngIf="quotes">
+      <ng-container *ngFor="let quote of quotes">
+        <ion-item-sliding>
+          <ion-item-options side="start" *ngIf="quote.waiting === 1">
+            <ion-item-option (click)="refuseQuote(quote)" color="danger"
+              >Refuser</ion-item-option
+            >
+          </ion-item-options>
+          <ion-item
+            *ngIf="quote.brand"
+            [routerLink]="['/quotes/show/'+ quote.id ]"
+          >
+            <ion-avatar slot="start">
+              <img
+                src="https://i2.wp.com/www.verizo.fr/wp-content/uploads/2017/03/icon-devis.png?ssl=1"
+              />
+            </ion-avatar>
+            <ion-label>
+              <h2>{{quote.user?.firstname}} {{quote.user?.lastname}}</h2>
+              <p>{{quote.brand}} {{quote.model}} - Model {{quote.year}}</p>
+              <h6>{{quote.plate_number}}</h6>
+            </ion-label>
+            <p>{{quote.created_at | date: 'dd/MM/yyyy'}}</p>
+          </ion-item>
+          <ion-item-options side="end">
+            <ion-item-option (click)="deleteQuote(quote)" color="danger"
+              >Supprimer</ion-item-option
+            >
+            <ion-item-option [routerLink]="['/quotes/show/'+ quote.id ]">
+              <ion-icon ios="eye-outline" md="eye-sharp"></ion-icon>
+              Détail
+            </ion-item-option>
+          </ion-item-options>
+        </ion-item-sliding>
+      </ng-container>
+    </div>
+  </ion-list>
+  <div *ngIf="!quotes">
+    <app-list-loading></app-list-loading>
+  </div>
 </ion-content>
