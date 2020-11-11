@@ -39,7 +39,10 @@
       <ng-container *ngFor="let quote of quotes">
         <ion-item-sliding>
           <ion-item-options side="start">
-            <ion-item-option (click)="refuseQuote(quote)" color="danger"
+            <ion-item-option
+              *ngIf="user.admin"
+              (click)="refuseQuote(quote)"
+              color="danger"
               >Refuser</ion-item-option
             >
           </ion-item-options>
@@ -53,9 +56,13 @@
               />
             </ion-avatar>
             <ion-label>
-              <h2>{{quote.user?.firstname}} {{quote.user?.lastname}}</h2>
-
-              <p>{{quote.brand}} {{quote.model}} - Model {{quote.year}}</p>
+              <ng-container *ngIf="user.admin">
+                <h2>{{quote.user?.firstname}} {{quote.user?.lastname}}</h2>
+                <p>{{quote.brand}} {{quote.model}} - Model {{quote.year}}</p>
+              </ng-container>
+              <ng-container *ngIf="!user.admin">
+                <h2>{{quote.brand}} {{quote.model}} - Model {{quote.year}}</h2>
+              </ng-container>
               <h6>{{quote.plate_number}}</h6>
             </ion-label>
             <p>{{quote.created_at | date: 'dd/MM/yyyy'}}</p>
