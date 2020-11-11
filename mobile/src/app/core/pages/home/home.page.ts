@@ -68,16 +68,16 @@ export class HomePage implements OnInit {
   }
 
   prepareAndCreateBarChart() {
-    const particulier$ = this.quoteService.getQuotesByTypeOfUser(1).pipe(
+    const particulier$ = this.quoteService.getQuotesByUserStatus('1').pipe(
       take(1),
       map((res) => res.data.quotes)
     );
-    const pro$ = this.quoteService.getQuotesByTypeOfUser(2).pipe(
+    const pro$ = this.quoteService.getQuotesByUserStatus('2').pipe(
       take(1),
       map((res) => res.data.quotes)
     );
 
-    const cabinet$ = this.quoteService.getQuotesByTypeOfUser(3).pipe(
+    const cabinet$ = this.quoteService.getQuotesByUserStatus('3').pipe(
       take(1),
       map((res) => res.data.quotes)
     );
