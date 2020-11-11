@@ -39,7 +39,7 @@ export class AppComponent implements OnInit {
       icon: 'add',
     },
     {
-      title: 'Tous les Devis',
+      title: 'Gérer les Devis',
       url: '/quotes/list',
       icon: 'list',
     },
@@ -80,6 +80,12 @@ export class AppComponent implements OnInit {
       this.oneSignalService.setupPush(
         this.authService.getUser() ? this.authService.getUser().id : null
       );
+
+      setTimeout(() => {
+        if (this.authService.getUser().admin !== 1) {
+          this.appPages.splice(-1, 1);
+        }
+      }, 500);
     });
   }
 
