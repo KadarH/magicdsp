@@ -35,9 +35,9 @@ export class QuotesService {
     return this.http.get<any>(`${this.AUTH_SERVER_ADDRESS}quotes?type=` + type);
   }
 
-  getQuotesByTypeOfUser(userId: number) {
+  getQuotesByUserStatus(statusId: string) {
     return this.http.get<any>(
-      `${this.AUTH_SERVER_ADDRESS}admin/users/status/` + userId + '/quotes'
+      `${this.AUTH_SERVER_ADDRESS}admin/users/status/` + statusId + '/quotes'
     );
   }
 
@@ -51,6 +51,11 @@ export class QuotesService {
       quote
     );
   }
+
+  deleteQuote(quote: Quote) {
+    return this.http.delete(`${this.AUTH_SERVER_ADDRESS}quotes/` + quote.id);
+  }
+
   uploadPhoto(file: any) {
     const formData: FormData = new FormData();
     formData.append('file', file);
