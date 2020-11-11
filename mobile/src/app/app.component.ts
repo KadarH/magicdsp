@@ -14,6 +14,7 @@ import { Subscription } from 'rxjs';
 import { OneSignalService } from './shared/one-signal.service';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
+import { User } from './core/models/user';
 
 @Component({
   selector: 'app-root',
@@ -21,6 +22,7 @@ import { Location } from '@angular/common';
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent implements OnInit {
+  user: any;
   isAuth: boolean;
   sub: Subscription;
   subscription: Subscription;
@@ -77,12 +79,11 @@ export class AppComponent implements OnInit {
     this.platform.ready().then(() => {
       this.statusBar.styleDefault();
       this.splashScreen.hide();
-      this.oneSignalService.setupPush(
-        this.authService.getUser() ? this.authService.getUser().id : null
-      );
+      this.user = this.authService.getUser();
+      this.oneSignalService.setupPush(this.user ? this.user.id : null);
 
       setTimeout(() => {
-        if (this.authService.getUser().admin !== 1) {
+        if (this.user.admin !== 1) {
           this.appPages.splice(-1, 1);
         }
       }, 500);

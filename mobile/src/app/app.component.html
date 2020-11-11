@@ -11,6 +11,20 @@
         <ion-list id="inbox-list">
           <ion-list-header>
             <ion-img src="assets/img/logo.png" style="width: 70px"></ion-img>
+            <ion-label class="ion-margin-start">
+              <h1>{{ this.user.firstname }} {{ this.user.lastname }}</h1>
+              <p>{{ this.user.email }}</p>
+              <ion-badge *ngIf="user.admin">Admin</ion-badge>
+              <ion-badge *ngIf="!user.admin && user.status_id === 1"
+                >Particulier</ion-badge
+              >
+              <ion-badge *ngIf="!user.admin && user.status_id === 2"
+                >Pro</ion-badge
+              >
+              <ion-badge *ngIf="!user.admin && user.status_id === 3"
+                >Cabinet d'expertise</ion-badge
+              >
+            </ion-label>
           </ion-list-header>
           <hr style="background-color: antiquewhite" />
 
