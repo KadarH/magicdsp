@@ -53,8 +53,10 @@
               />
             </ion-avatar>
             <ion-label>
-              <h2>{{quote.plate_number}}</h2>
+              <h2>{{quote.user?.firstname}} {{quote.user?.lastname}}</h2>
+
               <p>{{quote.brand}} {{quote.model}} - Model {{quote.year}}</p>
+              <h6>{{quote.plate_number}}</h6>
             </ion-label>
             <p>{{quote.created_at | date: 'dd/MM/yyyy'}}</p>
           </ion-item>
@@ -62,17 +64,6 @@
             <ion-item-option [routerLink]="['/quotes/show/'+ quote.id ]">
               <ion-icon ios="eye-outline" md="eye-sharp"></ion-icon>
               Détail
-            </ion-item-option>
-            <ion-item-option color="meduim">
-              <ion-icon
-                ios="chatbox-ellipses-outline"
-                md="chatbox-ellipses-sharp"
-              ></ion-icon>
-              Discussion
-            </ion-item-option>
-            <ion-item-option color="success">
-              <ion-icon ios="checkmark-outline" md="checkmark-sharp"></ion-icon>
-              Estimer
             </ion-item-option>
           </ion-item-options>
         </ion-item-sliding>

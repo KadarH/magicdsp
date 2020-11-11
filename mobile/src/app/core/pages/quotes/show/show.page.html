@@ -136,12 +136,24 @@
 
     <ion-card-content *ngIf="quote.storm === 0">
       <ion-item>
-        <ion-label class="label-title">Année : </ion-label>
-        <ion-badge color="medium" slot="end">{{quote.year}}</ion-badge>
+        <ion-label class="label-title">User : </ion-label>
+        <ion-badge color="medium" slot="end"
+          >{{quote.user.firstname}} {{quote.user.lastname}}</ion-badge
+        >
       </ion-item>
       <ion-item>
         <ion-label class="label-title">Immatriculation : </ion-label>
         <ion-badge color="medium" slot="end">{{quote.plate_number}}</ion-badge>
+      </ion-item>
+      <ion-item>
+        <ion-label class="label-title">Année : </ion-label>
+        <ion-badge color="medium" slot="end">{{quote.year}}</ion-badge>
+      </ion-item>
+      <ion-item>
+        <ion-label class="label-title">Marque : </ion-label>
+        <ion-badge color="medium" slot="end"
+          >{{quote.brand}} - {{quote.model}}</ion-badge
+        >
       </ion-item>
       <ion-item *ngIf="quote.chassis_number && quote.chassis_number !== ''">
         <ion-label class="label-title">Numéro de chassis : </ion-label>
