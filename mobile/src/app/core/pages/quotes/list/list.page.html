@@ -61,6 +61,12 @@
             <p>{{quote.created_at | date: 'dd/MM/yyyy'}}</p>
           </ion-item>
           <ion-item-options side="end">
+            <ion-item-option
+              *ngIf="user.admin"
+              (click)="deleteQuote(quote)"
+              color="danger"
+              >Supprimer</ion-item-option
+            >
             <ion-item-option [routerLink]="['/quotes/show/'+ quote.id ]">
               <ion-icon ios="eye-outline" md="eye-sharp"></ion-icon>
               Détail

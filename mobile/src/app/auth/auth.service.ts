@@ -89,7 +89,7 @@ export class AuthService {
     return await Storage.remove({ key: TOKEN_KEY });
   }
 
-  getUser() {
+  getUser(): any {
     return this.user;
   }
 }

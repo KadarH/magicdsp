@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { take } from 'rxjs/operators';
+import { AuthService } from 'src/app/auth/auth.service';
 import { Quote } from 'src/app/core/models/quote';
+import { User } from 'src/app/core/models/user';
 import { LoaderService } from 'src/app/shared/services/loader.service';
 import { ToastService } from 'src/app/shared/services/toast.service';
 import { QuotesService } from '../../quotes/services/quotes.service';
@@ -13,15 +15,18 @@ import { QuotesService } from '../../quotes/services/quotes.service';
 export class DevisPage implements OnInit {
   status: string;
 
+  user: User;
   quotes: Quote[];
 
   constructor(
     private quotesService: QuotesService,
     private loaderService: LoaderService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private authService: AuthService
   ) {}
 
   ngOnInit() {
+    this.user = this.authService.getUser();
     this.status = '1';
     this.segmentChanged(null);
   }
@@ -49,7 +54,7 @@ export class DevisPage implements OnInit {
             this.quotes = this.quotes.filter((obj) => obj.id !== quote.id);
             this.loaderService.dismiss();
             this.toastService.presentToast(
-              'Le devis ' + quote.id + 'a été refusé.'
+              'Le devis ' + quote.id + ' a été refusé.'
             );
           } else {
             this.loaderService.dismiss();
@@ -74,7 +79,7 @@ export class DevisPage implements OnInit {
             this.quotes = this.quotes.filter((obj) => obj.id !== quote.id);
             this.loaderService.dismiss();
             this.toastService.presentToast(
-              'Le devis ' + quote.id + 'a été refusé.'
+              'Le devis ' + quote.id + ' a été supprimé.'
             );
           } else {
             this.loaderService.dismiss();
