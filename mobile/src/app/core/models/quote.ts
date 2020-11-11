@@ -1,3 +1,5 @@
+import { User } from './user';
+
 // tslint:disable variable-name
 export class Quote {
   accepted: number;
@@ -20,6 +22,7 @@ export class Quote {
   year: string;
   price: number;
   duration: number;
+  user: User;
 }
 
 export enum Places {
