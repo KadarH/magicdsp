@@ -25,12 +25,21 @@
         :
       </p>
     </ion-list-header>
+
+    <ion-searchbar
+      *ngIf="user.admin"
+      placeholder="Recherche par nom ou prenom"
+      animated
+      (ionChange)="search($event.target.value)"
+      (search)="search($event.target.value)"
+    ></ion-searchbar>
+
     <div *ngIf="quotes">
       <ng-container *ngFor="let quote of quotes">
         <ion-item-sliding>
           <ion-item-options side="start" *ngIf="quote.waiting === 1">
             <ion-item-option
-              *ngIf="user.admin"
+              *ngIf="user.admin && quote.refused !==1"
               (click)="refuseQuote(quote)"
               color="danger"
               >Refuser</ion-item-option

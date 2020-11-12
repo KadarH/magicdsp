@@ -17,6 +17,7 @@ export class DevisPage implements OnInit {
 
   user: User;
   quotes: Quote[];
+  quotesBackup: Quote[];
 
   constructor(
     private quotesService: QuotesService,
@@ -38,11 +39,22 @@ export class DevisPage implements OnInit {
       .pipe(take(1))
       .subscribe((res: any) => {
         if (res.success) {
+          this.quotesBackup = [];
+          this.quotesBackup = res.data.quotes;
           this.quotes = res.data.quotes;
         }
       });
   }
-
+  search(name: string) {
+    this.quotes = this.quotesBackup.filter(
+      (quote: Quote) =>
+        quote.user &&
+        quote.user.firstname &&
+        quote.user.lastname &&
+        (quote.user.lastname.toLowerCase().includes(name.toLowerCase()) ||
+          quote.user.firstname.toLowerCase().includes(name.toLowerCase()))
+    );
+  }
   refuseQuote(quote: any) {
     this.loaderService.presentLoading();
     this.quotesService
