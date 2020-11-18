@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-toolbar>
+  <ion-toolbar color="primary">
     <ion-buttons slot="start">
       <app-back-button></app-back-button>
     </ion-buttons>
@@ -7,4 +7,84 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content> </ion-content>
+<ion-content>
+  <p class="ion-margin">
+    Veuillez choisir le garage, la date et l'heure du rendez vous :
+  </p>
+  <form [formGroup]="meetingForm">
+    <div class="input-group">
+      <ion-item>
+        <ion-label position="floating">Garage</ion-label>
+        <ion-select name="garage" formControlName="garage" required value="">
+          <ion-select-option
+            *ngFor="let item of garages$ | async"
+            [value]="item"
+            >{{item.name}}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+      <ion-item>
+        <ion-label>Date de rendez-vous</ion-label>
+
+        <ion-datetime
+          formControlName="date"
+          value="19-02-1994"
+          displayFormat="DD-MM-YYYY"
+          placeholder="Choisir une date"
+        ></ion-datetime>
+      </ion-item>
+      <div
+        *ngIf="(garage.dirty || garage.touched) && garage.errors"
+        class="errors"
+      >
+        <span *ngIf="garage.errors?.required">Ce champs est obligatoire</span>
+      </div>
+
+      <ion-card id="container-availabilities" *ngIf="availabilities">
+        <ul class="availabilities">
+          <ng-container
+            *ngFor="let availability of availabilities | keyvalue;let i=index"
+          >
+            <li class="availability" *ngIf="availability.value.display">
+              <div
+                class="content"
+                [class]="availability.value.status"
+                *ngIf="availability.value.status === 'opened'"
+                (click)="selectHour($event, availability.key)"
+              >
+                <span class="hour">{{ availability.key }}</span>
+                <span class="free">Disponible</span>
+                <span class="chosen">Sélectionnée</span>
+              </div>
+              <div
+                class="content"
+                [class]="availability.value.status"
+                *ngIf="availability.value.status !== 'opened'"
+              >
+                <span class="hour">{{ availability.key }}</span>
+              </div>
+            </li>
+          </ng-container>
+        </ul>
+      </ion-card>
+    </div>
+    <ion-row class="ion-margin">
+      <ion-col size="4">
+        <ion-button type="reset" expand="block" color="medium">
+          Annuler
+        </ion-button>
+      </ion-col>
+      <ion-col>
+        <ion-button
+          [disabled]="!meetingForm.valid || !hourSelected"
+          type="submit"
+          expand="block"
+          color="success"
+          (click)="fixMeeting()"
+        >
+          Fixer un rendez vous
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </form>
+</ion-content>
