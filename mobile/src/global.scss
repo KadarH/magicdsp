@@ -26,20 +26,7 @@
 @import '~@ionic/angular/css/flex-utils.css';
 
 :root {
-  /* Set the background of the entire app */
-  --ion-background-color: #000;
-
-  /* Set the font family of the entire app */
-  --ion-font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue',
-    'Roboto', sans-serif;
-}
-
-/* Set text color of the entire app for iOS only */
-.ios {
-  --ion-text-color: #ccc;
-}
-
-/* Set text color of the entire app for Material Design only */
-.md {
-  --ion-text-color: #ccc;
+  ion-header {
+    background-color: linear-gradient(to top right, #0374c4, #18c3f1);
+  }
 }
