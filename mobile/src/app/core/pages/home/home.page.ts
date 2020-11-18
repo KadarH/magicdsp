@@ -104,7 +104,7 @@ export class HomePage implements OnInit {
               this.accepted.length,
               this.refused.length,
             ],
-            backgroundColor: ['#b3b3ff', '#1aff1a', '#ff6666'],
+            backgroundColor: ['#ccc', '#a8bea8', '#ff6666'],
             borderColor: '#ccc', // array should have same number of elements as number of dataset
             borderWidth: 2,
             barPercentage: 1,

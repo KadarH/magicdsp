@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-toolbar>
+  <ion-toolbar color="primary">
     <ion-buttons slot="start">
       <ion-menu-button autoHide="false"></ion-menu-button>
     </ion-buttons>
@@ -12,14 +12,14 @@
 <ion-content>
   <ion-card class="welcome-card">
     <ion-card-header>
-      <ion-card-subtitle>Statistique des devis</ion-card-subtitle>
+      <ion-card-subtitle>Statistiques des devis</ion-card-subtitle>
     </ion-card-header>
     <ion-card-content>
       <canvas #pieChart></canvas>
     </ion-card-content>
   </ion-card>
 
-  <ion-card *ngIf="user.admin">
+  <ion-card class="welcome-card" *ngIf="user.admin">
     <ion-card-header>
       <ion-card-subtitle>Devis / type d'utilisateur</ion-card-subtitle>
     </ion-card-header>
