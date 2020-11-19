@@ -114,7 +114,6 @@ export class MeetingPage implements OnInit {
       .subscribe(
         (res: any) => {
           if (res.success) {
-            console.log(res);
             this.toastService.presentToast(
               'Le rendez-vous a été ajouté avec succès'
             );
