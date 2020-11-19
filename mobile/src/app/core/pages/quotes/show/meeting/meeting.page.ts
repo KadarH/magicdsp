@@ -118,7 +118,9 @@ export class MeetingPage implements OnInit {
               'Le rendez-vous a été ajouté avec succès'
             );
             this.loaderService.dismiss();
-            this.router.navigateByUrl('/quotes/show/' + this.quoteId);
+            this.router.navigateByUrl('/quotes/show/' + this.quoteId, {
+              replaceUrl: true,
+            });
           } else {
             this.toastService.presentToast(
               'Operation echoué, probléme du serveur'

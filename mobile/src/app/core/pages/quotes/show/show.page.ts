@@ -112,9 +112,28 @@ export class ShowPage implements OnInit {
       chassis_number: this.quote.chassis_number,
       tasks: tasksArray,
     };
-    this.quotesService.editQuote(obj).subscribe((res) => {
-      console.log(res);
-    });
+    this.loaderService.presentLoading();
+
+    this.quotesService.editQuote(obj).subscribe(
+      (res) => {
+        if (res.success) {
+          this.loaderService.dismiss();
+          this.toastService.presentToast(
+            'Le devis ' + this.quote.id + 'a été estimé.'
+          );
+          this.router.navigateByUrl('/quotes/show/' + this.quote.id, {
+            replaceUrl: true,
+          });
+        } else {
+          this.loaderService.dismiss();
+          this.toastService.presentToast('Erreur: opération échouée');
+        }
+      },
+      (err) => {
+        this.loaderService.dismiss();
+        this.toastService.presentToast('Erreur: opération échouée');
+      }
+    );
   }
 
   showPicture(pic: string) {
@@ -133,7 +152,7 @@ export class ShowPage implements OnInit {
             this.toastService.presentToast(
               'Le devis ' + quote.id + 'a été accepté.'
             );
-            this.router.navigateByUrl('/quotes/show/' + quote.id, {
+            this.router.navigateByUrl('/quotes/show/' + quote.id + '/meeting', {
               replaceUrl: true,
             });
           } else {

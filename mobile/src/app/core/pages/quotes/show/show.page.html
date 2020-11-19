@@ -14,6 +14,10 @@
         <div *ngIf="quote.waiting && !quote.price && !quote.duration">
           <p>Nouveau devis en attente d'actions.</p>
         </div>
+        <div *ngIf="quote.waiting && quote.price && quote.duration">
+          <p>Devis estimé.</p>
+          <p>En attente de prise de rendez-vous..</p>
+        </div>
 
         <div
           *ngIf="quote.storm && quote.meeting_date == null && quote.garage_id == null"
@@ -99,7 +103,7 @@
      (quote.waiting && !user.admin && communications.length > 0)"
     >
       <ion-button
-        *ngIf="(quote.waiting && user.admin && communications.length == 0)
+        *ngIf="(quote.waiting && user.admin && !quote.price && !quote.duration &&   communications.length == 0)
           || (quote.waiting && communications.length > 0)"
         [routerLink]="['communications']"
         color="medium"
@@ -110,7 +114,7 @@
       </ion-button>
 
       <ion-button
-        *ngIf="quote.waiting && user.admin"
+        *ngIf="quote.waiting && user.admin && !quote.price && !quote.duration"
         color="success"
         fill="outline"
         style="width: 100%"
@@ -233,7 +237,11 @@
           </ion-item>
 
           <div
-            *ngIf="user.admin && quote.waiting === 1 && quote.refused === 0 && quote.accepted === 0"
+            *ngIf="user.admin &&
+             quote.waiting === 1 &&
+             quote.refused === 0 &&
+              quote.accepted === 0 &&
+               !quote.price && !quote.duration"
           >
             <ion-item>
               <ion-input
@@ -264,7 +272,9 @@
           </div>
         </div>
       </div>
-      <ion-row *ngIf="user.admin && quote.waiting === 1">
+      <ion-row
+        *ngIf="user.admin && quote.waiting === 1 && !quote.price && !quote.duration"
+      >
         <ion-col>
           <ion-button (click)="estimate()" color="success" expand="block"
             >Estimer le devis

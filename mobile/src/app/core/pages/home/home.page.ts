@@ -104,7 +104,7 @@ export class HomePage implements OnInit {
               this.accepted.length,
               this.refused.length,
             ],
-            backgroundColor: ['#ccc', '#a8bea8', '#ff6666'],
+            backgroundColor: ['#9aa7c1', '#a8bea8', '#e35d6a'],
             borderColor: '#ccc', // array should have same number of elements as number of dataset
             borderWidth: 2,
             barPercentage: 1,
@@ -121,7 +121,9 @@ export class HomePage implements OnInit {
               dataArr.map((data) => {
                 sum += data;
               });
-              const percentage = ((value * 100) / sum).toFixed(0) + '%';
+              const percentage = value
+                ? ((value * 100) / sum).toFixed(0) + '%'
+                : '';
               return percentage;
             },
             color: 'black',
