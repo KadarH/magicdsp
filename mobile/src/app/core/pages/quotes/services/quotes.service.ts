@@ -52,6 +52,13 @@ export class QuotesService {
     );
   }
 
+  acceptQuote(quote: Quote) {
+    return this.http.patch(
+      `${this.AUTH_SERVER_ADDRESS}quotes/` + quote.id + '/accept',
+      quote
+    );
+  }
+
   deleteQuote(quote: Quote) {
     return this.http.delete(`${this.AUTH_SERVER_ADDRESS}quotes/` + quote.id);
   }

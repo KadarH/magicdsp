@@ -9,7 +9,7 @@
 
 <ion-content>
   <ion-card *ngIf="quote">
-    <ion-item style="text-align: center">
+    <ion-item>
       <div *ngIf="user.admin">
         <div *ngIf="quote.waiting && !quote.price && !quote.duration">
           <p>Nouveau devis en attente d'actions.</p>
@@ -21,9 +21,11 @@
           <h5>Devis véhicule grêlé</h5>
           <p>Estimation gratuite pour une durée de 30 minutes.</p>
         </div>
-
+        <div *ngIf="quote.accepted && quote.price ">
+          <p>Devis accepté.</p>
+        </div>
         <div
-          *ngIf="quote.accepted && quote.price && quote.duration && quote.meeting_date == null && quote.garage_id == null"
+          *ngIf="quote.price && quote.duration && !quote.meeting_date  && !quote.garage_id "
         >
           <p>
             Estimation de {{ quote.price }}€ pour une durée de {{
@@ -50,6 +52,11 @@
         <div *ngIf="quote.waiting && !quote.price && !quote.duration">
           <p>Devis envoyé et en attente de vérification par un admin.</p>
         </div>
+        <div
+          *ngIf="quote.accepted && quote.price && quote.duration && quote.meeting_date == null && quote.garage_id == null"
+        >
+          <p>Devis accepté.</p>
+        </div>
 
         <div
           *ngIf="quote.storm && quote.meeting_date == null && quote.garage_id == null"
@@ -59,7 +66,7 @@
         </div>
 
         <div
-          *ngIf="quote.accepted && quote.price && quote.duration && quote.meeting_date == null && quote.garage_id == null"
+          *ngIf="quote.waiting && quote.price && quote.duration && quote.meeting_date == null && quote.garage_id == null"
         >
           <h5>Devis accépté :</h5>
           <p>
@@ -85,6 +92,7 @@
 
     <ion-item
       *ngIf="(quote.waiting && user.admin) ||
+       (quote.waiting && !user.admin) ||
      (quote.waiting && user.admin && communications.length == 0)||
       (quote.waiting && communications.length > 0) ||
      (!user.admin && quote.accepted && !quote.meeting_date) ||
@@ -120,8 +128,20 @@
         *ngIf="quote.waiting && user.admin"
         color="danger"
         fill="outline"
-        (click)="refuseQuote()"
+        (click)="refuseQuote(quote)"
         >Refuser</ion-button
+      >
+      <ion-button
+        *ngIf="!user.admin &&
+        quote.waiting &&
+         quote.price &&
+         quote.duration &&
+         quote.meeting_date == null &&
+          quote.garage_id == null"
+        color="sucess"
+        fill="outline"
+        (click)="acceptQuote(quote)"
+        >Accepter et Fixer un Rendez-vous</ion-button
       >
     </ion-item>
     <ion-item>
@@ -166,13 +186,13 @@
         <ion-badge color="medium" slot="end">{{quote.doors}}</ion-badge>
       </ion-item>
       <hr />
-      <ion-item *ngIf="quote.accepted === 1">
+      <ion-item *ngIf="quote.duration">
         <ion-label class="label-title">Estimation totale du temps : </ion-label>
         <ion-badge color="success" slot="end"
           >{{totalDurationString}}</ion-badge
         >
       </ion-item>
-      <ion-item *ngIf="quote.accepted === 1">
+      <ion-item *ngIf="quote.price">
         <ion-label class="label-title"
           >Estimation totale du prix (€) :
         </ion-label>
@@ -211,16 +231,7 @@
               >{{task.description}}
             </span>
           </ion-item>
-          <ion-item *ngIf="quote.accepted === 1 && user.admin">
-            <ion-label class="label-title">Estimation de temps : </ion-label>
-            <ion-badge color="medium" slot="end"
-              >{{formatDuration(task.duration)}}
-            </ion-badge>
-          </ion-item>
-          <ion-item *ngIf="quote.accepted === 1 && user.admin">
-            <ion-label class="label-title">Estimation de prix : </ion-label>
-            <ion-badge color="medium" slot="end">{{task.price}}€</ion-badge>
-          </ion-item>
+
           <div
             *ngIf="user.admin && quote.waiting === 1 && quote.refused === 0 && quote.accepted === 0"
           >

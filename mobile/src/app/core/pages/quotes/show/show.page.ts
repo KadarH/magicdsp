@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ModalController } from '@ionic/angular';
 import { take } from 'rxjs/operators';
 import { User } from 'src/app/auth/user';
@@ -30,6 +30,7 @@ export class ShowPage implements OnInit {
   constructor(
     public modalController: ModalController,
     private route: ActivatedRoute,
+    private router: Router,
     private quotesService: QuotesService,
     private strokesService: StrokesService,
     private communicationsService: CommunicationsService,
@@ -118,6 +119,33 @@ export class ShowPage implements OnInit {
 
   showPicture(pic: string) {
     this.presentModal(pic);
+  }
+
+  acceptQuote(quote: any) {
+    this.loaderService.presentLoading();
+    this.quotesService
+      .acceptQuote(quote)
+      .pipe(take(1))
+      .subscribe(
+        (res: any) => {
+          if (res.success) {
+            this.loaderService.dismiss();
+            this.toastService.presentToast(
+              'Le devis ' + quote.id + 'a été accepté.'
+            );
+            this.router.navigateByUrl('/quotes/show/' + quote.id, {
+              replaceUrl: true,
+            });
+          } else {
+            this.loaderService.dismiss();
+            this.toastService.presentToast('Erreur: opération échouée');
+          }
+        },
+        (err) => {
+          this.loaderService.dismiss();
+          this.toastService.presentToast('Erreur: opération échouée');
+        }
+      );
   }
 
   refuseQuote(quote: any) {
