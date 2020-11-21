@@ -2,7 +2,12 @@ import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MenuController, ModalController, NavController } from '@ionic/angular';
 import * as moment from 'moment';
 import { Component, ElementRef, ViewChild, OnInit } from '@angular/core';
-import { Plugins, Storage } from '@capacitor/core';
+import {
+  Plugins,
+  Storage,
+  CameraResultType,
+  CameraPhoto,
+} from '@capacitor/core';
 import { SafeResourceUrl } from '@angular/platform-browser';
 import { Observable } from 'rxjs';
 import { MarquesService } from '../services/marques.service';
@@ -44,6 +49,8 @@ export class AddPage implements OnInit {
   isDesktop: boolean;
 
   toast: HTMLIonToastElement;
+
+  imageDevicePath: string; // device path to read the content
 
   constructor(
     private loaderService: LoaderService,
@@ -244,6 +251,70 @@ export class AddPage implements OnInit {
         );
     };
     reader.readAsDataURL(file);
+  }
+
+  async takePicture(event: any, index: number) {
+    const imageUrl: CameraPhoto = await Camera.getPhoto({
+      height: 1080,
+      width: 1080,
+      resultType: CameraResultType.Base64,
+    });
+
+    const contentType = 'image/' + imageUrl.format; // In this case "image/gif"
+    const realData = imageUrl.base64String; // In this case "R0lGODlhPQBEAPeoAJosM...."
+    const blob = this.b64toBlob(realData, contentType);
+
+    this.loaderService.presentLoading();
+
+    this.quotesService
+      .uploadPhoto(blob)
+      .pipe(take(1))
+      .subscribe(
+        (data) => {
+          if (data.success) {
+            const arr = this.devisForm.get('tasks') as FormArray;
+            arr.controls[index].patchValue({ picture: data.data.file });
+            this.loaderService.dismiss();
+          }
+        },
+        (err) => {
+          this.loaderService.dismiss();
+        }
+      );
+  }
+
+  b64toBlob(b64Data, contentType, sliceSize?) {
+    contentType = contentType || '';
+    sliceSize = sliceSize || 512;
+
+    const byteCharacters = atob(b64Data);
+    const byteArrays = [];
+
+    for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+      const slice = byteCharacters.slice(offset, offset + sliceSize);
+
+      const byteNumbers = new Array(slice.length);
+      for (let i = 0; i < slice.length; i++) {
+        byteNumbers[i] = slice.charCodeAt(i);
+      }
+
+      const byteArray = new Uint8Array(byteNumbers);
+
+      byteArrays.push(byteArray);
+    }
+
+    const blob = new Blob(byteArrays, { type: contentType });
+    return blob;
+  }
+
+  async fileRead() {
+    const { Filesystem } = Plugins;
+
+    const contents = await Filesystem.readFile({
+      path: this.imageDevicePath,
+    });
+
+    console.log(contents);
   }
 
   showPicture(pic: string) {

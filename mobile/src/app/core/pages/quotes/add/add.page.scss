@@ -10,3 +10,7 @@ input[type='file'] {
   padding-top: 5px;
   padding-bottom: 5px;
 }
+ion-item {
+  --border-width: 0;
+  --inner-border-width: 0;
+}
