@@ -52,7 +52,7 @@ export class AppComponent implements OnInit {
     },
     {
       title: 'Administration',
-      url: '/admin',
+      url: '/admin/users',
       icon: 'settings',
     },
   ];

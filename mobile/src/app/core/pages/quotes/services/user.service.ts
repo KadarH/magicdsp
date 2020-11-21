@@ -14,4 +14,28 @@ export class UserService {
       `${this.AUTH_SERVER_ADDRESS}admin/users/status/` + id + '/quotes'
     );
   }
+
+  deleteUser(user: any) {
+    return this.http.delete<any>(
+      `${this.AUTH_SERVER_ADDRESS}admin/users/` + user.id
+    );
+  }
+
+  editUser(user: any) {
+    return this.http.patch<any>(
+      `${this.AUTH_SERVER_ADDRESS}admin/users/` + user.id,
+      {
+        firstname: user.firstname,
+        lastname: user.lastname,
+        address: user.address,
+        phone_number: user.phone_number,
+        email: user.email,
+        vat_number: user.vat_number,
+      }
+    );
+  }
+
+  getAllUsers() {
+    return this.http.get<any>(`${this.AUTH_SERVER_ADDRESS}admin/users`);
+  }
 }

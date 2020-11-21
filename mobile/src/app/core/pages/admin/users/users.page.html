@@ -1,9 +1,64 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>users</ion-title>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content>
+  <ion-segment [(ngModel)]="status" (ionChange)="segmentChanged($event)">
+    <ion-segment-button value="1" checked active>
+      <ion-label>Particuliers</ion-label>
+      <ion-icon name="people"></ion-icon>
+    </ion-segment-button>
+    <ion-segment-button value="2">
+      <ion-label>Professionels</ion-label>
+      <ion-icon name="car-sport"></ion-icon>
+    </ion-segment-button>
+    <ion-segment-button value="3">
+      <ion-label>Cabinets</ion-label>
+      <ion-icon name="briefcase"></ion-icon>
+    </ion-segment-button>
+  </ion-segment>
+  <div class="user-list">
+    <div>
+      <ion-list>
+        <div>
+          <ion-searchbar
+            placeholder="Recherche par nom ou prenom"
+            animated
+            (ionChange)="search($event.target.value)"
+            (search)="search($event.target.value)"
+          ></ion-searchbar>
 
+          <ng-container *ngIf="users">
+            <ion-item-sliding *ngFor="let user of users">
+              <ion-item *ngIf="user.firstname">
+                <ion-avatar slot="start">
+                  <img
+                    src="https://www.st-ives.cornwall.sch.uk/wp-content/uploads/2016/06/User-Icon.ico"
+                  />
+                </ion-avatar>
+                <ion-label>
+                  <h2>{{user.firstname}} {{user.lastname}}</h2>
+                  <p>
+                    {{user.status_id === 1 ? 'Particulier': ( user.status_id===
+                    2) ?'Professionnel automobile': 'Cabinet expertise'}}
+                  </p>
+                  <p>{{user.email}}</p>
+                </ion-label>
+                <ion-button
+                  color="secondary"
+                  fill="outline"
+                  (click)="addNewUser('edit',user.id)"
+                  >Modifier</ion-button
+                >
+              </ion-item>
+              <ion-item-options side="end">
+                <ion-item-option (click)="deleteUser(user)" color="danger"
+                  >Supprimer</ion-item-option
+                >
+              </ion-item-options>
+            </ion-item-sliding>
+          </ng-container>
+        </div>
+      </ion-list>
+    </div>
+    <div *ngIf="!users">
+      <app-list-loading></app-list-loading>
+    </div>
+  </div>
 </ion-content>
