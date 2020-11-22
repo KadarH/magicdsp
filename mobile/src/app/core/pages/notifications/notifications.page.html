@@ -27,4 +27,7 @@
       </p>
     </ion-item>
   </ng-container>
+  <div *ngIf="!gotted">
+    <app-list-loading></app-list-loading>
+  </div>
 </ion-content>

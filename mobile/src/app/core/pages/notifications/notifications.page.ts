@@ -14,6 +14,8 @@ import { NotificationsService } from '../quotes/services/notifications.service';
 })
 export class NotificationsPage implements OnInit {
   notifications$: Observable<Notification[]>;
+
+  gotted = false;
   constructor(
     private notificationsService: NotificationsService,
     private loaderService: LoaderService,
@@ -24,7 +26,7 @@ export class NotificationsPage implements OnInit {
   ngOnInit() {
     this.notifications$ = this.notificationsService.getNotifications().pipe(
       map((res) => {
-        console.log(res);
+        this.gotted = true;
         return res.data.notifications;
       })
     );

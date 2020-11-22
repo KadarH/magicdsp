@@ -42,10 +42,10 @@ export class GaragesPage implements OnInit {
   }
 
   addNewGarage(mode: string, garageId?: any) {
-    this.showPicture(mode, garageId);
+    this.showPopup(mode, garageId);
   }
 
-  showPicture(mode: string, garageId?: any) {
+  showPopup(mode: string, garageId?: any) {
     this.presentModal(mode, garageId);
   }
 
@@ -72,7 +72,7 @@ export class GaragesPage implements OnInit {
             this.garages = this.garages.filter((obj) => obj.id !== garage.id);
             this.loaderService.dismiss();
             this.toastService.presentToast(
-              'Le devis ' + garage.name + ' a été supprimé.'
+              'Le garage ' + garage.name + ' a été supprimé.'
             );
           } else {
             this.loaderService.dismiss();

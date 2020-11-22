@@ -135,19 +135,20 @@ export class AppComponent implements OnInit {
   presentAlertConfirm() {
     this.alertController
       .create({
-        header: 'Confirm Alert',
-        subHeader: 'Beware lets confirm',
-        message: 'Are you sure? you want to leave without safty mask?',
+        header: 'Confirmation',
+        subHeader: '',
+        // tslint:disable-next-line: quotemark
+        message: "Etês vous sur de vouloir quitter l'application ?",
         buttons: [
           {
-            text: 'Confirmer',
+            text: 'Oui',
             handler: () => {
               (navigator as any).app.exitApp();
               console.log('Exit');
             },
           },
           {
-            text: 'Rester',
+            text: 'Non',
             handler: () => {
               console.log('Let me think');
             },

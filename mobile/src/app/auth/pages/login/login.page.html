@@ -1,10 +1,5 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>login</ion-title>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content>
+  <br /><br />
   <div class="choices">
     <ion-segment [(ngModel)]="mode" (ionChange)="segmentChanged($event)">
       <ion-segment-button value="login" checked active>
@@ -35,6 +30,12 @@
           *ngIf="(email.dirty || email.touched) && email.errors"
           class="errors"
         >
+          {{email.errors | inputError}}
+        </div>
+        <div
+          *ngIf="(email.dirty || email.touched) && email.errors"
+          class="errors"
+        >
           <span *ngIf="email.errors?.required">Email is required</span>
           <span *ngIf="email.errors?.email">Email is invalid</span>
         </div>
@@ -53,6 +54,12 @@
           <span *ngIf="password.errors?.minlength"
             >Password needs to be 6 characters</span
           >
+        </div>
+        <div
+          *ngIf="(password.dirty || password.touched) && password.errors"
+          class="errors"
+        >
+          {{password.errors | inputError}}
         </div>
       </div>
 
@@ -99,6 +106,14 @@
             required
           ></ion-input>
         </ion-item>
+        <div
+          *ngIf="(registerForm.get('lastname').dirty ||
+          registerForm.get('lastname').touched) &&
+          registerForm.get('lastname').errors"
+          class="errors"
+        >
+          {{registerForm.get('lastname').errors | inputError}}
+        </div>
         <ion-item>
           <ion-input
             name="firstname"
@@ -108,6 +123,14 @@
             required
           ></ion-input>
         </ion-item>
+        <div
+          *ngIf="(registerForm.get('firstname').dirty ||
+          registerForm.get('firstname').touched) &&
+          registerForm.get('firstname').errors"
+          class="errors"
+        >
+          {{registerForm.get('firstname').errors | inputError}}
+        </div>
         <ion-item>
           <ion-input
             name="email"
@@ -117,6 +140,14 @@
             required
           ></ion-input>
         </ion-item>
+        <div
+          *ngIf="(registerForm.get('email').dirty ||
+          registerForm.get('email').touched) &&
+          registerForm.get('email').errors"
+          class="errors"
+        >
+          {{registerForm.get('email').errors | inputError}}
+        </div>
         <ion-item>
           <ion-input
             name="address"
@@ -126,6 +157,14 @@
             required
           ></ion-input>
         </ion-item>
+        <div
+          *ngIf="(registerForm.get('address').dirty ||
+          registerForm.get('address').touched) &&
+          registerForm.get('address').errors"
+          class="errors"
+        >
+          {{registerForm.get('address').errors | inputError}}
+        </div>
         <ion-item>
           <ion-input
             name="phone_number"
@@ -135,6 +174,14 @@
             required
           ></ion-input>
         </ion-item>
+        <div
+          *ngIf="(registerForm.get('phone_number').dirty ||
+          registerForm.get('phone_number').touched) &&
+          registerForm.get('phone_number').errors"
+          class="errors"
+        >
+          {{registerForm.get('phone_number').errors | inputError}}
+        </div>
         <ion-item
           *ngIf="registerForm.get('status_id').value === '2' ||registerForm.get('status_id').value === '3'"
         >
@@ -146,6 +193,16 @@
             required
           ></ion-input>
         </ion-item>
+        <div
+          *ngIf="(registerForm.get('vat_number').dirty ||
+          registerForm.get('vat_number').touched) &&
+          registerForm.get('vat_number').errors &&
+          registerForm.get('status_id').value === '2' ||
+          registerForm.get('status_id').value === '3' "
+          class="errors"
+        >
+          {{registerForm.get('vat_number').errors | inputError}}
+        </div>
         <ion-item>
           <ion-input
             type="password"
@@ -153,6 +210,14 @@
             formControlName="password"
           ></ion-input>
         </ion-item>
+        <div
+          *ngIf="(registerForm.get('password').dirty ||
+          registerForm.get('password').touched) &&
+          registerForm.get('password').errors"
+          class="errors"
+        >
+          {{registerForm.get('password').errors | inputError}}
+        </div>
       </div>
 
       <ion-button type="submit" expand="block" [disabled]="!registerForm.valid"
