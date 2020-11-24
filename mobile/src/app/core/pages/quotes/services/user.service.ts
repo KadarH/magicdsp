@@ -38,4 +38,8 @@ export class UserService {
   getAllUsers() {
     return this.http.get<any>(`${this.AUTH_SERVER_ADDRESS}admin/users`);
   }
+
+  getUserById(id: number) {
+    return this.http.get<any>(`${this.AUTH_SERVER_ADDRESS}admin/users/` + id);
+  }
 }

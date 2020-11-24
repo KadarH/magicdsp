@@ -22,6 +22,8 @@ import { ModalShowComponent } from '../modal-show/modal-show.component';
 import { environment } from 'src/environments/environment';
 import { LoaderService } from 'src/app/shared/services/loader.service';
 import { ToastService } from 'src/app/shared/services/toast.service';
+import { AuthService } from 'src/app/auth/auth.service';
+import { Task } from 'src/app/core/models/task';
 const { Camera } = Plugins;
 
 @Component({
@@ -63,6 +65,7 @@ export class AddPage implements OnInit {
     private modelsService: ModelsService,
     private strokesService: StrokesService,
     private quotesService: QuotesService,
+    private authService: AuthService,
     private router: Router
   ) {}
 
@@ -186,13 +189,45 @@ export class AddPage implements OnInit {
   }
 
   addNewTask() {
-    this.pushQuoteTask();
+    const currentUser: User = this.authService.getUser();
+    const control: FormArray = this.devisForm.get('tasks') as FormArray;
+
+    if (
+      (currentUser.status_id === 1 && control.length < 2) ||
+      ((currentUser.status_id === 2 || currentUser.status_id === 2) &&
+        control.length < 4) ||
+      currentUser.admin
+    ) {
+      this.pushQuoteTask();
+    } else {
+      this.toastService.presentToast(
+        // tslint:disable-next-line: quotemark
+        "Vous navez pas le droit d'ajouter un nouveau dégat"
+      );
+    }
   }
 
-  deleteTask(i: number) {
+  deleteTask(i: number, item: any) {
+    console.log(item.get('picture'));
+
     const control: FormArray = this.devisForm.get('tasks') as FormArray;
-    control.removeAt(i);
-    this.toastService.presentToast('Degat supprimé avec succès.');
+    console.log(control.value[i].picture);
+
+    this.quotesService
+      .deletePhoto(control.value[i].picture)
+      .pipe(take(1))
+      .subscribe(
+        (res: any) => {
+          if (res.success) {
+            control.removeAt(i);
+            this.toastService.presentToast('Degat supprimé avec succès.');
+          }
+        },
+        (err) => {
+          this.toastService.presentToast('Ajout echoué, problème du serveur.');
+          this.loaderService.dismiss();
+        }
+      );
   }
 
   pushQuoteTask() {
@@ -215,42 +250,6 @@ export class AddPage implements OnInit {
     }
 
     this.years.reverse();
-  }
-
-  getPicture(type: string) {
-    this.filePickerRef.nativeElement.click();
-  }
-
-  onFileChoose(event: any, index: number) {
-    const file = (event.target as HTMLInputElement).files[0];
-    const pattern = /image-*/;
-    const reader = new FileReader();
-
-    if (!file.type.match(pattern)) {
-      this.toastService.presentToast('Format du fichier non supportée.');
-      return;
-    }
-    reader.onload = () => {
-      this.photo = reader.result.toString();
-
-      this.loaderService.presentLoading();
-      this.quotesService
-        .uploadPhoto(file)
-        .pipe(take(1))
-        .subscribe(
-          (data) => {
-            if (data.success) {
-              const arr = this.devisForm.get('tasks') as FormArray;
-              arr.controls[index].patchValue({ picture: data.data.file });
-              this.loaderService.dismiss();
-            }
-          },
-          (err) => {
-            this.loaderService.dismiss();
-          }
-        );
-    };
-    reader.readAsDataURL(file);
   }
 
   async takePicture(event: any, index: number) {

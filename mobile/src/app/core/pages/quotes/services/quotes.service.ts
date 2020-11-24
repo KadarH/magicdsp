@@ -73,4 +73,13 @@ export class QuotesService {
       { headers: { 'Content-Type': 'multipart' } }
     );
   }
+
+  deletePhoto(picture: string) {
+    return this.http.post<any>(
+      `${this.AUTH_SERVER_ADDRESS}tasks/delete/picture`,
+      {
+        file: picture,
+      }
+    );
+  }
 }

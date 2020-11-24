@@ -159,7 +159,7 @@
                   ios="close-circle-outline"
                   md="close-circle-sharp"
                   slot="end"
-                  (click)="deleteTask(i)"
+                  (click)="deleteTask(i,item)"
                 ></ion-icon>
               </ion-item>
               <div [formGroupName]="i">
@@ -167,7 +167,7 @@
                   <ion-label position="floating">Stroke</ion-label>
                   <ion-select formControlName="stroke_id" required value="">
                     <ion-select-option
-                      *ngFor="let st of strokes$ | async,let i= index;"
+                      *ngFor="let st of strokes$ | async"
                       [value]="st.id"
                       >{{st.name}}
                     </ion-select-option>
@@ -181,7 +181,7 @@
                 </div>
                 <ion-item>
                   <ion-label>Photo</ion-label>
-                  <ion-button size="small" (click)="getPicture('camera')">
+                  <ion-button size="small" (click)="takePicture('camera',i)">
                     <ion-icon name="camera" slot="start"></ion-icon>
                     <ion-label>Camera</ion-label>
                   </ion-button>
