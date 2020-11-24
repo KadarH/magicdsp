@@ -24,6 +24,12 @@ export class GaragesPage implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.getListOfGarages();
+  }
+
+  getListOfGarages() {
+    this.loaderService.presentLoading();
+
     this.garagesService
       .getGarages()
       .pipe(take(1))
@@ -31,8 +37,10 @@ export class GaragesPage implements OnInit {
         (res) => {
           if (res.success) {
             this.garages = res.data.garages;
+            this.loaderService.dismiss();
           } else {
             this.toastService.presentToast('Erreur: opération échouée');
+            this.loaderService.dismiss();
           }
         },
         (err) => {
@@ -40,7 +48,6 @@ export class GaragesPage implements OnInit {
         }
       );
   }
-
   addNewGarage(mode: string, garageId?: any) {
     this.showPopup(mode, garageId);
   }
@@ -57,6 +64,12 @@ export class GaragesPage implements OnInit {
         garageId: id,
         mode: mod,
       },
+    });
+    modal.onDidDismiss().then((res) => {
+      console.log(res.data);
+      if (res && res.data) {
+        this.getListOfGarages();
+      }
     });
     return await modal.present();
   }

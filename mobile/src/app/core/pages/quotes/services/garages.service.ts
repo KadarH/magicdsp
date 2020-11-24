@@ -20,13 +20,25 @@ export class GaragesService {
   }
 
   addGarage(garage: any) {
-    return this.http.get<any>(`${this.AUTH_SERVER_ADDRESS}garages`);
+    return this.http.post<any>(
+      `${this.AUTH_SERVER_ADDRESS}admin/garages`,
+      garage
+    );
   }
+
+  editGarage(garage: any) {
+    return this.http.patch<any>(
+      `${this.AUTH_SERVER_ADDRESS}admin/garages/` + garage.id,
+      garage
+    );
+  }
+
   deleteGarage(garage: any) {
     return this.http.delete<any>(
       `${this.AUTH_SERVER_ADDRESS}admin/garages/` + garage.id
     );
   }
+
   checkAvailabilities(quoteId: number, garageId: number, date: string) {
     let params = new HttpParams();
 

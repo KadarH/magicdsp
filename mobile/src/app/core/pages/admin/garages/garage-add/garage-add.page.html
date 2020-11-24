@@ -12,7 +12,7 @@
 
 <ion-content>
   <ion-card *ngIf="garage">
-    <form (ngSubmit)="addGarage(garageForm.value)">
+    <form #garageForm>
       <ion-item>
         <ion-label position="floating">Nom du garage</ion-label>
         <ion-input required [(ngModel)]="garage.name" name="name"> </ion-input>
@@ -28,8 +28,67 @@
           </ion-select-option>
         </ion-select>
       </ion-item>
+      <br *ngIf="garage.google_calendar" />
 
-      <div id="openings">
+      <div *ngIf="garage.google_calendar" id="google_calendars">
+        <ng-container
+          *ngFor="let calendar of garage.google_calendar; let j= index"
+        >
+          <ion-item class="item-border-double">
+            <ion-label slot="start">Calendrier {{ j+1 }}</ion-label>
+            <ion-button
+              color="light"
+              slot="end"
+              size="small"
+              (click)="deleteCalendar(j)"
+            >
+              <ion-icon
+                ios="trash-outline"
+                md="trash-sharp"
+                color="danger"
+              ></ion-icon>
+            </ion-button>
+          </ion-item>
+          <ion-item>
+            <ion-label position="floating">Nom</ion-label>
+            <ion-input
+              *ngIf="calendar"
+              [(ngModel)]="calendar.name"
+              [ngModelOptions]="{standalone: true}"
+            >
+            </ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="floating">ID</ion-label>
+            <ion-input
+              *ngIf="calendar"
+              [(ngModel)]="calendar.id"
+              [ngModelOptions]="{standalone: true}"
+            >
+            </ion-input>
+          </ion-item>
+        </ng-container>
+        <ion-button
+          *ngIf="garage.google_calendar"
+          size="small"
+          expand="full"
+          color="medium"
+          (click)="addCalendar()"
+        >
+          Ajouter un calendrier
+        </ion-button>
+      </div>
+
+      <br *ngIf="garage.google_calendar" />
+      <div id="openings" *ngIf="garage.opening">
+        <ion-list>
+          <ion-item class="item-border-double">
+            <ion-label expand="full" slot="start"
+              >Heures d'ouvertures</ion-label
+            >
+          </ion-item>
+        </ion-list>
         <div class="day" *ngFor="let day of garage.opening; let i = index;">
           <span class="day_name" (click)="showDay($event)"
             >{{ momentParse(i)}}</span
@@ -41,7 +100,10 @@
                   <td class="hour">{{ hour.key }}</td>
                   <td class="status">
                     <ion-select
+                      *ngIf="hour"
                       [class]="hour.value.status"
+                      [(ngModel)]="hour.value.status"
+                      [ngModelOptions]="{standalone: true}"
                       placeholder="Status"
                     >
                       <ion-select-option value="opened"
@@ -57,6 +119,7 @@
                       *ngIf="hour"
                       name="i+''+j"
                       [(ngModel)]="hour.value.display"
+                      [ngModelOptions]="{standalone: true}"
                       [class]="hour.value.display ? 'display' : ''"
                       placeholder="Affichage"
                     >
@@ -77,8 +140,14 @@
 
       <ion-row class="ion-margin">
         <ion-col>
-          <ion-button type="submit" color="success" expand="block">
-            Ajouter le garage
+          <ion-button
+            type="submit"
+            color="success"
+            expand="block"
+            (click)="addGarage(garage)"
+          >
+            <span *ngIf="mode !== 'edit'">Ajouter le garage</span>
+            <span *ngIf="mode === 'edit'">Modifier le garage</span>
           </ion-button>
         </ion-col>
       </ion-row>
