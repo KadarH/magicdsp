@@ -1,4 +1,10 @@
-import { Component, OnInit, QueryList, ViewChildren } from '@angular/core';
+import {
+  Component,
+  NgZone,
+  OnInit,
+  QueryList,
+  ViewChildren,
+} from '@angular/core';
 
 import {
   AlertController,
@@ -15,6 +21,7 @@ import { OneSignalService } from './shared/one-signal.service';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { User } from './core/models/user';
+import { App } from '@capacitor/core';
 
 @Component({
   selector: 'app-root',
@@ -69,7 +76,8 @@ export class AppComponent implements OnInit {
     private oneSignalService: OneSignalService,
     private alertController: AlertController,
     private router: Router,
-    private location: Location
+    private location: Location,
+    private zone: NgZone
   ) {
     this.initializeApp();
     this.backButtonEvent();
@@ -87,6 +95,18 @@ export class AppComponent implements OnInit {
           this.appPages.splice(-1, 1);
         }
       }, 500);
+    });
+    App.addListener('appUrlOpen', (data: any) => {
+      this.zone.run(() => {
+        // Example url: https://beerswift.app/tabs/tab2
+        // slug = /tabs/tab2
+        const slug = data.url.split('.com').pop();
+        if (slug) {
+          this.router.navigateByUrl(slug);
+        }
+        // If no match, do nothing - let regular routing
+        // logic take over
+      });
     });
   }
 

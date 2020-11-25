@@ -1,9 +1,188 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>user-add</ion-title>
+    <ion-buttons slot="start">
+      <ion-button (click)="closePop()">
+        <ion-icon name="close-circle-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Modifier L'utilisateur</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
+  <ion-card>
+    <form
+      *ngIf="userToUpdate"
+      (ngSubmit)="updateUser(userForm.value)"
+      [formGroup]="userForm"
+    >
+      <div class="input-group">
+        <ion-item>
+          <ion-label position="floating">Nom</ion-label>
+          <ion-input
+            name="lastname"
+            type="text"
+            placeholder="Nom"
+            formControlName="lastname"
+            required
+          ></ion-input>
+        </ion-item>
+        <div
+          *ngIf="(userForm.get('lastname').dirty ||
+        userForm.get('lastname').touched) &&
+        userForm.get('lastname').errors"
+          class="errors"
+        >
+          {{userForm.get('lastname').errors | inputError}}
+        </div>
+        <ion-item>
+          <ion-label position="floating">Prénom</ion-label>
+          <ion-input
+            name="firstname"
+            type="text"
+            placeholder="Prénom"
+            formControlName="firstname"
+            required
+          ></ion-input>
+        </ion-item>
+        <div
+          *ngIf="(userForm.get('firstname').dirty ||
+        userForm.get('firstname').touched) &&
+        userForm.get('firstname').errors"
+          class="errors"
+        >
+          {{userForm.get('firstname').errors | inputError}}
+        </div>
+        <ion-item>
+          <ion-label position="floating">Email</ion-label>
+          <ion-input
+            name="email"
+            type="email"
+            placeholder="Adresse email"
+            formControlName="email"
+            required
+          ></ion-input>
+        </ion-item>
+        <div
+          *ngIf="(userForm.get('email').dirty ||
+        userForm.get('email').touched) &&
+        userForm.get('email').errors"
+          class="errors"
+        >
+          {{userForm.get('email').errors | inputError}}
+        </div>
+        <ion-item>
+          <ion-label position="floating">Adresse</ion-label>
+          <ion-input
+            name="address"
+            type="text"
+            placeholder="Adresse"
+            formControlName="address"
+            required
+          ></ion-input>
+        </ion-item>
+        <div
+          *ngIf="(userForm.get('address').dirty ||
+        userForm.get('address').touched) &&
+        userForm.get('address').errors"
+          class="errors"
+        >
+          {{userForm.get('address').errors | inputError}}
+        </div>
+        <ion-item>
+          <ion-label position="floating">Numéro de télephone</ion-label>
+          <ion-input
+            name="phone_number"
+            type="text"
+            placeholder="Numéro de télephone"
+            formControlName="phone_number"
+            required
+          ></ion-input>
+        </ion-item>
+        <div
+          *ngIf="(userForm.get('phone_number').dirty ||
+        userForm.get('phone_number').touched) &&
+        userForm.get('phone_number').errors"
+          class="errors"
+        >
+          {{userForm.get('phone_number').errors | inputError}}
+        </div>
+        <ion-item
+          *ngIf="userForm.get('status_id').value === '2' ||userForm.get('status_id').value === '3'"
+        >
+          <ion-label position="floating">Numéro de TVA/Siret</ion-label>
+          <ion-input
+            name="vat_number"
+            type="text"
+            placeholder="Numéro de TVA/Siret"
+            formControlName="vat_number"
+            required
+          ></ion-input>
+        </ion-item>
+        <div
+          *ngIf="(userForm.get('vat_number').dirty ||
+        userForm.get('vat_number').touched) &&
+        userForm.get('vat_number').errors &&
+        userForm.get('status_id').value === '2' ||
+        userForm.get('status_id').value === '3' "
+          class="errors"
+        >
+          {{userForm.get('vat_number').errors | inputError}}
+        </div>
+      </div>
 
+      <ion-button type="submit" expand="block">Modifier</ion-button>
+    </form>
+  </ion-card>
+
+  <ion-card>
+    <ion-list>
+      <div *ngIf="quotes">
+        <h3 style="text-align: center">Liste des devis</h3>
+        <hr />
+        <p style="text-align: center" *ngIf="quotes.length <= 1">Aucun devis</p>
+        <ng-container *ngFor="let quote of quotes">
+          <ion-item-sliding>
+            <ion-item-options side="start" *ngIf="quote.waiting === 1">
+              <ion-item-option
+                *ngIf="user.admin && quote.refused !==1"
+                (click)="refuseQuote(quote)"
+                color="danger"
+                >Refuser</ion-item-option
+              >
+            </ion-item-options>
+            <ion-item *ngIf="quote.brand" (click)="goToQuote(quote.id)">
+              <ion-avatar slot="start">
+                <img
+                  src="https://i2.wp.com/www.verizo.fr/wp-content/uploads/2017/03/icon-devis.png?ssl=1"
+                />
+              </ion-avatar>
+              <ion-label>
+                <ng-container *ngIf="user.admin">
+                  <h2>{{quote.user?.firstname}} {{quote.user?.lastname}}</h2>
+                  <p>{{quote.brand}} {{quote.model}} - Model {{quote.year}}</p>
+                </ng-container>
+                <ng-container *ngIf="!user.admin">
+                  <h2>
+                    {{quote.brand}} {{quote.model}} - Model {{quote.year}}
+                  </h2>
+                </ng-container>
+                <h6>{{quote.plate_number}}</h6>
+              </ion-label>
+              <p>{{quote.created_at | date: 'dd/MM/yyyy'}}</p>
+            </ion-item>
+            <ion-item-options side="end">
+              <ion-item-option (click)="goToQuote(quote.id)">
+                <ion-icon ios="eye-outline" md="eye-sharp"></ion-icon>
+                Détail
+              </ion-item-option>
+            </ion-item-options>
+          </ion-item-sliding>
+        </ng-container>
+      </div>
+    </ion-list>
+    <div *ngIf="!quotes">
+      <app-list-loading></app-list-loading>
+    </div>
+  </ion-card>
 </ion-content>

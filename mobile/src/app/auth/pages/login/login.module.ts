@@ -5,7 +5,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 
 import { LoginPage } from './login.page';
-import { InputErrorPipe } from 'src/app/shared/input-error.pipe';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
   imports: [
@@ -14,7 +14,8 @@ import { InputErrorPipe } from 'src/app/shared/input-error.pipe';
     FormsModule,
     ReactiveFormsModule,
     IonicModule,
+    SharedModule
   ],
-  declarations: [LoginPage, InputErrorPipe],
+  declarations: [LoginPage],
 })
 export class LoginPageModule {}
