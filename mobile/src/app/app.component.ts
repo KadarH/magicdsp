@@ -22,6 +22,7 @@ import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { User } from './core/models/user';
 import { App } from '@capacitor/core';
+import { ToastService } from './shared/services/toast.service';
 
 @Component({
   selector: 'app-root',
@@ -57,11 +58,6 @@ export class AppComponent implements OnInit {
       url: '/notifications',
       icon: 'notifications',
     },
-    {
-      title: 'Administration',
-      url: '/admin/users',
-      icon: 'settings',
-    },
   ];
 
   lastTimeBackPress = 0;
@@ -75,6 +71,7 @@ export class AppComponent implements OnInit {
     private menuCtrl: MenuController,
     private oneSignalService: OneSignalService,
     private alertController: AlertController,
+    private toastService: ToastService,
     private router: Router,
     private location: Location,
     private zone: NgZone
@@ -89,12 +86,6 @@ export class AppComponent implements OnInit {
       this.splashScreen.hide();
       this.user = this.authService.getUser();
       this.oneSignalService.setupPush(this.user ? this.user.id : null);
-
-      setTimeout(() => {
-        if (this.user.admin !== 1) {
-          this.appPages.splice(-1, 1);
-        }
-      }, 500);
     });
     App.addListener('appUrlOpen', (data: any) => {
       this.zone.run(() => {
@@ -118,6 +109,18 @@ export class AppComponent implements OnInit {
       );
     }
     this.isAuthenticated();
+  }
+
+  goToAdmin() {
+    this.selectedIndex = this.appPages.length;
+    if (!this.user.admin) {
+      console.log('zabi');
+      this.toastService.presentToast(
+        "Vous n'avez pas le droit d'acceder à l'administration"
+      );
+    } else {
+      this.router.navigateByUrl('/admin/users');
+    }
   }
 
   isAuthenticated() {

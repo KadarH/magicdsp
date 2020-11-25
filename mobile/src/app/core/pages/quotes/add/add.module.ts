@@ -8,7 +8,6 @@ import { AddPageRoutingModule } from './add-routing.module';
 
 import { AddPage } from './add.page';
 import { SharedModule } from 'src/app/shared/shared.module';
-import { InputErrorPipe } from 'src/app/shared/input-error.pipe';
 
 @NgModule({
   imports: [
@@ -19,6 +18,6 @@ import { InputErrorPipe } from 'src/app/shared/input-error.pipe';
     IonicModule,
     AddPageRoutingModule,
   ],
-  declarations: [AddPage, InputErrorPipe],
+  declarations: [AddPage],
 })
 export class AddPageModule {}

@@ -48,6 +48,22 @@
               <ion-label>{{ p.title }}</ion-label>
             </ion-item>
           </ion-menu-toggle>
+          <ion-menu-toggle auto-hide="false">
+            <ion-item
+              (click)="goToAdmin()"
+              routerDirection="root"
+              lines="none"
+              detail="false"
+              [class.selected]="selectedIndex == appPages.length"
+            >
+              <ion-icon
+                slot="start"
+                [ios]="'settings-outline'"
+                [md]="'settings-sharp'"
+              ></ion-icon>
+              <ion-label>Administration</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
           <ion-item (click)="logout()" lines="none" detail="false">
             <ion-icon
               slot="start"
