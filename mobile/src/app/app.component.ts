@@ -39,11 +39,6 @@ export class AppComponent implements OnInit {
   public selectedIndex = 0;
   public appPages = [
     {
-      title: 'Acceuil',
-      url: '/home',
-      icon: 'home',
-    },
-    {
       title: 'Ajouter un devis',
       url: '/quotes/add',
       icon: 'add',
@@ -109,10 +104,14 @@ export class AppComponent implements OnInit {
       );
     }
     this.isAuthenticated();
+    this.authService.authSubject.subscribe((res) => {
+      console.log(res);
+      this.user = this.authService.getUser();
+    });
   }
 
   goToAdmin() {
-    this.selectedIndex = this.appPages.length;
+    this.selectedIndex = this.appPages.length + 1;
     if (!this.user.admin) {
       console.log('zabi');
       this.toastService.presentToast(

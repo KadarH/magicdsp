@@ -9,11 +9,14 @@
     >
       <ion-content>
         <ion-list id="inbox-list">
-          <ion-list-header>
-            <ion-img src="assets/img/logo.png" style="width: 70px"></ion-img>
+          <ion-list-header class="menu-header-blue">
+            <ion-img
+              src="assets/img/logo.png"
+              style="width: 70px; margin-bottom: 3%; margin-left: 2%"
+            ></ion-img>
             <ion-label class="ion-margin-start">
               <h1>{{ this.user.firstname }} {{ this.user.lastname }}</h1>
-              <p>{{ this.user.email }}</p>
+              <p style="color: antiquewhite">{{ this.user.email }}</p>
               <ion-badge *ngIf="user.admin">Admin</ion-badge>
               <ion-badge *ngIf="!user.admin && user.status_id === 1"
                 >Particulier</ion-badge
@@ -26,19 +29,35 @@
               >
             </ion-label>
           </ion-list-header>
-          <hr style="background-color: antiquewhite" />
 
+          <ion-menu-toggle auto-hide="false" *ngIf="user.admin">
+            <ion-item
+              (click)="selectedIndex = 0"
+              [routerLink]="'/home'"
+              routerDirection="root"
+              lines="none"
+              detail="false"
+              [class.selected]="selectedIndex == 0"
+            >
+              <ion-icon
+                slot="start"
+                [ios]="'home-outline'"
+                [md]="'home-sharp'"
+              ></ion-icon>
+              <ion-label>Tableau de bord</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
           <ion-menu-toggle
             auto-hide="false"
             *ngFor="let p of appPages; let i = index"
           >
             <ion-item
-              (click)="selectedIndex = i"
+              (click)="selectedIndex = i + 1"
               routerDirection="root"
               [routerLink]="[p.url]"
               lines="none"
               detail="false"
-              [class.selected]="selectedIndex == i"
+              [class.selected]="selectedIndex == i + 1"
             >
               <ion-icon
                 slot="start"
@@ -48,13 +67,13 @@
               <ion-label>{{ p.title }}</ion-label>
             </ion-item>
           </ion-menu-toggle>
-          <ion-menu-toggle auto-hide="false">
+          <ion-menu-toggle auto-hide="false" *ngIf="user.admin">
             <ion-item
               (click)="goToAdmin()"
               routerDirection="root"
               lines="none"
               detail="false"
-              [class.selected]="selectedIndex == appPages.length"
+              [class.selected]="selectedIndex == appPages.length + 1"
             >
               <ion-icon
                 slot="start"

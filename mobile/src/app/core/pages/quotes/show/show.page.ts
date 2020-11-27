@@ -119,7 +119,7 @@ export class ShowPage implements OnInit {
         if (res.success) {
           this.loaderService.dismiss();
           this.toastService.presentToast(
-            'Le devis ' + this.quote.id + 'a été estimé.'
+            'Le devis ' + this.quote.id + ' a été estimé.'
           );
           this.router.navigateByUrl('/quotes/show/' + this.quote.id, {
             replaceUrl: true,
@@ -150,7 +150,7 @@ export class ShowPage implements OnInit {
           if (res.success) {
             this.loaderService.dismiss();
             this.toastService.presentToast(
-              'Le devis ' + quote.id + 'a été accepté.'
+              'Le devis ' + quote.id + ' a été accepté.'
             );
             this.router.navigateByUrl('/quotes/show/' + quote.id + '/meeting', {
               replaceUrl: true,
@@ -177,7 +177,7 @@ export class ShowPage implements OnInit {
           if (res.success) {
             this.loaderService.dismiss();
             this.toastService.presentToast(
-              'Le devis ' + quote.id + 'a été refusé.'
+              'Le devis ' + quote.id + ' a été refusé.'
             );
           } else {
             this.loaderService.dismiss();

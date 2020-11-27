@@ -47,8 +47,11 @@ export class LoginPage implements OnInit {
 
   login() {
     this.authService.login(this.credentials.value).subscribe((res) => {
-      console.log(res);
-      this.router.navigateByUrl('home');
+      if (this.authService.getUser().admin) {
+        this.router.navigateByUrl('home');
+      } else {
+        this.router.navigateByUrl('quotes/list');
+      }
     });
   }
 

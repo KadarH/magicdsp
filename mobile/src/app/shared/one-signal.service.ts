@@ -9,6 +9,7 @@ export class OneSignalService {
     private oneSignal: OneSignal,
     private alertCtrl: AlertController
   ) {}
+
   setupPush(id?: number) {
     // I recommend to put these into your environment.ts
     this.oneSignal.startInit(
@@ -33,20 +34,11 @@ export class OneSignalService {
       // Just a note that the data is a different place here!
       const additionalData = data.notification.payload.additionalData;
 
-      this.showAlert(
-        'Notification opened',
-        'You already read this before',
-        additionalData.task
-      );
     });
     this.oneSignal.addSubscriptionObserver().subscribe((state) => {
       if (state) {
         this.oneSignal.sendTag('user_id', id ? id + '' : '0');
-        this.showAlert(
-          'Notification opened',
-          'You already read this before',
-          'additionalData.task'
-        );
+
       }
     });
     this.oneSignal.endInit();

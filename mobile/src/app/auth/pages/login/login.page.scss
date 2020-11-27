@@ -2,8 +2,10 @@ ion-content {
   --padding-top: 5%;
   --padding-start: 10%;
   --padding-end: 10%;
-  --background: url('https://bestwallpapers.in/wp-content/uploads/2018/05/car-sunset-sport-car-4k-wallpaper-1440x2560.jpg')
-    0 0/100% 100% no-repeat;
+  --background: linear-gradient(to top right, #0b2868, #24558d);
+
+  --background: url('https://i.pinimg.com/originals/d6/fd/c8/d6fdc83f651e1c1460625cd25da61cd0.jpg');
+  //     0 0/100% 100% no-repeat;
 }
 
 .input-group {

@@ -10,7 +10,7 @@
 <!-- https://enappd.com/blog/charts-in-ionic-4-apps-and-pwa-part-1/52/ -->
 
 <ion-content>
-  <ion-card class="welcome-card">
+  <ion-card class="welcome-card" *ngIf="user.admin">
     <ion-card-header>
       <ion-card-subtitle>Statistiques des devis</ion-card-subtitle>
     </ion-card-header>

@@ -29,7 +29,6 @@ ion-menu.md ion-list#inbox-list {
 ion-menu.md ion-list#inbox-list ion-list-header {
   font-size: 22px;
   font-weight: 600;
-
   min-height: 20px;
 }
 
@@ -117,4 +116,16 @@ ion-note {
 
 ion-item.selected {
   --color: var(--ion-color-primary);
+}
+
+#inbox-list {
+  padding: 0;
+}
+.menu-header-blue {
+  --background: linear-gradient(to top right, #012a83, #187df1);
+  padding: 0;
+  color: white;
+  padding-top: 5%;
+  padding-bottom: 3%;
+  margin-bottom: 3%;
 }

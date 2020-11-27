@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import * as Chart from 'chart.js';
 import * as dataLabels from 'chartjs-plugin-datalabels';
 import { forkJoin } from 'rxjs';
@@ -30,18 +31,24 @@ export class HomePage implements OnInit {
 
   constructor(
     private quoteService: QuotesService,
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router
   ) {}
 
   ionViewDidEnter() {
-    this.prepareAndCreatePieChart();
     if (this.user.admin) {
-      this.prepareAndCreateBarChart();
+      this.prepareAndCreatePieChart();
+      if (this.user.admin) {
+        this.prepareAndCreateBarChart();
+      }
     }
   }
 
   ngOnInit() {
     this.user = this.authService.getUser();
+    if (!this.user.admin) {
+      this.router.navigateByUrl('quotes/list');
+    }
   }
 
   prepareAndCreatePieChart() {

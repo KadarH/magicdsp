@@ -11,6 +11,17 @@ export class InputErrorPipe implements PipeTransform {
       if (value.required) {
         rvalue = 'Ce champ est obligatoire.';
       }
+      if (value.email) {
+        rvalue = 'Veuillez saisir une adresse mail valide';
+      }
+
+      if (value.minlength) {
+        console.log(value);
+        rvalue =
+          'Ce champ doit comporter au minimum ' +
+          value.requiredLength +
+          ' caratères.';
+      }
     }
     return rvalue;
   }

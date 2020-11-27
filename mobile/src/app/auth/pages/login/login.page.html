@@ -1,12 +1,28 @@
-<ion-content>
-  <br /><br />
+<ion-content padding>
+  <div style="height: 100px" *ngIf="mode !== 'register'"></div>
+  <ion-card-content style="background: transparent">
+    <ion-img
+      slot="center"
+      style="width: 99px; margin: auto"
+      src="assets/img/logo.png"
+    ></ion-img>
+  </ion-card-content>
+  <br />
   <div class="choices">
     <ion-segment [(ngModel)]="mode" (ionChange)="segmentChanged($event)">
-      <ion-segment-button value="login" checked active>
+      <ion-segment-button
+        [style.color]="mode ==='login'? 'black':'white'"
+        value="login"
+        checked
+        active
+      >
         <ion-label>Connexion</ion-label>
         <ion-icon ios="log-in-outline" md="log-in-sharp"></ion-icon>
       </ion-segment-button>
-      <ion-segment-button value="register">
+      <ion-segment-button
+        [style.color]="mode ==='register'? 'black':'white'"
+        value="register"
+      >
         <ion-label>Inscription</ion-label>
         <ion-icon ios="add-circle-outline" md="add-circle-sharp"></ion-icon>
       </ion-segment-button>
@@ -32,13 +48,6 @@
         >
           {{email.errors | inputError}}
         </div>
-        <div
-          *ngIf="(email.dirty || email.touched) && email.errors"
-          class="errors"
-        >
-          <span *ngIf="email.errors?.required">Email is required</span>
-          <span *ngIf="email.errors?.email">Email is invalid</span>
-        </div>
         <ion-item>
           <ion-input
             type="password"
@@ -46,15 +55,7 @@
             formControlName="password"
           ></ion-input>
         </ion-item>
-        <div
-          *ngIf="(password.dirty || password.touched) && password.errors"
-          class="errors"
-        >
-          <span *ngIf="password.errors?.required">Password is required</span>
-          <span *ngIf="password.errors?.minlength"
-            >Password needs to be 6 characters</span
-          >
-        </div>
+
         <div
           *ngIf="(password.dirty || password.touched) && password.errors"
           class="errors"
@@ -114,7 +115,7 @@
         >
           {{registerForm.get('lastname').errors | inputError}}
         </div>
-        <ion-item>
+        <ion-item *ngIf="registerForm.get('status_id').value === '1' ">
           <ion-input
             name="firstname"
             type="text"
@@ -126,7 +127,8 @@
         <div
           *ngIf="(registerForm.get('firstname').dirty ||
           registerForm.get('firstname').touched) &&
-          registerForm.get('firstname').errors"
+          registerForm.get('firstname').errors && 
+          registerForm.get('status_id').value === '1'"
           class="errors"
         >
           {{registerForm.get('firstname').errors | inputError}}
@@ -197,8 +199,8 @@
           *ngIf="(registerForm.get('vat_number').dirty ||
           registerForm.get('vat_number').touched) &&
           registerForm.get('vat_number').errors &&
-          registerForm.get('status_id').value === '2' ||
-          registerForm.get('status_id').value === '3' "
+          (registerForm.get('status_id').value === '2' ||
+          registerForm.get('status_id').value === '3') "
           class="errors"
         >
           {{registerForm.get('vat_number').errors | inputError}}
@@ -228,7 +230,7 @@
         expand="block"
         color="white"
         fill="clear"
-        (click)="mode = 'register'"
+        (click)="mode = 'login'"
         >Se connecter
       </ion-button>
     </form>

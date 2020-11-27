@@ -95,15 +95,21 @@
     </ion-item>
 
     <ion-item
-      *ngIf="(quote.waiting && user.admin) ||
-       (quote.waiting && !user.admin) ||
+      *ngIf="(quote.waiting && user.admin && !quote.price && !quote.duration &&  communications.length == 0)
+      || (quote.waiting && communications.length > 0) ||
+       (quote.waiting && user.admin && !quote.price && !quote.duration) ||
+       (!user.admin && quote.accepted && !quote.meeting_date ) ||
      (quote.waiting && user.admin && communications.length == 0)||
-      (quote.waiting && communications.length > 0) ||
-     (!user.admin && quote.accepted && !quote.meeting_date) ||
-     (quote.waiting && !user.admin && communications.length > 0)"
+      (quote.waiting && user.admin) ||
+     (!user.admin &&
+     quote.waiting &&
+      quote.price &&
+      quote.duration &&
+      quote.meeting_date == null &&
+       quote.garage_id == null) "
     >
       <ion-button
-        *ngIf="(quote.waiting && user.admin && !quote.price && !quote.duration &&   communications.length == 0)
+        *ngIf="(quote.waiting && user.admin && !quote.price && !quote.duration &&  communications.length == 0)
           || (quote.waiting && communications.length > 0)"
         [routerLink]="['communications']"
         color="medium"
@@ -145,7 +151,7 @@
         color="sucess"
         fill="outline"
         (click)="acceptQuote(quote)"
-        >Accepter et Fixer un Rendez-vous</ion-button
+        >Fixer un Rendez-vous</ion-button
       >
     </ion-item>
     <ion-item>
